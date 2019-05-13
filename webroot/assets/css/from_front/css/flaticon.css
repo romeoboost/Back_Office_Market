@@ -1,0 +1,42 @@
+	/*
+  	Flaticon icon font: Flaticon
+  	Creation date: 22/01/2019 09:05
+  	*/
+
+@font-face {
+  font-family: "Flaticon";
+  src: url("http://localhost/Back_Office_Market/webroot/assets/css/from_front/fonts/flat_icons/font/Flaticon.eot");
+  src: url("http://localhost/Back_Office_Market/webroot/assets/css/from_front/fonts/flat_icons/font/Flaticon.eot?#iefix") format("embedded-opentype"),
+       url("http://localhost/Back_Office_Market/webroot/assets/css/from_front/fonts/flat_icons/font/Flaticon.woff2") format("woff2"),
+       url("http://localhost/Back_Office_Market/webroot/assets/css/from_front/fonts/flat_icons/font/Flaticon.woff") format("woff"),
+       url("http://localhost/Back_Office_Market/webroot/assets/css/from_front/fonts/flat_icons/font/Flaticon.ttf") format("truetype"),
+       url("http://localhost/Back_Office_Market/webroot/assets/css/from_front/fonts/flat_icons/font/Flaticon.svg#Flaticon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "Flaticon";
+    src: url("http://localhost/Market/webroot/fonts/flat_icons/font/Flaticon.svg#Flaticon") format("svg");
+  }
+}
+
+[class^="flaticon-"]:before, [class*=" flaticon-"]:before,
+[class^="flaticon-"]:after, [class*=" flaticon-"]:after {   
+  font-family: Flaticon;
+        font-size: 20px;
+font-style: normal;
+margin-left: 12px;
+}
+
+.flaticon-vegetable:before { content: "\f100"; }
+.flaticon-rice:before { content: "\f101"; }
+.flaticon-fruit:before { content: "\f102"; }
+.flaticon-basket:before { content: "\f103"; }
+.flaticon-chicken:before { content: "\f104"; }
+.flaticon-oil:before { content: "\f105"; }
+.flaticon-fish:before { content: "\f106"; }
+.flaticon-potatoes:before { content: "\f107"; }
+.flaticon-rice-1:before { content: "\f108"; }
+.flaticon-seed-bag:before { content: "\f109"; }

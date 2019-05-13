@@ -1,0 +1,20 @@
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_URI} !^/Back_Office_Market/webroot/images/(.+)$
+RewriteCond %{REQUEST_URI} !^/Back_Office_Market/webroot/css/(.+)$
+RewriteCond %{REQUEST_URI} !^/Back_Office_Market/webroot/js/(.+)$
+RewriteRule (.*) index.php/$1 [L]
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^css/(.*)-[.0-9]+\.css$ css/$1.css [L]
+RewriteRule ^js/(.*)-[.0-9]+\.js$ js/$1.js [L]
+RewriteRule ^images/(.*)-[.0-9]+\.(.*)$ ./images/$1.$2 [L]
+
+
+
+
+ 
+
+

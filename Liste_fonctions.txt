@@ -1,0 +1,28 @@
+02. Connexion : OK
+	- Ajouter un spiner au click sur un bouton https://loading.io/button/ | https://www.w3schools.com/howto/howto_css_loading_buttons.asp : OK
+	- Desactiver button apres click (ajouter class bootstrap .disabled) : OK
+03. Deconnexion : OK
+
+17. Mot de passe oublié
+
+01. Piste d'audits 66
+
+
+
+04. Tableau de bord (total commandes,total commandes livrés, total commandes en attente, graphe commandes sur periode (mois en cours),
+total users, total users avec commandes, total avis, total produits, produits plus vendus, produits non commandés depuis plus de 10jr, produits stock épuisés (seuil) )7
+		URL to check if page is loaded : https://www.jstips.co/en/javascript/detect-document-ready-in-pure-js/ | https://stackoverflow.com/questions/978740/javascript-how-to-detect-if-document-has-loaded-ie-7-firefox-3
+
+
+05. Produits (Listes(+total achetés), stats, ajouter, modifier, supprimer, details)
+06. Commandes( Listes, stats, rejetter(-reprendre),supprimer(+mot de passe), actions sur status, details)
+07. Commune livraison(+actif/non actif)
+08. Stocks
+09. Fournisseurs
+16. Publicités
+10. Les avis
+11. Les mails
+12. Clients (stat, liste (avec nombre de commandes), actions sur status, supprimer, details)
+13. Gestiln Utilisateurs Back Office
+14. Extraction pour les listes
+15. Recherche multicriteres(-periodes, identifiant, statut, -nom prouduits, nom element, tel client, email client)

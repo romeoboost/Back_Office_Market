@@ -4,7 +4,8 @@
 
             <div class="col-sm-6 col-sm-offset-3">
                 <br/>
-                <span class="text-bold login-app-name"><?php echo APPLI_NAME; ?></span>
+                <span class="text-bold text-center login-app-name" style="color: #0aa89e;"><?php echo "BACK OFFICE"; ?></span>
+                <span class="text-bold text-center login-app-name"><?php echo APPLI_NAME; ?></span>
                 <br/><br/>
                 <div id="errorLoginForm" class="col-md-12 text-center"></div>
                 <form id="authentication-login-form" class="form floating-label" action="" accept-charset="utf-8" method="post">

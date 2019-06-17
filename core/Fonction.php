@@ -1,8 +1,84 @@
 <?php
 
-// $prix_produit = $produit->prix_quantite_unitaire - 
-// ($produit->prix_quantite_unitaire*$produit->pourcentage_promo/100);
+//renvoi la coloration que doit prendre la ligne
+function color_ligne_product($produit){
+  $class_color = '';
+  if ( intval($produit->stock) == 0 ) {
+    $class_color = ' danger ';
+    return $class_color ;
+  }
 
+  //non ctif
+  if ( intval($produit->produit_statut) == 0 ) {
+    $class_color = ' warning ';
+    return $class_color ;
+  }
+
+  //promo
+  if ( intval($produit->ispromo) == 1 ) {
+    $class_color = ' success ';
+    return $class_color ;
+  }
+
+  //return $produit->stock ;
+  return $class_color ;
+
+}
+
+//renvoi le libellé et le style pour un status
+function status_displayed( $status ){
+  $command_status_desc[0]['libele']='en attente';
+  $command_status_desc[0]['color']='info';
+
+  $command_status_desc[1]['libele']='livrée';
+  $command_status_desc[1]['color']='success';
+
+  $command_status_desc[2]['libele']='annulée';
+  $command_status_desc[2]['color']='danger';
+
+  $command_status_desc[3]['libele']='en livraison';
+  $command_status_desc[3]['color']='warning';
+
+  $command_status_desc[4]['libele']='rejetée';
+  $command_status_desc[4]['color']='default';
+
+  return $command_status_desc[$status];
+
+}
+
+//pour la pagination : dit si une page est active ou non
+function page_active($page_number, $number_page_running){
+  $active = "";
+  if( $page_number == $number_page_running ){
+    $active = "active ";
+  }
+
+  return $active;
+}
+
+//Dit si un onglet du menu est actif ou non
+function active_menu($menu_name)
+{
+  $active = "";
+  if( isset( $_SESSION['bo_menu'] ) && $_SESSION['bo_menu'] === $menu_name){
+    $active = "active ";
+  }
+
+  return $active;
+}
+
+//Dit si un onglet du menu est actif ou non
+function active_sub_menu($sub_menu_name)
+{
+  $active = "";
+  if( isset( $_SESSION['bo_sub_menu'] ) && $_SESSION['bo_sub_menu'] === $sub_menu_name){
+    $active = "active ";
+  }
+
+  return $active;
+}
+
+//determine le prix reel (en vente) du produit selon qui ait une promotion ou non ($pourcentage_promo = 0)
 function productPrice($prix_quantite_unitaire, $pourcentage_promo){
   return $prix_quantite_unitaire - ($prix_quantite_unitaire*$pourcentage_promo/100);
 }
@@ -19,17 +95,20 @@ function dateFormat($date){
 function debug($var){
     
    $debug = debug_backtrace();   
-   echo '<br/><p><a href="#" onclick="$(this).parent().next
-       (\'ol\').slideToggle(); return false;"><strong>'.$debug[0]['file'].
-           ' </strong></a>à la ligne : '.$debug[0]['line'].'</p>';
-   echo '<ol"> ';
+   echo '<br/><p><a href="#" onclick="$(this).parent().next.(\'ol\').slideToggle(); return false;">
+              <strong>'.$debug[0]['file'].
+           '  </strong></a>à la ligne : '.$debug[0]['line'].'</p>';
+   echo '<ol> ';
    foreach ($debug as $k => $v) {
-       echo '<li><strong>'.$v['file'].' '.$v['line'].'</li></strong>';
+      if( isset( $v['file'] ) || isset( $v['line'] ) ){
+        echo '<li><strong>'.$v['file'].' '.$v['line'].'</li></strong>';
+      }
    }
    echo '</ol>';
    echo '<pre>';
    print_r($var);
    echo '</pre>';
+   die();
 }
 function accentdel($var){
 		$var = str_replace(
@@ -117,109 +196,51 @@ function dateFormat_old($date){
     return implode('-', array_reverse(explode('-', $date)));
     //return $date; // 31-07-2012 
 }
-function rang($recup) {
-      $rang = array();
-      $r = 1;
-      $mprev = 0;
-      $rang[$recup[0]->id_eleve] = $r; 
-      $rprev = $rang [$recup[0]->id_eleve];
-      $mprev = $recup[0]->moy_eleve;
-      foreach ($recup as $k => $v){
-                if($k != 0){
-                    $r += 1;
-                    if($v->moy_eleve == $mprev){
-                       $rang [$v->id_eleve] = $rprev;
-                    }elseif($v->moy_eleve < $mprev){
-                      $rang [$v->id_eleve] = $r;  
-                    }
-                    $mprev = $v->moy_eleve;
-                    $rprev = $rang [$v->id_eleve];
-                }
-            }
-      return $rang;      
-}
 
-function annrecal($recup) {
-   $moy = array();
-   $moy_classe = 0;
-   foreach ($recup as $k){
-      $moy[$k->id_eleve] = $k->moy_eleve;
-    }
-    $moy_classe = array_sum($moy) / count($moy);
-    return $moy_classe;
-}
 
-function cycle($niveau){
-    $firstCycle = array('6ème','5ème','4ème','3ème');
-    if(in_array($niveau,$firstCycle)){
-       return true; 
-    }else{
-       return false; 
-    }
-    
-}
+
 
 function upload($file) {
-    $img = $file['name'];
-       $img_tmp = $file['tmp_name'];
-       $image = explode('.',$img);
-       $image_ext = end($image);
-       $error = '';
-       if(in_array(strtolower($image_ext),array('png','jpeg','jpg'))=== false){
-           $error = 'veuillez entrer une image valable';
-           return false;
+   $img = $file['name'];
+   $img_tmp = $file['tmp_name'];
+   $image = explode('.',$img);
+   $image_ext = end($image);
+   $error = '';
+   if( in_array( strtolower($image_ext),array('png','jpeg','jpg') ) === false ){
+       $error = 'veuillez entrer une image valable';
+       return false;
+   }else{
+       $image_size = getimagesize($img_tmp);
+       if($image_size['mime'] === 'image/png'){
+           $image_src = imagecreatefrompng($img_tmp);
+       }elseif($image_size['mime'] === 'image/jpeg'){
+           $image_src = imagecreatefromjpeg($img_tmp);
+       }elseif($image_size['mime'] === 'image/jpg'){
+           $image_src = imagecreatefromjpg($img_tmp);
        }else{
-           $image_size = getimagesize($img_tmp);
-           if($image_size['mime'] === 'image/png'){
-               $image_src = imagecreatefrompng($img_tmp);
-           }elseif($image_size['mime'] === 'image/jpeg'){
-               $image_src = imagecreatefromjpeg($img_tmp);
-           }elseif($image_size['mime'] === 'image/jpg'){
-               $image_src = imagecreatefromjpg($img_tmp);
-           }else{
-               $image_src = false;
-               $error =  'veuillez entrer une image valide';
-               return false;
-           }
-           if($image_src !== false){
-               $image_width = 100;
-               if($image_size[0] == $image_width){
-                   $image_finale = $image_src;
-               }else{
-                   $new_width = $image_width;
-                   $new_height = 100;
-                   $image_finale= imagecreatetruecolor($new_width,$new_height);
-                   imagecopyresampled($image_finale,$image_src,0,0,0,0,$new_width,$new_height,
-                           $image_size[0],$image_size[1]);
-               }
-               //imagejpeg($image_finale,'C:\wamp\www\mareussite\webroot\photo\1.jpg');
-               return $image_finale;
-           }
+           $image_src = false;
+           $error =  'veuillez entrer une image valide';
+           return false;
        }
+       if($image_src !== false){
+           $image_width = 100;
+           if($image_size[0] == $image_width){
+               $image_finale = $image_src;
+           }else{
+               $new_width = $image_width;
+               $new_height = 100;
+               $image_finale= imagecreatetruecolor($new_width,$new_height);
+               imagecopyresampled($image_finale,$image_src,0,0,0,0,$new_width,$new_height,
+                       $image_size[0],$image_size[1]);
+           }
+           //imagejpeg($image_finale,'C:\wamp\www\mareussite\webroot\photo\1.jpg');
+           return $image_finale;
+       }
+   }
+
 }
 
-function orderMatiere($matiere){ //$matiere = array(objects)
-    foreach ($matiere as $v) {
-            if($v->genre === 'Littérature'){
-               $d['keys'][$v->idm] = $v->idm; 
-               $d['values'][$v->idm] = $v->matiere;
-           }
-        }
-        foreach ($matiere as $v) {
-            if($v->genre === 'Sciences'){
-              $d['keys'][$v->idm] = $v->idm; 
-              $d['values'][$v->idm] = $v->matiere;  
-           }
-        }
-        foreach ($matiere as $v) {
-            if($v->genre === 'Autre'){
-               $d['keys'][$v->idm] = $v->idm; 
-               $d['values'][$v->idm] = $v->matiere; 
-           }
-        }
-        $matieres = array_combine($d['keys'], $d['values']);
-    return $matieres;
-}
+
 
 function comparer($a, $b) {
   return strcmp(strtoupper($a->nom), strtoupper($b->nom));
@@ -268,10 +289,6 @@ function getStatus($statut){
         return $statutPaiement[$statut];
 
     }
-
-
-
-
 
 
 

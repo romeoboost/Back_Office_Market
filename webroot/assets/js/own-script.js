@@ -1,24 +1,356 @@
 (function($) {
 
 	"use strict";
+    window.chartColors = {
+        red: 'rgb(255, 99, 132)',
+        orange: 'rgb(255, 159, 64)',
+        yellow: 'rgb(255, 205, 86)',
+        green: 'rgb(75, 192, 192)',
+        blue: 'rgb(54, 162, 235)',
+        purple: 'rgb(153, 102, 255)',
+        grey: 'rgb(201, 203, 207)'
+    };
 
     //$("#myModal").modal();
     var UrlToAddMember = $("#linkToAddMember").html();
     var UrlToLogin = $("#linkToLogin").html();
     var linkToHome = $("#linkToHome").html();
+    var linkToStatOrder = $("#linkToStatOrder").html();
+    var linkToStatCustomer = $("#linkToStatCustomer").html();
+    var linkToStatProducts = $("#linkToStatProducts").html();
+    var linkToSearchOrders = $("#linkToSearchOrders").html();
+    var linkToSetOrderDelivrery = $("#linkToSetOrderDelivrery").html();
+    var linkToGetLivreur = $("#linkToGetLivreur").html();
+    var linkToSetStopOrderDelivrery = $("#linkToSetStopOrderDelivrery").html();
+    var linkToRejectOrder = $("#linkToRejectOrder").html();
+    var linkToRestoreOrder = $("#linkToRestoreOrder").html();
+    var linkToDeleteOrder = $("#linkToDeleteOrder").html();
+    var linkToSearchProducts = $("#linkToSearchProducts").html();
+    var linkToAddProduct = $("#linkToAddProduct").html();
 
-    var UrlToEspacePerso = $("#linkToEspPerso").html();
-    var linkToProductList = $("#linkToProductList").html();
-    var linkToProductRelated = $("#linkToProductRelated").html();
-    var linkToAddToCart = $("#linkToAddToCart").html();
-    var linkToUpdateToCart = $("#linkToUpdateToCart").html();
-    var linkToDeleteToCart = $("#linkToDeleteToCart").html();
-    var linkToAddMessage = $("#linkToAddMessage").html();
-    var linkToShippingDest = $("#linkToShippingDest").html();
-    var linkToOrder = $("#linkToOrder").html();
-    var linkToUpdateInfosUser = $("#linkToUpdateInfosUser").html();
-    var linkToUpdatePassword = $("#linkToUpdatePassword").html();
-    var linkToCancelledOrder = $("#linkToCancelledOrder").html();
+
+
+    if( $('.with_date')[0] ){
+        //console.log('formDate');
+        $('#StartDate').datetimepicker({
+            locale: 'fr',
+            format: 'DD-MM-YYYY'
+        });
+        // $('#StartDateInput').datetimepicker({
+        //     locale: 'fr',
+        //     format: 'DD-MM-YYYY'
+        // });
+
+        $('#StartHour').datetimepicker({
+            locale: 'fr',
+            format: 'hh:mm:ss'
+        });
+        // $('#StartHourInput').datetimepicker({
+        //     locale: 'fr',
+        //     format: 'hh:mm:ss'
+        // });
+
+        $('#EndDate').datetimepicker({
+            locale: 'fr',
+            format: 'DD-MM-YYYY'
+        });
+        // $('#EndDateInput').datetimepicker({
+        //     locale: 'fr',
+        //     format: 'DD-MM-YYYY'
+        // });
+
+        $('#EndHour').datetimepicker({
+            locale: 'fr',
+            format: 'hh:mm:ss'
+        });
+        // $('#EndHourInput').datetimepicker({
+        //     locale: 'fr',
+        //     format: 'hh:mm:ss'
+        // });
+    }
+    // else{
+    //     console.log('NO formDate');
+    // }    
+
+    
+
+    //statProductsDashboard();
+
+    var wrapStat = document.getElementById('stat-container');
+
+    if(wrapStat==null || wrapStat===false){
+    }else{
+        
+        //Verifie la page a completement été chargée
+        let stateCheck = setInterval(() => {
+          if (document.readyState === 'complete') {
+            clearInterval(stateCheck);
+            //console.log('The page is document ready');// document ready
+            orderCharts();
+            //customerCharts();
+          }
+        }, 600);
+
+        let stateCheck_two = setInterval(() => {
+          if (document.readyState === 'complete') {
+            clearInterval(stateCheck_two);
+            customerCharts();
+          }
+        }, 900);
+
+        let stateCheck_three = setInterval(() => {
+          if (document.readyState === 'complete') {
+            clearInterval(stateCheck_three);
+            statProductsDashboard();
+          }
+        }, 1000);
+
+    }
+    
+    // /*** PRODUCT HANDLING ***/ //
+    //form recherche commandes
+    $('.product_add_form').on('submit', function (e) {
+        e.preventDefault();
+        var form = $('.product_add_form')[0]; // You need to use standard javascript object here
+        var formData = new FormData(form);
+        
+
+        // var formdata = new FormData( this );
+        console.log( formData );
+        $("#add_product_btn").addClass('disabled');
+        $("#add_product_btn").addClass('running');
+
+        add_product( formData );
+
+        return false;
+
+    });
+    function add_product(add_data){
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: linkToAddProduct,
+            data: add_data,
+            contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
+            processData: false, // NEEDED, DON'T OMIT THIS
+            success: function (data, textStatus, jqXHR) {
+               if( $("#add_product_btn").hasClass('disabled') ){
+                        $("#add_product_btn").removeClass('disabled');
+                        $("#add_product_btn").removeClass('running');
+                }
+                $('.product_add_form')[0].reset();
+                console.log(data);
+                Swal({
+                  title: data.error_text,
+                  text: data.error_text_second,
+                  type: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#0aa89e',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'OK'
+                }).then((result) => {
+                  if (result.value) {
+                    window.location.replace(data.linkToProductList);
+                  }
+                });
+
+            },
+            error: function(jqXHR) {
+              console.log(jqXHR.responseText);
+              if( $("#add_product_btn").hasClass('disabled') ){
+                    $("#add_product_btn").removeClass('disabled');
+                    $("#add_product_btn").removeClass('running');
+               }  
+              
+              // $('#errorForm').prepend(jqXHR.responseJSON['error_html']);
+            }
+        });
+    }
+
+    //form recherche commandes
+    $('.product_search_form').on('submit', function (e) {
+        e.preventDefault();
+        console.log( $(this).serialize() );
+        $("#cmd_search_form_btn").addClass('disabled');
+        $("#cmd_search_form_btn").addClass('running');
+                
+        search_product( $(this).serialize() );
+
+        
+        var start_date = $(".product_search_form :input[name='start_date']").val();
+        var start_hour = $(".product_search_form :input[name='start_hour']").val();
+        var end_date = $(".product_search_form :input[name='end_date']").val();
+        var end_hour = $(".product_search_form :input[name='end_hour']").val();
+        var name_product = $(".product_search_form :input[name='name_product']").val();
+        var category_product = $(".product_search_form :input[name='category_product']").val();
+        var stock_product = $(".product_search_form :input[name='stock_product']").val();
+        var unit_mesure = $(".product_search_form :input[name='unit_mesure']").val();
+        var status_product = $(".product_search_form :input[name='status_product']").val();
+        var promo_product = $(".product_search_form :input[name='promo_product']").val();
+        var amount_product = $(".product_search_form :input[name='amount_product']").val();
+        var number_page_running = $(".product_search_form :input[name='number_page_running']").val();
+
+        $('#product-list').attr('filter-data-startDate', start_date);
+        $('#product-list').attr('filter-data-startHour', start_hour);
+        $('#product-list').attr('filter-data-endDate', end_date);
+        $('#product-list').attr('filter-data-endHour', end_hour);
+        $('#product-list').attr('filter-data-nameProduct', name_product);
+        $('#product-list').attr('filter-data-categoryProduct', category_product);
+        $('#product-list').attr('filter-data-stockProduct', stock_product);
+        $('#product-list').attr('filter-data-unitMesure', unit_mesure);
+        $('#product-list').attr('filter-data-statusProduct', status_product);
+        $('#product-list').attr('filter-data-promoProduct', promo_product);
+        $('#product-list').attr('filter-data-amountProduct', amount_product);
+        $('#product-list').attr('filter-data-pageRunning', number_page_running);
+        console.log( status_product );
+
+        return false;
+
+    });
+
+    //console.log($('.pagination a .page-numbers'));
+    $('#list-product-pagination').on('click', '.page-link', function (e) {
+        e.preventDefault();
+        var numero = $(this).attr('href');
+        // console.log(numero);
+
+        var start_date = $('#product-list').attr('filter-data-startDate');
+        var start_hour = $('#product-list').attr('filter-data-startHour');
+        var end_date = $('#product-list').attr('filter-data-endDate');
+        var end_hour = $('#product-list').attr('filter-data-endHour');
+        var name_product = $('#product-list').attr('filter-data-nameProduct');
+        var category_product = $('#product-list').attr('filter-data-categoryProduct');
+        var stock_product = $('#product-list').attr('filter-data-stockProduct');
+       var unit_mesure = $('#product-list').attr('filter-data-unitMesure');
+       var status_product = $('#product-list').attr('filter-data-statusProduct');
+        var promo_product = $('#product-list').attr('filter-data-promoProduct');
+       var amount_product = $('#product-list').attr('filter-data-amountProduct');
+        var number_page_running = $('#product-list').attr('filter-data-pageRunning');
+        var pagination = true;        
+
+        var dataFilter = {start_date:start_date,start_hour:start_hour,end_date:end_date,end_hour:end_hour,pagination:pagination,
+            name_product:name_product,category_product:category_product,stock_product:stock_product,unit_mesure:unit_mesure,
+            status_product:status_product,promo_product:promo_product,amount_product:amount_product,number_page_running:numero,pagination:pagination,status:status};
+        
+        if( !isNaN( parseInt(numero) ) ){
+            // console.log(dataFilter);
+            search_product(dataFilter);      
+        }
+        //$(".cmd_search_form :input[name='number_page_running']").val(numero);
+        $('#order-list').attr('filter-data-pageRunning', numero);
+        return false;
+    });
+    
+    function search_product(filter_data){
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: linkToSearchProducts,
+            data: filter_data,
+            success: function (data, textStatus, jqXHR) {
+               
+               $(' #product-list tbody ').html( data.result.html_list_cmd );
+               $(' #list-product-pagination ').html( data.result.html_pagination ); 
+               // console.log(data);
+               if(!filter_data.pagination){
+                    
+                    if( $("#cmd_search_form_btn").hasClass('disabled') ){
+                        $("#cmd_search_form_btn").removeClass('disabled');
+                        $("#cmd_search_form_btn").removeClass('running');
+                    }
+                    $('.total_produit').hide().html( data.result.stat.total ).fadeIn(1000);
+                    $('.total_produit_stock_off').hide().html( data.result.stat.produits_stock_off ).fadeIn(1000);
+                    $('.total_never_cmd').hide().html( data.result.stat.produits_non_cmd ).fadeIn(1000);
+                    $('.total_non_actif').hide().html( data.result.stat.produits_non_actif ).fadeIn(1000);
+               } 
+               
+               $('#extract-excel-btn').attr('href', data.result.link_for_extract);
+
+            },
+            error: function(jqXHR) {
+              console.log(jqXHR.responseText);
+              if( $("#cmd_search_form_btn").hasClass('disabled') ){
+                    $("#cmd_search_form_btn").removeClass('disabled');
+                    $("#cmd_search_form_btn").removeClass('running');
+               }  
+              
+              $('#errorForm').prepend(jqXHR.responseJSON['error_html']);
+            }
+        });
+    }
+
+    
+    // /*** FINISH PRODUCT HANDLING ***/ //
+
+
+
+    //form recherche commandes
+    $('.cmd_search_form').on('submit', function (e) {
+        e.preventDefault();
+        console.log( $(this) );
+        $("#cmd_search_form_btn").addClass('disabled');
+        $("#cmd_search_form_btn").addClass('running');
+                
+        search_orders( $(this).serialize() );
+
+        // $('#list_produits').attr('product-data-display','true');
+        // var productDataOrder= $('#list_produits').attr('product-data-order'); // ordonnancement du plus... au moins...
+        var start_date = $(".cmd_search_form :input[name='start_date']").val();
+        var start_hour = $(".cmd_search_form :input[name='start_hour']").val();
+        var end_date = $(".cmd_search_form :input[name='end_date']").val();
+        var end_hour = $(".cmd_search_form :input[name='end_hour']").val();
+        var tel_user = $(".cmd_search_form :input[name='tel_user']").val();
+        var client_id = $(".cmd_search_form :input[name='client_id']").val();
+        var cmd_amount = $(".cmd_search_form :input[name='cmd_amount']").val();
+        var cmd_id = $(".cmd_search_form :input[name='cmd_id']").val();
+        var status = $(".cmd_search_form :input[name='status']").val();
+        var number_page_running = $(".cmd_search_form :input[name='number_page_running']").val();
+
+        $('#order-list').attr('filter-data-startDate', start_date);
+        $('#order-list').attr('filter-data-startHour', start_hour);
+        $('#order-list').attr('filter-data-endDate', end_date);
+        $('#order-list').attr('filter-data-endHour', end_hour);
+        $('#order-list').attr('filter-data-telUser', tel_user);
+        $('#order-list').attr('filter-data-clientId', client_id);
+        $('#order-list').attr('filter-data-cmdAmount', cmd_amount);
+        $('#order-list').attr('filter-data-cmdId', cmd_id);
+        $('#order-list').attr('filter-data-status', status);
+        $('#order-list').attr('filter-data-pageRunning', number_page_running);
+        console.log( start_date );
+
+        return false;
+
+    });
+
+    //console.log($('.pagination a .page-numbers'));
+    $('#list-cmd-pagination').on('click', '.page-link', function (e) {
+        e.preventDefault();
+        var numero = $(this).attr('href');
+        console.log(numero);
+
+        var start_date = $('#order-list').attr('filter-data-startDate');
+        var start_hour = $('#order-list').attr('filter-data-startHour');
+        var end_date = $('#order-list').attr('filter-data-endDate');
+        var end_hour = $('#order-list').attr('filter-data-endHour');
+        var tel_user = $('#order-list').attr('filter-data-telUser');
+        var client_id = $('#order-list').attr('filter-data-clientId');
+        var cmd_amount = $('#order-list').attr('filter-data-cmdAmount');
+        var cmd_id = $('#order-list').attr('filter-data-cmdId');
+        var status = $('#order-list').attr('filter-data-status');
+        var pagination = true;        
+
+        var dataFilter = {start_date:start_date,start_hour:start_hour,end_date:end_date,end_hour:end_hour,tel_user:tel_user,client_id:client_id,cmd_amount:cmd_amount,cmd_id:cmd_id,number_page_running:numero,pagination:pagination,status:status};
+        
+        if( !isNaN( parseInt(numero) ) ){
+            // console.log(dataFilter);
+            search_orders(dataFilter);
+            
+        }
+        //$(".cmd_search_form :input[name='number_page_running']").val(numero);
+        $('#order-list').attr('filter-data-pageRunning', numero);
+        return false;
+    });
+    
 
    
     /*reajustement du margin du formulaire apres avoir fermé le message d'erreur*/
@@ -60,12 +392,736 @@
         return false;
     });
 
+    //AFFICHER MODAL POUR ARRETER LIVRAISON
+    $('#order-list tbody ').on('click','.set-stop-shipping-btn',function(){
+        
+        var cmd_id = $(this).attr('cmd-id');
+        // console.log( cmd_id );
+        var montant_ht = $('#order-list tbody .'+cmd_id+' .montant_ht').html();
+        var frais_livraison = $('#order-list tbody .'+cmd_id+' .frais_livraison').html();
+        var montant_ttc = $('#order-list tbody .'+cmd_id+' .montant_ttc').html();
 
-//Affichage produits
-// var productDataFound = $('#list_produits').attr('product-data-found'); // nombre darticles affiché
-// var productDataTotal = $('#list_produits').attr('product-data-total'); // nombre article affichés
+        $("#form-set-stop-shipping :input[name='cmd_montant_ht']").val(montant_ht);
+        $("#form-set-stop-shipping :input[name='cmd_frais_livraison']").val(frais_livraison);
+        $("#form-set-stop-shipping :input[name='cmd_montant_ttc']").val(montant_ttc);
+        $("#form-set-stop-shipping :input[name='cmd_id']").val(cmd_id);
 
-//var productDataTotal = $('#list_produits').attr('product-data-total');
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: linkToGetLivreur,
+            data: {cmd_id:cmd_id},
+            success: function (data, textStatus, jqXHR) {
+               // console.log(data);
+               $("#form-set-stop-shipping :input[name='livreur_displayed']").val(data.nom_livreur);
+               $("#form-set-stop-shipping :input[name='livreur']").val(data.id_livreur);
+               $('#modal-set-stop-shipping').modal('show');
+            },
+            error: function(jqXHR) {
+              // console.log(jqXHR.responseText);
+              //$('.contact-form .error-text').html(jqXHR.responseJSON.error_html);
+            }
+        });        
+    });
+
+    //Validation du formulaire pour l'arret de la livraison
+    $('#form-set-stop-shipping').on('submit',function(e){
+        e.preventDefault();
+        $("#modal-set-stop-shipping-confirm-btn").addClass('disabled');
+        $("#modal-set-stop-shipping-confirm-btn").addClass('running');
+        var set_stop_shipping_data = $(this).serialize();
+        console.log( set_stop_shipping_data );
+        set_stop_order_delivrery(set_stop_shipping_data);
+    });
+
+    //AFFICHER MODAL POUR METTRE LA COMMANDE AU STATUT "LIVREE"
+    $('#order-list tbody ').on('click','.set-shipping-btn',function(){
+        
+        var cmd_id = $(this).attr('cmd-id');
+        console.log( cmd_id );
+        var montant_ht = $('#order-list tbody .'+cmd_id+' .montant_ht').html();
+        var frais_livraison = $('#order-list tbody .'+cmd_id+' .frais_livraison').html();
+        var montant_ttc = $('#order-list tbody .'+cmd_id+' .montant_ttc').html();
+
+        $("#form-set-shipping :input[name='cmd_montant_ht']").val(montant_ht);
+        $("#form-set-shipping :input[name='cmd_frais_livraison']").val(frais_livraison);
+        $("#form-set-shipping :input[name='cmd_montant_ttc']").val(montant_ttc);
+        $("#form-set-shipping :input[name='cmd_id']").val(cmd_id);
+
+        $('#modal-set-shipping').modal('show');
+    });
+
+    //validation du formulaire de paramétrage de la commande à "livrer" et attribution de livreur
+    $('#form-set-shipping').on('submit',function(e){
+        e.preventDefault();
+        $("#modal-set-shipping-confirm-btn").addClass('disabled');
+        $("#modal-set-shipping-confirm-btn").addClass('running');
+        var set_shipping_data = $(this).serialize();
+        console.log( set_shipping_data );
+        set_order_delivrery(set_shipping_data);
+    });
+
+    //
+    //Cliquer sur le bouton pour rejetter une commande
+    $('#order-list tbody').on('click', '.set-rejected-btn', function(e){ // 
+        e.preventDefault();
+        var self = $(this);
+        //console.log(self);
+        var cmd_id = $(this).attr('cmd-id');
+
+        console.log( cmd_id );
+        var montant_ht = $('#order-list tbody .'+cmd_id+' .montant_ht').html();
+        var frais_livraison = $('#order-list tbody .'+cmd_id+' .frais_livraison').html();
+        var montant_ttc = $('#order-list tbody .'+cmd_id+' .montant_ttc').html();
+
+        $("#form-reject-order :input[name='cmd_montant_ht']").val(montant_ht);
+        $("#form-reject-order :input[name='cmd_frais_livraison']").val(frais_livraison);
+        $("#form-reject-order :input[name='cmd_montant_ttc']").val(montant_ttc);
+        $("#form-reject-order :input[name='cmd_id']").val(cmd_id);
+
+        $('#modal-reject-order').modal('show');
+        
+        //  Swal({
+        //   title: 'Êtes vous sure ?',
+        //   text: 'Vous vous apprêter à rejeter la commande '+cmd_id,
+        //   type: 'warning',
+        //   showCancelButton: true,
+        //   confirmButtonColor: '#0aa89e',
+        //   cancelButtonColor: '#d33',
+        //   confirmButtonText: 'OK',
+        //   cancelButtonText: 'Annuler'
+        // }).then((result) => {
+        //   if (result.value) {
+        //     //console.log(self);
+        //     reject_order(cmd_id, self);
+            
+        //   }
+        // });
+        
+        return false;
+    });
+
+    //validation du formulaire de rejet de la commande
+    $('#form-reject-order').on('submit',function(e){
+        e.preventDefault();
+        $("#modal-reject-order-confirm-btn").addClass('disabled');
+        $("#modal-reject-order-confirm-btn").addClass('running');
+        var reject_order_data = $(this).serialize();
+        // console.log( reject_order_data );
+        reject_order(reject_order_data);
+    });
+
+    /*********** METTRE UN FORMULAIRE POUR LE REJET AFIN D'ECRIRE LE MOTIF DU REJET ***********/
+
+    //Cliquer sur le bouton pour restaurer une commande
+    $('#order-list tbody').on('click', '.set-restore-btn', function(e){ // 
+        e.preventDefault();
+        var self = $(this);
+        //console.log(self);
+        var cmd_id = $(this).attr('cmd-id');
+
+         Swal({
+          title: 'Êtes vous sure ?',
+          text: 'Vous vous apprêter à restaurer la commande '+cmd_id,
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#0aa89e',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Annuler'
+        }).then((result) => {
+          if (result.value) {
+            //console.log(self);
+            restore_order(cmd_id, self);            
+          }
+        });        
+        return false;
+    });
+
+
+    //AFFICHER MODAL POUR SUPPRIMER COMMANDES
+    $('#order-list tbody ').on('click','.delete-order-btn',function(){
+        
+        var cmd_id = $(this).attr('cmd-id');
+        console.log( cmd_id );
+        var montant_ht = $('#order-list tbody .'+cmd_id+' .montant_ht').html();
+        var frais_livraison = $('#order-list tbody .'+cmd_id+' .frais_livraison').html();
+        var montant_ttc = $('#order-list tbody .'+cmd_id+' .montant_ttc').html();
+
+        $("#form-delete-order :input[name='cmd_montant_ht']").val(montant_ht);
+        $("#form-delete-order :input[name='cmd_frais_livraison']").val(frais_livraison);
+        $("#form-delete-order :input[name='cmd_montant_ttc']").val(montant_ttc);
+        $("#form-delete-order :input[name='cmd_id']").val(cmd_id);
+
+        $('#modal-delete-order').modal('show');
+              
+    });
+
+    //validation du formulaire de paramétrage de la commande à "livrer" et attribution de livreur
+    $('#form-delete-order').on('submit',function(e){
+        e.preventDefault();
+        $("#modal-delete-order-confirm-btn").addClass('disabled');
+        $("#modal-delete-order-confirm-btn").addClass('running');
+        var delete_order_data = $(this).serialize();
+        //console.log( delete_order_data );
+        delete_order(delete_order_data);
+    });
+
+    /*Function rejet de commande*/
+    function delete_order(delete_order_data){
+        console.log(delete_order_data);       
+        
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: linkToDeleteOrder,
+            data: delete_order_data,
+            success: function (data, textStatus, jqXHR) {
+               console.log(data);
+
+               //Arrete le spinner du boutnon de validation du formulaire
+                    $("#modal-delete-order-confirm-btn").removeClass('disabled');
+                    $("#modal-delete-order-confirm-btn").removeClass('running');
+                               
+                // //supprimer la ligne de commande
+                // $("#order-list tbody ."+data.cmd_id+" .set-shipping-btn").remove();
+                var password = '';
+                $("#form-delete-order :input[name='password']").val(password);
+                $('#modal-delete-order').modal('hide');
+
+               Swal({
+                  title: data.error_text,
+                  text: data.error_text_second,
+                  type: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#0aa89e',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'OK'
+                }).then((result) => {
+                  if (result.value) {
+                    //supprimer la ligne de commande
+                    $("#order-list tbody ."+data.cmd_id).fadeOut(700);
+                  }
+                });
+            },
+            error: function(jqXHR) {
+              console.log(jqXHR.responseText);
+              $("#modal-delete-order-confirm-btn").removeClass('disabled');
+              $("#modal-delete-order-confirm-btn").removeClass('running');
+              //$('.contact-form .error-text').html(jqXHR.responseJSON.error_html);
+              if(jqXHR.responseJSON.error === 'oui'){
+                    //$('#confirm-order-modal').hide();
+                    Swal({
+                      type: 'error',
+                      title: jqXHR.responseJSON.error_text,
+                      text: jqXHR.responseJSON.error_text_second
+                    });
+                    //return html_status_initial;
+              }
+
+            }
+        });
+
+    }
+
+
+    /*Function rejet de commande*/
+    function restore_order(cmd_id, self){
+        // console.log(cmd_id);       
+        
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: linkToRestoreOrder,
+            data: {cmd_id:cmd_id},
+            success: function (data, textStatus, jqXHR) {
+               // console.log(data);
+                //mettre a jour l'intitulé du statut de la commande
+               $('#order-list tbody .'+data.cmd_id+' .cmd-status').html('EN ATTENTE');           
+
+               // mettre a jour la couleur du statut (style)
+               if( $("#order-list tbody ."+data.cmd_id+" .cmd-status").hasClass('style-default') ){
+                    $("#order-list tbody ."+data.cmd_id+" .cmd-status").removeClass('style-default') 
+                    $("#order-list tbody ."+data.cmd_id+" .cmd-status").addClass('style-info')
+                }
+
+               //  //mettre a jour les bouton d'actions
+                    
+                    //remplacer bouton "arreter livraison" par "rejeter"
+                    $("#order-list tbody ."+data.cmd_id+" .set-restore-btn").attr('data-original-title', 'Rejetter la commande');
+                    $("#order-list tbody ."+data.cmd_id+" .set-restore-btn").html('<i class="fa fa-times-circle-o"></i>');
+                    //Ajouter class pour laction du bouton
+                    $("#order-list tbody ."+data.cmd_id+" .set-restore-btn").addClass('set-rejected-btn');
+                    $("#order-list tbody ."+data.cmd_id+" .set-restore-btn").removeClass('set-restore-btn');
+
+                    //Ajouter bouton liver
+                    $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").before( data.btn_rejected_html );
+
+               Swal({
+                  title: data.error_text,
+                  text: data.error_text_second,
+                  type: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#0aa89e',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'OK'
+                }).then((result) => {
+                  if (result.value) {
+                    $("#order-list tbody ."+data.cmd_id).fadeOut(250).fadeIn(250).fadeOut(250).fadeIn(250);
+                  }
+                });
+            },
+            error: function(jqXHR) {
+              console.log(jqXHR.responseText);
+              //$('.contact-form .error-text').html(jqXHR.responseJSON.error_html);
+              if(jqXHR.responseJSON.error === 'oui'){
+                    //$('#confirm-order-modal').hide();
+                    Swal({
+                      type: 'error',
+                      title: jqXHR.responseJSON.error_text,
+                      text: jqXHR.responseJSON.error_text_second
+                    });
+                    //return html_status_initial;
+              }
+
+            }
+        });
+
+    }
+
+    /*Function rejet de commande*/
+    function reject_order( reject_order_data ){
+        // console.log(reject_order_data);       
+        
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: linkToRejectOrder,
+            data: reject_order_data,
+            success: function (data, textStatus, jqXHR) {
+               // console.log(data);
+                //mettre a jour l'intitulé du statut de la commande
+               $('#order-list tbody .'+data.cmd_id+' .cmd-status').html('REJETÉE');           
+
+               // mettre a jour la couleur du statut (style)
+               if( $("#order-list tbody ."+data.cmd_id+" .cmd-status").hasClass('style-info') ){
+                    $("#order-list tbody ."+data.cmd_id+" .cmd-status").removeClass('style-info') 
+                    $("#order-list tbody ."+data.cmd_id+" .cmd-status").addClass('style-default')
+                }
+
+                //mettre a jour les bouton d'actions
+                    //supprimer bouton liver
+                    $("#order-list tbody ."+data.cmd_id+" .set-shipping-btn").remove();
+
+                    //remplacer bouton "rejeter" par "restauration de commande"
+                    $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").attr('data-original-title', 'Restaurer la commande');
+                    $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").html('<i class="md md-settings-backup-restore"></i>');
+                    //palce la classe permetant de selectionner l'action d'arreter une livraison
+                    $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").addClass('set-restore-btn');
+                    $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").removeClass('set-rejected-btn');
+
+                    var rejected_message = '';
+                    $("#form-reject-order :input[name='rejected_message']").val(rejected_message);
+                    //Arrete le spinner du boutnon de validation du formulaire
+                    $("#modal-reject-confirm-btn").removeClass('disabled');
+                    $("#modal-reject-confirm-btn").removeClass('running');
+                    //cacher la fenetre modal du formulaire du rejet
+                    $('#modal-reject-order').modal('hide');
+
+               Swal({
+                  title: data.error_text,
+                  text: data.error_text_second,
+                  type: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#0aa89e',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'OK'
+                }).then((result) => {
+                  if (result.value) {
+                    $("#order-list tbody ."+data.cmd_id).fadeOut(250).fadeIn(250).fadeOut(250).fadeIn(250);
+                    // console.log(self);
+                    // self.parent().siblings("td.command-status").html( data.error_html );
+                    // self.hide();
+                  }
+                });
+            },
+            error: function(jqXHR) {
+                console.log(jqXHR.responseText);
+                var rejected_message = '';
+                $("#form-reject-order :input[name='rejected_message']").val(rejected_message);
+                //Arrete le spinner du boutnon de validation du formulaire
+                $("#modal-reject-confirm-btn").removeClass('disabled');
+                $("#modal-reject-confirm-btn").removeClass('running');
+                //cacher la fenetre modal du formulaire du rejet
+                $('#modal-delete-order').modal('show');
+              //$('.contact-form .error-text').html(jqXHR.responseJSON.error_html);
+                if(jqXHR.responseJSON.error === 'oui'){
+                    //$('#confirm-order-modal').hide();
+                    Swal({
+                      type: 'error',
+                      title: jqXHR.responseJSON.error_text,
+                      text: jqXHR.responseJSON.error_text_second
+                    });
+                    //return html_status_initial;
+                }
+
+            }
+        });
+
+    }
+
+    //Function ajax pour paramétrage de la commande à "livrer" et attribution de livreur
+    function set_order_delivrery(set_shipping_data){
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: linkToSetOrderDelivrery,
+            data: set_shipping_data,
+            success: function (data, textStatus, jqXHR) {
+               $('#modal-set-shipping').modal('hide'); 
+               // console.log(data);
+
+               //mettre a jour l'intitulé du statut de la commande
+               $('#order-list tbody .'+data.cmd_id+' .cmd-status').html('EN LIVRAISON');           
+
+               // mettre a jour la couleur du statut (style)
+               if( $("#order-list tbody ."+data.cmd_id+" .cmd-status").hasClass('style-info') ){
+                    $("#order-list tbody ."+data.cmd_id+" .cmd-status").removeClass('style-info') 
+                    $("#order-list tbody ."+data.cmd_id+" .cmd-status").addClass('style-warning')
+                }
+
+                //mettre a jour les bouton d'actions
+                    //supprimer bouton liver
+                    $("#order-list tbody ."+data.cmd_id+" .set-shipping-btn").remove();
+
+                    //remplacer bouton "rejeter" par "arreter livraison"
+                    $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").attr('data-original-title', 'Arrêter la livraison');
+                    $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").html('<i class="fa fa-pause"></i>');
+                    //palce la classe permetant de selectionner l'action d'arreter une livraison
+                    $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").addClass('set-stop-shipping-btn');
+                    $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").removeClass('set-rejected-btn');
+                    // $('#order-list ').attr('filter-data-status', status);
+
+                    //Arrete le spinner du boutnon de validation du formulaire
+                    $("#modal-set-shipping-confirm-btn").removeClass('disabled');
+                    $("#modal-set-shipping-confirm-btn").removeClass('running');
+
+               //afficher la notification de succès
+               Swal({
+                  title: data.error_text,
+                  text: data.error_text_second,
+                  type: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#0aa89e',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'OK'
+                }).then((result) => {
+                  if (result.value) {
+                    $("#order-list tbody ."+data.cmd_id).fadeOut(250).fadeIn(150).fadeOut(250).fadeIn(150).fadeOut(250).fadeIn(150);                
+                  }
+                });
+               
+            },
+            error: function(jqXHR) {
+                $("#modal-set-shipping-confirm-btn").removeClass('disabled');
+                $("#modal-set-shipping-confirm-btn").removeClass('running');  
+                console.log(jqXHR.responseText);
+                Swal({
+                      type: 'error',
+                      title: jqXHR.responseJSON.error_text,
+                      text: jqXHR.responseJSON.error_text_second
+                    });          
+            }
+        });
+    }
+
+    //Function ajax pour paramétrage de la commande à "livrer" et attribution de livreur
+    function set_stop_order_delivrery(set_stop_shipping_data){
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: linkToSetStopOrderDelivrery,
+            data: set_stop_shipping_data,
+            success: function (data, textStatus, jqXHR) {
+               $('#modal-set-stop-shipping').modal('hide'); 
+               console.log(data);
+
+               //mettre a jour l'intitulé du statut de la commande
+               $('#order-list tbody .'+data.cmd_id+' .cmd-status').html('EN ATTENTE');           
+
+               // // mettre a jour la couleur du statut (style)
+               if( $("#order-list tbody ."+data.cmd_id+" .cmd-status").hasClass('style-warning') ){
+                    $("#order-list tbody ."+data.cmd_id+" .cmd-status").removeClass('style-warning') 
+                    $("#order-list tbody ."+data.cmd_id+" .cmd-status").addClass('style-info')
+                }
+
+               //  //mettre a jour les bouton d'actions
+                    
+                    //remplacer bouton "arreter livraison" par "rejeter"
+                    $("#order-list tbody ."+data.cmd_id+" .set-stop-shipping-btn").attr('data-original-title', 'Rejetter la commande');
+                    $("#order-list tbody ."+data.cmd_id+" .set-stop-shipping-btn").html('<i class="fa fa-times-circle-o"></i>');
+
+                    //Ajouter class pour laction du bouton
+                    $("#order-list tbody ."+data.cmd_id+" .set-stop-shipping-btn").addClass('set-rejected-btn');
+                    $("#order-list tbody ."+data.cmd_id+" .set-stop-shipping-btn").removeClass('set-stop-shipping-btn');
+
+               //Ajouter bouton liver
+                    $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").before( data.btn_rejected_html );
+
+               //      // $('#order-list ').attr('filter-data-status', status);
+                    $("#modal-set-stop-shipping-confirm-btn").removeClass('disabled');
+                    $("#modal-set-stop-shipping-confirm-btn").removeClass('running');
+
+               //afficher la notification de succès
+               Swal({
+                  title: data.error_text,
+                  text: data.error_text_second,
+                  type: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#0aa89e',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'OK'
+                }).then((result) => {
+                  if (result.value) {
+                    $("#order-list tbody ."+data.cmd_id).fadeOut(250).fadeIn(250).fadeOut(250).fadeIn(250);                
+                  }
+                });
+               
+            },
+            error: function(jqXHR) {
+                $("#modal-set-stop-shipping-confirm-btn").removeClass('disabled');
+                $("#modal-set-stop-shipping-confirm-btn").removeClass('running');  
+                console.log(jqXHR.responseText);
+                Swal({
+                      type: 'error',
+                      title: jqXHR.responseJSON.error_text,
+                      text: jqXHR.responseJSON.error_text_second
+                    });          
+            }
+        });
+    }
+
+    
+    /*GRAPHE DES COMMANDES TABLEAU DE BORD*/
+    function orderCharts(){
+        var period = 'month';
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: linkToStatOrder,
+            data: {period:period},
+            success: function (dataAjax, textStatus, jqXHR) {
+               // console.log(dataAjax);
+               /*config for number chart*/
+               var config = {
+                        type: 'line',
+                        data: {
+                            labels: dataAjax.result.days_list_formated,
+                            datasets: [{
+                                label: 'Nombre de commandes',
+                                backgroundColor: window.chartColors.red,
+                                borderColor: window.chartColors.red,
+                                data: dataAjax.result.count_list,
+                                fill: false,
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            title: {
+                                display: false,
+                                text: 'Nombre de commandes sur les 7 derniers jours'
+                            },
+                            tooltips: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                            hover: {
+                                mode: 'nearest',
+                                intersect: true
+                            },
+                            scales: {
+                                xAxes: [{
+                                    display: true,
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'Jours'
+                                    }
+                                }],
+                                yAxes: [{
+                                    display: true,
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'Nombre'
+                                    }
+                                }]
+                            }
+                        }
+                    };
+               //display charts for number
+               var ctx = document.getElementById('canvasNumber').getContext('2d');
+                window.myLine = new Chart(ctx, config);
+
+                /*config for amount chart*/
+                var config_two = {
+                        type: 'bar',
+                        data: {
+                            labels: dataAjax.result.days_list_formated,
+                            datasets: [{
+                                label: 'Montant de commandes',
+                                backgroundColor: window.chartColors.green,
+                                borderColor: window.chartColors.green,
+                                data: dataAjax.result.amount_list,
+                                fill: false,
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            title: {
+                                display: false,
+                                text: 'Nombre de commandes sur les 7 derniers jours'
+                            },
+                            tooltips: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                            hover: {
+                                mode: 'nearest',
+                                intersect: true
+                            },
+                            scales: {
+                                xAxes: [{
+                                    display: true,
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'Jours'
+                                    }
+                                }],
+                                yAxes: [{
+                                    display: true,
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'Montant'
+                                    }
+                                }]
+                            }
+                        }
+                    };
+
+                //display charts for number
+                var ctx_two = document.getElementById('canvasAmount').getContext('2d');
+                window.myLineTwo = new Chart(ctx_two, config_two);
+
+
+                // console.log(config_two);
+                // console.log(config);
+            },
+            error: function(jqXHR) {
+              // console.log(jqXHR);
+                            
+              //console.log(data);
+            }
+        });
+    }
+
+
+    /*GRAPHE DES CLIENTS TABLEAU DE BORD*/
+    function customerCharts(){
+        var verif = true;
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: linkToStatCustomer,
+            data: {verif:verif},
+            success: function (dataAjax, textStatus, jqXHR) {
+               console.log(dataAjax);
+               $("#stat-total-users").html(dataAjax.result.total_nbre_customers);
+
+               var config = {
+                                type: 'doughnut',
+                                data: {
+                                    datasets: [{
+                                        data: [
+                                            dataAjax.result.total_nbre_customers_with_order,
+                                            dataAjax.result.total_nbre_customers_without_order
+                                        ],
+                                        backgroundColor: [
+                                            window.chartColors.orange,
+                                            window.chartColors.red
+                                        ],
+                                        label: 'Dataset 1'
+                                    }],
+                                    labels: [
+                                        'Clients avec commandes',
+                                        'Clients sans commandes'
+                                    ]
+                                },
+                                options: {
+                                    responsive: true,
+                                    legend: {
+                                        position: 'top',
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Graphe des clients avec ou sans commandes.'
+                                    },
+                                    animation: {
+                                        animateScale: true,
+                                        animateRotate: true
+                                    }
+                                }
+                            };
+
+                var ctx = document.getElementById('canvasCustomers').getContext('2d');
+                window.myDoughnut = new Chart(ctx, config);
+               
+            },
+            error: function(jqXHR) {
+              console.log(jqXHR);
+                            
+              //console.log(data);
+            }
+        });
+    }
+
+    /*STAT DASHBOARD PRODUCTS*/
+    function statProductsDashboard(){
+        var verif = true;
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: linkToStatProducts,
+            data: {verif:verif},
+            success: function (dataAjax, textStatus, jqXHR) {
+               console.log(dataAjax.result.list_produits_html);
+               $("#product-list-stat-container").fadeIn(500).html(dataAjax.result.list_produits_html);
+            },
+            error: function(jqXHR) {
+              console.log(jqXHR);                            
+              //console.log(data);
+            }
+        });
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //experience
@@ -127,22 +1183,6 @@ if(productsRelatedContainer!=null && productsRelatedContainer!==false){
             search_products_related();
     }
 
- /*   
-A revoir
- function load_detail(){
-        var detailYOffset = window.pageYOffset;
-        var productRelatedDisplay_one = $('#products-related-container').attr('product-display');
-        if(productsRelatedContainer.getBoundingClientRect().y <= detailYOffset){
-            if(productRelatedDisplay_one=="false"){
-                console.log(productRelatedDisplay);
-                console.log(productsRelatedContainer.getBoundingClientRect().y);
-
-            }
-        }
-    }
-
-    window.onscroll = load_detail;
-    */
     
 }
 
@@ -889,6 +1929,8 @@ function search_products(){
     var productDataCategory = $('#list_produits').attr('product-data-category'); // filtre category
     var productDataNumberPage= $('#list_produits').attr('product-data-number-page'); //numero de la page courante
     var productDataOrder= $('#list_produits').attr('product-data-order'); // ordonnancement du plus... au moins...
+
+
 
     $.ajax({
         type: "POST",

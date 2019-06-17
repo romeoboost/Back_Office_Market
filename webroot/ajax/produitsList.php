@@ -101,7 +101,7 @@ if ($_POST) {
 
     foreach ($unites_from_bd as $u) {
        $unites[$u->id] = $u->symbole;
-     }
+    }
 
     //determiner le nombre de page
     $nombre_produits_trouves=count($produits);

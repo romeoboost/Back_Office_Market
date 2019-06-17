@@ -11,9 +11,10 @@
 
     $date = date_create();
     $version_number = date_timestamp_get($date);
-    define('APPLI_NAME', 'CHOCO MARKET');
+    define('APPLI_NAME', 'AFROMART');
     define('WEBROOT_URL', 'http://localhost/Back_Office_Market/webroot/');
-    define('SITE_BASE_URL', 'http://localhost/Back_Office_Market/');     
+    define('SITE_BASE_URL', 'http://localhost/Back_Office_Market/');
+    define('WEBROOT_URL_FRONT', 'http://localhost/Market/webroot/');     
     define('WEBROOT', dirname(__FILE__));
     define('ROOT', dirname(WEBROOT));
     define('VERSION', $version_number);

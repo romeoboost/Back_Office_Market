@@ -3,26 +3,129 @@
 	- Desactiver button apres click (ajouter class bootstrap .disabled) : OK
 03. Deconnexion : OK
 
-17. Mot de passe oubli�
+17. Mot de passe oublié
+
+18. Categorie Produit
 
 01. Piste d'audits 66
 
 
 
-04. Tableau de bord (total commandes,total commandes livr�s, total commandes en attente, graphe commandes sur periode (mois en cours),
-total users, total users avec commandes, total avis, total produits, produits plus vendus, produits non command�s depuis plus de 10jr, produits stock �puis�s (seuil) )7
+04. Tableau de bord (total commandes,total commandes livrés, total commandes en attente, graphe commandes sur periode (7 derniers jours),
+total users, total users avec commandes, total avis, total produits, produits plus vendus, produits non commandés depuis plus de 10jr, produits stock épuisés (seuil) )7
 		URL to check if page is loaded : https://www.jstips.co/en/javascript/detect-document-ready-in-pure-js/ | https://stackoverflow.com/questions/978740/javascript-how-to-detect-if-document-has-loaded-ie-7-firefox-3
 
 
-05. Produits (Listes(+total achet�s), stats, ajouter, modifier, supprimer, details)
+05. Produits (Listes(+total achetés), stats, ajouter, modifier, supprimer, details)
 06. Commandes( Listes, stats, rejetter(-reprendre),supprimer(+mot de passe), actions sur status, details)
+	form recherche : 
+			- Periode (date debut / date fin)
+			- Identifiant Client ( et/ou telephone)
+			- Statut
+			- Montant
+			- Id Commande
+
 07. Commune livraison(+actif/non actif)
 08. Stocks
 09. Fournisseurs
-16. Publicit�s
+16. Publicités
 10. Les avis
 11. Les mails
 12. Clients (stat, liste (avec nombre de commandes), actions sur status, supprimer, details)
 13. Gestiln Utilisateurs Back Office
 14. Extraction pour les listes
 15. Recherche multicriteres(-periodes, identifiant, statut, -nom prouduits, nom element, tel client, email client)
+16. Livreurs
+
+
+<script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/core/demo/Demo.js"></script>
+<script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/core/demo/DemoDashboard.js"></script>
+
+
+
+statProducts logic
+- verifie si post envoyé
+- verifie si variable envoyée
+- recupère la liste des produits (nom, qtte_cmdee, unité de messure)
+- formater la liste des produits pour affichage
+
+a- Lister les commandes par lot de 10
+
+b- logique de recherche multicritere
+	- verifie si post envoyé
+	- verifie si variable envoyée
+
+	// RESTE POUR FINIR COMMANDE //
+	* Pagination : OK
+	* Action Livrer : OK
+		- Afficher un formulaire pour le choix d'un livreur avec les champs (cmd_id, Montant HT	; Frais Livr.;	Montant TTC; livreur (select) )
+	* Action Rejetter :  OK
+		- Afficher modal sweatalert pour confirmation avec lid de la commande
+		- function de rejet
+	* Action Supprimer : OK
+		- Afficher un formulaire pour saisi de mot de passe (cmd_id, Montant HT	; Frais Livr.;	Montant TTC; Mot de passe )
+		- Validation de formulaire
+		- fonction delete_order (with ajax)
+			- verifie si post envoyé
+			- verifie si variable envoyée
+			- verifie si variable non vide
+			- Verifie si mot de passe correct.
+			- verifie si commande existe non vide
+			- Si commande a statut "En attente" et " En livraison " --> met a jour le stock des produits liés à la commande
+			- Supprimer la commande
+
+	* Action restaurer : OK
+		- Afficher modal sweatalert pour confirmation avec lid de la commande
+		- function de restore
+			- verifie si post envoyé
+			- verifie si variable envoyée
+			- verifie si variable non vide
+			- verifie si commande existe non vide
+			- verifie si commande a statut "rejetée"
+			- verifie si quantité produit toujours disponible en base ##
+			- diminue le stock de produits en base
+			- Modifie le statut de la commande
+			
+
+	* Action stopper livraison : OK
+	* Action details : OK
+	* Ameliorer Loading
+	* EXTRACTION excell (rajouter les champs: num tel du client, nom prenom du livreur, date dernier statut) : OK
+		- construire le lien pour l'extraction avec les options de filtre : OK
+		- creer la fonction pour extraction dans la classe dans la classe
+			- faire ue fonction qui permettra de recuperer la liste des  commande sellon le filtre
+		--- Mettre une condition pour ne pas afficher le bouton d'extraction lorsque le tableau est vide ---
+
+c- Lister les Produits 
+	stat : nombre total de produit, stock epuisé, produits non commandés
+	tableau : 
+		Actions : 
+			- supprimer
+			- modifier
+			- Détails
+	Recherche multicritere ( champs + : )
+
+livreurs
+
+id, nom, prenom, tel, date_creation, date_modification
+
+*** Faire fonction de nouveau produit ****
+
+
+        //il faut redefinir des input hiden de la sorte car les valeur des montants recupérées en js avec un espace sont transformées en "+"
+        // var montant_ht_hide = $('#order-list tbody .'+cmd_id+' .montant_ht').attr('data-list-montant-ht');
+        // var frais_livraison_hide = $('#order-list tbody .'+cmd_id+' .frais_livraison').attr('data-list-frais-livraison');
+        // var montant_ttc_hide = $('#order-list tbody .'+cmd_id+' .montant_ttc').attr('data-list-montant-ttc');
+
+        // $("#form-set-shipping :input[name='cmd_montant_ht']").val(montant_ht);
+        // $("#form-set-shipping :input[name='cmd_frais_livraison']").val(frais_livraison);
+        // $("#form-set-shipping :input[name='cmd_montant_ttc']").val(montant_ttc);
+
+        // $("#form-set-shipping :input[name='cmd_montant_ht_hide']").val(montant_ht_hide);
+        // $("#form-set-shipping :input[name='cmd_frais_livraison_hide']").val(frais_livraison_hide);
+        // $("#form-set-shipping :input[name='cmd_montant_ttc_hide']").val(montant_ttc_hide);
+
+        // console.log( montant_ht_hide+' '+frais_livraison_hide+' '+montant_ttc_hide );
+
+
+

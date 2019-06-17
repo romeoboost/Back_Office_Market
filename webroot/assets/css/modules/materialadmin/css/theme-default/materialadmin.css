@@ -1000,7 +1000,7 @@ p {
 }
 .text-caption {
   display: block;
-  margin-bottom: 29px;
+  /*margin-bottom: 29px;*/
   font-size: 12px;
 }
 .card ~ .text-caption,
@@ -2737,7 +2737,7 @@ label {
 }
 .form-control {
   padding: 0;
-  height: 37px;
+  height: 28px;
   border-left: none;
   border-right: none;
   border-top: none;
@@ -2804,7 +2804,7 @@ textarea.autosize {
 }
 .form-group {
   position: relative;
-  margin-bottom: 19px;
+  margin-bottom: 10px;
 }
 .form-group .form-control:not(.static) ~ label,
 .form-group .form-control:not(.static) ~ .form-control-line {
@@ -2855,7 +2855,7 @@ textarea.autosize {
 }
 .floating-label .form-control ~ label {
   top: 19px;
-  font-size: 16px;
+  font-size: 12px;
 }
 .floating-label .form-control:focus ~ label,
 .floating-label .form-control.dirty ~ label {
@@ -6815,6 +6815,9 @@ sub.badge {
 .alert-callout.alert-danger:before {
   background: #f44336;
 }
+.alert-callout.alert-pending:before {
+  background: #ead515;
+}
 .breadcrumb {
   padding: 0;
   margin-bottom: 0;
@@ -7663,7 +7666,9 @@ sub.badge {
 }
 .opacity-50 {
   opacity: 0.5;
+  font-size: 0.8em;
   filter: alpha(opacity=50);
+
 }
 .opacity-75 {
   opacity: 0.75;
@@ -8038,4 +8043,98 @@ li.L8 {
   list-style-type: none;
 }
 /* Alternate shading for lines */
+
+.stat-part-title{
+  font-size: 25px;
+  font-weight: 800;
+  color: #9ea0a0;
+  text-shadow: 0px 0px 2px black;
+  text-transform: uppercase;
+}
+
+.stat-data-value{
+  font-weight: 600;
+
+}
+
+.data-title, .cmd-status{
+  text-transform: uppercase;
+}
+
+.height-auto{
+  height: auto;
+}
+.stat-day-title{
+  font-size: 10px;
+}
+.pager li > a{
+  padding: 2px 5px;
+}
+
+.own-modal .modal-header {
+    min-height: 16.43px;
+    padding: 10px 15px 10px 15px;
+    border-bottom: 0px;
+    background-color: #0aa89e;
+    box-shadow: 1px 2px 9px 0px #0aa89e80;
+}
+
+.own-modal .modal-header .close {
+    background-color: #fcfffc;
+    padding: 1px 5px;
+    border-radius: 50%;
+    box-shadow: 0 0 6px black;
+}
+
+.own-modal .modal-header h4 {
+    color: #fff;
+}
+
+.badge-detail{
+  border-radius: 20px;
+  padding: 5px;
+}
+
+.detail-cmd-info dt {
+  width: 120px;
+  text-align: left;
+  font-weight: normal;
+}
+
+.detail-cmd-info-shipping dt {
+  width: 170px;
+  text-align: left;
+  font-weight: normal;
+}
+
+.detail-cmd-other-info dt {
+  width: 350px;
+  text-align: left;
+  font-weight: normal;
+}
+
+.detail-cmd-info dd, .detail-cmd-info-shipping dd, .detail-cmd-other-info dd {
+  margin-left: 120px;
+  font-weight: bold;
+}
+
+.shipping-details-table thead th {
+  font-weight: bold !important;
+}
+
+.list-element .tools .btn {
+    font-size: 24px;
+    text-transform: uppercase;
+}
+
+option.toUpCase{
+  text-transform: uppercase;
+}
+
+.dropdown-menu .toUpCase{
+  text-transform: uppercase !important;
+}
+.content-section-center{
+  margin: 24px 12%;
+}
 

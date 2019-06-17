@@ -11,7 +11,7 @@ $error_html = '';
 $retour = array();
 $retour['connected'] = 'non';
 
-sleep(5);
+sleep(1);
 
 if ($_POST) {
     
@@ -40,7 +40,7 @@ if ($_POST) {
             //$encrypt_password = md5($user_password);
             $username = trim($username);
             $password = md5($password);
-            $req = $pdo->prepare("SELECT * FROM utilisateurs WHERE (tel =:tel OR email=:email) AND password =:password"); //':email' => $user_login,
+            $req = $pdo->prepare("SELECT * FROM utilisateurs WHERE (tel =:tel OR email=:email) AND password =:password"); //
             $req->execute(array(':tel' => $username, ':email' => $username, ':password' => $password));
             // var_dump($req);
             // die();

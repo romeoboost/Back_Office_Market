@@ -5,12 +5,12 @@
 
 @font-face {
   font-family: "Flaticon";
-  src: url("http://localhost/Back_Office_Market/webroot/assets/css/from_front/fonts/flat_icons/font/Flaticon.eot");
-  src: url("http://localhost/Back_Office_Market/webroot/assets/css/from_front/fonts/flat_icons/font/Flaticon.eot?#iefix") format("embedded-opentype"),
-       url("http://localhost/Back_Office_Market/webroot/assets/css/from_front/fonts/flat_icons/font/Flaticon.woff2") format("woff2"),
-       url("http://localhost/Back_Office_Market/webroot/assets/css/from_front/fonts/flat_icons/font/Flaticon.woff") format("woff"),
-       url("http://localhost/Back_Office_Market/webroot/assets/css/from_front/fonts/flat_icons/font/Flaticon.ttf") format("truetype"),
-       url("http://localhost/Back_Office_Market/webroot/assets/css/from_front/fonts/flat_icons/font/Flaticon.svg#Flaticon") format("svg");
+  src: url("../fonts/flat_icons/font/Flaticon.eot");
+  src: url("../fonts/flat_icons/font/Flaticon.eot?#iefix") format("embedded-opentype"),
+       url("../fonts/flat_icons/font/Flaticon.woff2") format("woff2"),
+       url("../fonts/flat_icons/font/Flaticon.woff") format("woff"),
+       url("../fonts/flat_icons/font/Flaticon.ttf") format("truetype"),
+       url("../fonts/flat_icons/font/Flaticon.svg#Flaticon") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -18,7 +18,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: "Flaticon";
-    src: url("http://localhost/Market/webroot/fonts/flat_icons/font/Flaticon.svg#Flaticon") format("svg");
+    src: url("../fonts/flat_icons/font/Flaticon.svg#Flaticon") format("svg");
   }
 }
 

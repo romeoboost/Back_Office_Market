@@ -4,7 +4,7 @@ class AccueilController extends Controller {
     public function index(){
       conf::redir();
       $this->loadmodel('Accueil');
-      $_SESSION['menu'] = 'Accueil';
+      $_SESSION['bo_menu'] = 'Accueil';
 
     }  
 

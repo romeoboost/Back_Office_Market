@@ -25,8 +25,33 @@
         <link type="text/css" rel="stylesheet" href="<?php echo WEBROOT_URL; ?>assets/css/modules/materialadmin/css/theme-default/libs/rickshaw/rickshaw.css?1422823372" />
 
         <link type="text/css" rel="stylesheet" href="<?php echo WEBROOT_URL; ?>assets/css/modules/materialadmin/css/theme-default/libs/morris/morris.core.css?1422823370" />
+        <link type="text/css" rel="stylesheet" href="<?php echo WEBROOT_URL; ?>assets/css/modules/materialadmin/css/theme-default/libs/select2/select2.css?1422823373" />
 
-        <link rel="stylesheet" href="<?php echo WEBROOT_URL; ?>assets/css/from_front/css/flaticon.css?000000002" type="text/css" media="all">
+        <link type="text/css" rel="stylesheet" href="<?php echo WEBROOT_URL; ?>assets/css/modules/materialadmin/css/theme-default/libs/multi-select/multi-select.css?1422823371" />
+
+        <link type="text/css" rel="stylesheet" href="<?php echo WEBROOT_URL; ?>assets/css/modules/materialadmin/css/theme-default/libs/bootstrap-datepicker/datepicker3.css?1422823364" />
+        <link type="text/css" rel="stylesheet" href="<?php echo WEBROOT_URL; ?>assets/css/forDatetimepicker/bootstrap-datetimepicker.css?1422823364" />
+
+        <link type="text/css" rel="stylesheet" href="<?php echo WEBROOT_URL; ?>assets/css/modules/materialadmin/css/theme-default/libs/jquery-ui/jquery-ui-theme.css?1422823370" />
+
+        <link type="text/css" rel="stylesheet" href="<?php echo WEBROOT_URL; ?>assets/css/modules/materialadmin/css/theme-default/libs/bootstrap-colorpicker/bootstrap-colorpicker.css?1422823362" />
+
+        <link type="text/css" rel="stylesheet" href="<?php echo WEBROOT_URL; ?>assets/css/modules/materialadmin/css/theme-default/libs/bootstrap-tagsinput/bootstrap-tagsinput.css?1422823365" />
+
+        <link type="text/css" rel="stylesheet" href="<?php echo WEBROOT_URL; ?>assets/css/modules/materialadmin/css/theme-default/libs/typeahead/typeahead.css?1422823375" />
+
+        <link type="text/css" rel="stylesheet" href="<?php echo WEBROOT_URL; ?>assets/css/modules/materialadmin/css/theme-default/libs/dropzone/dropzone-theme.css?1422823366" />
+
+        <link rel="stylesheet" href="<?php echo WEBROOT_URL; ?>assets/css/from_front/css/flaticon.css?000000003" type="text/css" media="all">
+        <link rel="stylesheet" href="<?php echo WEBROOT_URL; ?>assets/css/from_front/css/sweetalert2.min.css?000000003" type="text/css" media="all">
+        <link rel="stylesheet" href="<?php echo WEBROOT_URL; ?>assets/css/from_front/css/bootstrap_select.min.css?000000003" type="text/css" media="all">
+        
+        <link type="text/css" rel="stylesheet" href="<?php echo WEBROOT_URL; ?>assets/css/loading-btn/loading.css?1422823240" />
+
+        <link type="text/css" rel="stylesheet" href="<?php echo WEBROOT_URL; ?>assets/css/loading-btn/loading-btn.css?1422823240" />
+
+        <link type="text/css" rel="stylesheet" href="<?php echo WEBROOT_URL; ?>assets/css/modules/materialadmin/css/theme-default/materialadmin_print.css?1422823243"  media="print"/>
+
         <!-- END STYLESHEETS -->
 
 
@@ -40,6 +65,19 @@
 <body class="menubar-hoverable header-fixed ">
         <!-- BEGIN HEADER-->
 <header id="header" >
+    <span id="linkToStatOrder" class="hidden"><?php echo WEBROOT_URL.'ajax/statOrder.php'; ?></span>
+    <span id="linkToStatCustomer" class="hidden"><?php echo WEBROOT_URL.'ajax/statCustomer.php'; ?></span>
+    <span id="linkToStatProducts" class="hidden"><?php echo WEBROOT_URL.'ajax/statProducts.php'; ?></span>
+    <span id="linkToSearchOrders" class="hidden"><?php echo WEBROOT_URL.'ajax/searchOrders.php'; ?></span>
+    <span id="linkToSetOrderDelivrery" class="hidden"><?php echo WEBROOT_URL.'ajax/setOrderDelivrery.php'; ?></span>
+    <span id="linkToGetLivreur" class="hidden"><?php echo WEBROOT_URL.'ajax/getLivreur.php'; ?></span>
+    <span id="linkToSetStopOrderDelivrery" class="hidden"><?php echo WEBROOT_URL.'ajax/setStopOrderDelivrery.php'; ?></span>
+    <span id="linkToRejectOrder" class="hidden"><?php echo WEBROOT_URL.'ajax/rejectOrder.php'; ?></span>
+    <span id="linkToRestoreOrder" class="hidden"><?php echo WEBROOT_URL.'ajax/restoreOrder.php'; ?></span>
+    <span id="linkToDeleteOrder" class="hidden"><?php echo WEBROOT_URL.'ajax/deleteOrder.php'; ?></span>
+    <span id="linkToSearchProducts" class="hidden"><?php echo WEBROOT_URL.'ajax/searchProducts.php'; ?></span>
+    <span id="linkToAddProduct" class="hidden"><?php echo WEBROOT_URL.'ajax/AddProduct.php'; ?></span>
+
 
 <div class="headerbar">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -47,7 +85,7 @@
         <ul class="header-nav header-nav-options">
             <li class="header-nav-brand" >
                 <div class="brand-holder">
-                    <a href="../../materialadmin.1">
+                    <a href="<?php echo BASE_URL.DS.'accueil/index'; ?>">
                         <span class="text-lg text-bold text-primary"><?php echo APPLI_NAME; ?></span>
                     </a>
                 </div>
@@ -92,8 +130,8 @@
                         </a>
                     </li>
                     <li class="dropdown-header">Options</li>
-                    <li><a href="../pages/login">Voir tous les messages<span class="pull-right"><i class="fa fa-arrow-right"></i></span></a></li>
-                    <li><a href="../pages/login">Marquer comme lus<span class="pull-right"><i class="fa fa-arrow-right"></i></span></a></li>
+                    <li><a href="">Voir tous les messages<span class="pull-right"><i class="fa fa-arrow-right"></i></span></a></li>
+                    <li><a href="">Marquer comme lus<span class="pull-right"><i class="fa fa-arrow-right"></i></span></a></li>
                 </ul><!--end .dropdown-menu -->
             </li><!--end .dropdown -->
 
@@ -110,7 +148,7 @@
                 </a>
                 <ul class="dropdown-menu animation-dock">
                     <!-- <li class="dropdown-header">Configs</li> -->
-                    <li><a href="#">Mon profile</a></li>
+                    <li><a href="#">Mon profil</a></li>
                     <li class="divider"></li>
                     <!-- <li><a href="../pages/locked"><i class="fa fa-fw fa-lock"></i> Lock</a></li> -->
                     <li>
@@ -153,7 +191,7 @@
                     </a>
                 </div>
                 <div class="expanded">
-                    <a href="">
+                    <a href="<?php echo BASE_URL.DS.'accueil/index'; ?>">
                         <span class="text-lg text-bold text-primary "><?php echo APPLI_NAME; ?></span>
                     </a>
                 </div>
@@ -163,7 +201,7 @@
 <ul id="main-menu" class="gui-controls">
     <!-- BEGIN DASHBOARD -->
     <li>
-        <a href="" class="active">
+        <a href="<?php echo BASE_URL.DS.'dashboard/index'; ?>" class=" <?php echo active_menu('Dashboard'); ?> ">
             <div class="gui-icon"><i class="md md-assessment"></i></div>
             <span class="title">Tableau de bord</span>
         </a>
@@ -171,7 +209,7 @@
     <!-- END DASHBOARD -->
     
     <li class="">
-        <a href="">
+        <a href="<?php echo BASE_URL.DS.'commandes/liste'; ?>" class=" <?php echo active_menu('Commandes'); ?> ">
             <!-- <div class="gui-icon"><i class="md md-email"></i></div> -->
             <div class="gui-icon"><i class="fa fa-shopping-cart"></i></div>
             <span class="title">Commandes</span>
@@ -180,7 +218,7 @@
     
     <!-- BEGIN DASHBOARD -->
     <li>
-        <a href="" >
+        <a href="<?php echo SITE_BASE_URL.'clients/liste'; ?>" >
             <div class="gui-icon"><i class="fa fa-users"></i></div>
             <span class="title">Clients</span>
         </a>
@@ -188,17 +226,22 @@
     <!-- END DASHBOARD -->
     
     <!-- BEGIN UI -->
-    <li class="">
-        <a href="">
+    <li class="gui-folder <?php echo active_menu('Produits'); ?>">
+        <a >
             <div class="gui-icon"><i class=" flaticon-basket"></i></div>
             <span class="title">Produits</span>
         </a>
+        <ul>
+            <li class="<?php echo active_sub_menu('Produits'); ?>">
+                <a href="<?php echo BASE_URL.DS.'produits/liste'; ?>"><span class="title <?php echo active_sub_menu('Produits'); ?>">Les Produits</span></a></li>
+            <li><a href="<?php echo BASE_URL.DS.'profils/liste'; ?>"><span class="title <?php echo active_sub_menu('Categories'); ?>">Les Catégories</span></a></li>            
+        </ul>
     </li><!--end /menu-li -->
     <!-- END UI -->
     
     <!-- BEGIN TABLES -->
     <li class="">
-        <a href="">
+        <a href="<?php echo SITE_BASE_URL.'communes_livraison/liste'; ?>">
             <div class="gui-icon"><i class="glyphicon glyphicon-map-marker"></i></div>
             <span class="title">Communes Livraison</span>
         </a>
@@ -207,7 +250,7 @@
     
     <!-- BEGIN FORMS -->
     <li class="">
-        <a href="">
+        <a href="<?php echo BASE_URL.DS.'stocks/liste'; ?>">
             <div class="gui-icon"><span class="md md-web"></span></div>
             <span class="title">Stocks</span>
         </a>
@@ -216,13 +259,19 @@
     
     <!-- BEGIN PAGES -->
     <li class="">
-        <a href="">
+        <a href="<?php echo BASE_URL.DS.'fournisseurs/liste'; ?>">
             <div class="gui-icon"><i class="fa fa-puzzle-piece fa-fw"></i></div>
             <span class="title">Fournisseurs</span>
         </a>
     </li>
     <li class="">
-        <a href="">
+        <a href="<?php echo BASE_URL.DS.'livreurs/liste'; ?>">
+            <div class="gui-icon"><i class="md md-local-shipping"></i></div>
+            <span class="title">Livreurs</span>
+        </a>
+    </li>
+    <li class="">
+        <a href="<?php echo BASE_URL.DS.'pub/liste'; ?>">
             <div class="gui-icon"><i class="fa fa-image"></i></div>
             <span class="title">Bannières publicitaires</span>
         </a>
@@ -232,14 +281,14 @@
     
     <!-- BEGIN CHARTS -->
     <li>
-        <a href="" >
+        <a href="<?php echo BASE_URL.DS.'avis/liste'; ?>" >
             <div class="gui-icon"><i class="glyphicon glyphicon-comment"></i></div>
             <span class="title">Avis</span>
         </a>
     </li>
 
     <li>
-        <a href="" >
+        <a href="<?php echo BASE_URL.DS.'mails/liste'; ?>" >
             <div class="gui-icon"><i class="md md-email"></i></div>
             <span class="title">Mails</span>
         </a>
@@ -249,14 +298,14 @@
     
     <!-- BEGIN LEVELS -->
     <li class="gui-folder">
-        <a>
+        <a >
             <div class="gui-icon"><i class="md md-settings"></i></div>
             <span class="title">Paramétrages</span>
         </a>
         <!--start submenu -->
         <ul>
-            <li><a href=""><span class="title">Utilisateurs</span></a></li>
-            <li><a href=""><span class="title">Profils</span></a></li>            
+            <li><a href="<?php echo BASE_URL.DS.'utilisateurs/liste'; ?>"><span class="title">Utilisateurs</span></a></li>
+            <li><a href="<?php echo BASE_URL.DS.'profils/liste'; ?>"><span class="title">Profils</span></a></li>            
         </ul><!--end /submenu -->
     </li><!--end /menu-li -->
     <!-- END LEVELS -->
@@ -531,12 +580,20 @@
 
     <!-- BEGIN JAVASCRIPT -->
         
-            <script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/libs/jquery/jquery-1.11.2.min.js"></script>
+<script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/libs/jquery/jquery-1.11.2.min.js"></script>
 <script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/libs/jquery/jquery-migrate-1.2.1.min.js"></script>
+<script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/libs/jquery-ui/jquery-ui.min.js"></script>
 <script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/libs/bootstrap/bootstrap.min.js"></script>
 <script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/libs/spin.js/spin.min.js"></script>
 <script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/libs/autosize/jquery.autosize.min.js"></script>
+<script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/libs/inputmask/jquery.inputmask.bundle.min.js"></script>
+
 <script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/libs/moment/moment.min.js"></script>
+<script src="<?php echo WEBROOT_URL; ?>assets/js/libs/forDatetimePicker/moment-with-locales.js"></script>
+<script src="<?php echo WEBROOT_URL; ?>assets/js/libs/forDatetimePicker/bootstrap-datetimepicker.js"></script>
+<script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/libs/bootstrap-datepicker/bootstrap-datepicker.js"></script>
+<script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/libs/bootstrap-colorpicker/bootstrap-colorpicker.min.js"></script>
+
 <script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/libs/flot/jquery.flot.min.js"></script>
 <script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/libs/flot/jquery.flot.time.min.js"></script>
 <script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/libs/flot/jquery.flot.resize.min.js"></script>
@@ -549,6 +606,10 @@
 <script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/libs/d3/d3.min.js"></script>
 <script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/libs/d3/d3.v3.js"></script>
 <script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/libs/rickshaw/rickshaw.min.js"></script>
+
+<script src="<?php echo WEBROOT_URL; ?>assets/js/libs/Chart.js-master/dist/Chart.min.js"></script>
+
+
 <script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/core/source/App.js"></script>
 <script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/core/source/AppNavigation.js"></script>
 <script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/core/source/AppOffcanvas.js"></script>
@@ -556,8 +617,13 @@
 <script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/core/source/AppForm.js"></script>
 <script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/core/source/AppNavSearch.js"></script>
 <script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/core/source/AppVendor.js"></script>
+
 <script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/core/demo/Demo.js"></script>
-<script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/core/demo/DemoDashboard.js"></script>
+<script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/core/demo/DemoFormComponents.js"></script>
+
+<script type="text/javascript" src="<?php echo WEBROOT_URL; ?>assets/js/own-script.js?<?php echo VERSION; ?>"></script>
+<script type="text/javascript" src="<?php echo WEBROOT_URL; ?>assets/js/sweetalert2.min.js?<?php echo VERSION; ?>"></script>
+<script type="text/javascript" src="<?php echo WEBROOT_URL; ?>assets/js/bootstrap_select.min.js?<?php echo VERSION; ?>"></script>
 
     
     <!-- END JAVASCRIPT -->

@@ -31,6 +31,7 @@
             
         }
         
+        //peut prendre les conditions listées dans un tableau ou pas
         public function find($req, $table=null){
            if($table){
              $this->table = $table;  
@@ -83,7 +84,12 @@
            }           
            //die ($sql);
            $pre = $this->db->prepare($sql);
-           $pre->execute();
+           if( isset( $req['array_filter'] ) ){
+              $pre->execute($req['array_filter']);  
+            }else{
+              $pre->execute(); 
+            }
+           
            if(isset($req['assos'])){
              return $pre->fetchAll(PDO::FETCH_ASSOC);  
            }else{
@@ -119,17 +125,17 @@
 
         public function findSum($condition, $fields, $table){ // $condition est pour tout ce qui vient apres le WHERE dans la req SQL
             $res = $this->findfirst(array(
-               'fields' => 'SUM('.$fields.') as count',
+               'fields' => 'SUM('.$fields.') as somme',
                'condition' => $condition 
             ),$table);
-            return $res->count;            
+            return $res->somme;            
         }
 
         public function findSumAll($fields, $table){ // renvoi la somme des element d'un champs
             $res = $this->findfirst(array(
-               'fields' => 'SUM('.$fields.') as count'
+               'fields' => 'SUM('.$fields.') as somme'
             ),$table);
-            return $res->count;            
+            return $res->somme;            
         }
         
         public function delete($req, $table){
@@ -160,8 +166,6 @@
             $sql = ' INSERT INTO '.$table.' (';
             $sql .= implode(', ', $req['fields']).')';
             $sql .= ' VALUE (:'.implode(', :',$req['fields']).')';
-            //debug($sql);
-            //debug($req['values']);
             $pre = $this->db->prepare($sql);
             $pre->execute($req['values']);
         }
@@ -189,11 +193,8 @@
                //return false;
            }
            //die($sql);
-          //echo $sql;
            $pre = $this->db->prepare($sql);
            $pre->execute($req['values']);
-          //debug($sql);
-//           debug($req['values']);
         }
         
         public function findJoin($req, $maintable, $secondtable, $thirdtable=NULL){
@@ -230,11 +231,12 @@
             if(isset($req['limit'])){
               $sql .= ' LIMIT '.$req['limit'];              
             } 
-
-            //debug($req['fields'][1]);
-            //die(debug($sql));
             $pre = $this->db->prepare($sql);
-            $pre->execute();
+            if( isset( $req['array_filter'] ) ){
+              $pre->execute($req['array_filter']);  
+            }else{
+              $pre->execute(); 
+            }
             return $pre->fetchAll(PDO::FETCH_OBJ);
         }
 
@@ -246,7 +248,7 @@
                 $sql .= ', '.$thirdtable.'.'.implode(', '.$thirdtable.'.',$req['fieldsthree']);
             }
             $sql .= ' FROM '.$maintable;
-            $sql .= ' RIGHT JOIN '.$secondtable.' ON '.$maintable.'.'.$req['fields'][0]['main'].' = '.$secondtable.'.'.$req['fields'][0]['second'];
+            $sql .= ' LEFT JOIN '.$secondtable.' ON '.$maintable.'.'.$req['fields'][0]['main'].' = '.$secondtable.'.'.$req['fields'][0]['second'];
             if(isset($thirdtable)){
               $sql .= ' INNER JOIN '.$thirdtable.' ON '.$maintable.'.'.$req['fields'][1]['main'].' = '.$thirdtable.'.'.$req['fields'][1]['third']; 
             }
@@ -260,10 +262,6 @@
                   $sql .= ' ORDER BY '.$req['order'].' ASC';  
                 }
             }
-            //debug($req['fields'][1]);
-            /*debug($sql);
-            die();*/
-            //debug($sql);
             $pre = $this->db->prepare($sql);
             $pre->execute();
             return $pre->fetchAll(PDO::FETCH_OBJ);
@@ -293,9 +291,6 @@
                   $sql .= ' ORDER BY '.$req['order'].' ASC';  
                 }
             }
-            //debug($req['fields'][1]);
-            /*debug($sql);*/
-            //die($sql);
             $pre = $this->db->prepare($sql);
             $pre->execute();
             return $pre->fetchAll(PDO::FETCH_OBJ);
@@ -303,8 +298,7 @@
         
         public function clear($table) {
             $sql = 'DELETE FROM ';
-            $sql .= $table; 
-//            echo $sql;
+            $sql .= $table;
             $pre = $this->db->prepare($sql);
             $pre->execute();
         }

@@ -4,7 +4,7 @@
 
 
     <head>
-        <title>Material Admin - Login</title>
+        <title>Back Office - <?php echo APPLI_NAME; ?></title>
 
         <!-- BEGIN META -->
         <meta charset="utf-8">

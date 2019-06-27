@@ -32,7 +32,7 @@ if ($_POST) {
         // if( strlen($amount_product) == 0 ) { debugger($_POST); }
         
         //verifie si au moins un champs de filtre est renseigné
-        if( empty($name_product) || empty($image) || strlen($category_product) == 0 || empty($amount_product) || 
+        if( empty($name_product) || empty($image['name']) || strlen($category_product) == 0 || empty($amount_product) || 
             strlen($unit_qtt_sold) == 0 || strlen($unit_mesure) == 0 || empty($descript_product)
           )
         {
@@ -97,6 +97,7 @@ if ($_POST) {
                 $cat_info = current($req->fetchAll(PDO::FETCH_OBJ));
                 $slug .= '-'.$cat_info->nom;
                 $slug .= '-'.$token;
+                $slug .= str_replace(' ', '-', $slug);
                 // debugger($slug);
 
                 $date = date("Y-m-d H:i:s");

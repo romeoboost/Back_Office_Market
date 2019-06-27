@@ -84,8 +84,7 @@ b- logique de recherche multicritere
 			- verifie si commande a statut "rejetée"
 			- verifie si quantité produit toujours disponible en base ##
 			- diminue le stock de produits en base
-			- Modifie le statut de la commande
-			
+			- Modifie le statut de la commande		
 
 	* Action stopper livraison : OK
 	* Action details : OK
@@ -96,7 +95,7 @@ b- logique de recherche multicritere
 			- faire ue fonction qui permettra de recuperer la liste des  commande sellon le filtre
 		--- Mettre une condition pour ne pas afficher le bouton d'extraction lorsque le tableau est vide ---
 
-c- Lister les Produits 
+c- Lister les Produits : OK
 	stat : nombre total de produit, stock epuisé, produits non commandés
 	tableau : 
 		Actions : 
@@ -105,6 +104,18 @@ c- Lister les Produits
 			- Détails
 	Recherche multicritere ( champs + : )
 
+d- Categorie produits
+	Stat: Total, Actif, non actif
+	Tableau
+		Actions : 
+			- supprimer
+			- modifier
+			- Détails
+	Recherche Multicritere
+	Extraction
+
+VUE POUR GERER LES UNITE DE MESURE
+
 livreurs
 
 id, nom, prenom, tel, date_creation, date_modification
@@ -112,20 +123,6 @@ id, nom, prenom, tel, date_creation, date_modification
 *** Faire fonction de nouveau produit ****
 
 
-        //il faut redefinir des input hiden de la sorte car les valeur des montants recupérées en js avec un espace sont transformées en "+"
-        // var montant_ht_hide = $('#order-list tbody .'+cmd_id+' .montant_ht').attr('data-list-montant-ht');
-        // var frais_livraison_hide = $('#order-list tbody .'+cmd_id+' .frais_livraison').attr('data-list-frais-livraison');
-        // var montant_ttc_hide = $('#order-list tbody .'+cmd_id+' .montant_ttc').attr('data-list-montant-ttc');
-
-        // $("#form-set-shipping :input[name='cmd_montant_ht']").val(montant_ht);
-        // $("#form-set-shipping :input[name='cmd_frais_livraison']").val(frais_livraison);
-        // $("#form-set-shipping :input[name='cmd_montant_ttc']").val(montant_ttc);
-
-        // $("#form-set-shipping :input[name='cmd_montant_ht_hide']").val(montant_ht_hide);
-        // $("#form-set-shipping :input[name='cmd_frais_livraison_hide']").val(frais_livraison_hide);
-        // $("#form-set-shipping :input[name='cmd_montant_ttc_hide']").val(montant_ttc_hide);
-
-        // console.log( montant_ht_hide+' '+frais_livraison_hide+' '+montant_ttc_hide );
 
 
 

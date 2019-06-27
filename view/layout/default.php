@@ -76,7 +76,17 @@
     <span id="linkToRestoreOrder" class="hidden"><?php echo WEBROOT_URL.'ajax/restoreOrder.php'; ?></span>
     <span id="linkToDeleteOrder" class="hidden"><?php echo WEBROOT_URL.'ajax/deleteOrder.php'; ?></span>
     <span id="linkToSearchProducts" class="hidden"><?php echo WEBROOT_URL.'ajax/searchProducts.php'; ?></span>
+    <span id="linkToSearchCategory" class="hidden"><?php echo WEBROOT_URL.'ajax/searchCategory.php'; ?></span>
     <span id="linkToAddProduct" class="hidden"><?php echo WEBROOT_URL.'ajax/AddProduct.php'; ?></span>
+    <span id="linkToUpdateProduct" class="hidden"><?php echo WEBROOT_URL.'ajax/updateProduct.php'; ?></span>
+    <span id="linkToDeleteProduct" class="hidden"><?php echo WEBROOT_URL.'ajax/deleteProduct.php'; ?></span>
+    <span id="linkToAddCategory" class="hidden"><?php echo WEBROOT_URL.'ajax/AddCategory.php'; ?></span>
+    <span id="linkToUpdateCategory" class="hidden"><?php echo WEBROOT_URL.'ajax/UpdateCategory.php'; ?></span>
+    <span id="linkToDeleteCategory" class="hidden"><?php echo WEBROOT_URL.'ajax/DeleteCategory.php'; ?></span>
+    <span id="linkToSearchClients" class="hidden"><?php echo WEBROOT_URL.'ajax/SearchClients.php'; ?></span>
+    <span id="linkToRejectClients" class="hidden"><?php echo WEBROOT_URL.'ajax/RejectClients.php'; ?></span>
+    <span id="linkToRestoreClients" class="hidden"><?php echo WEBROOT_URL.'ajax/RestoreClients.php'; ?></span>
+    <span id="linkToDeleteClients" class="hidden"><?php echo WEBROOT_URL.'ajax/DeleteClients.php'; ?></span>
 
 
 <div class="headerbar">
@@ -217,7 +227,7 @@
     </li>
     
     <!-- BEGIN DASHBOARD -->
-    <li>
+    <li class="<?php echo active_menu('Clients'); ?>">
         <a href="<?php echo SITE_BASE_URL.'clients/liste'; ?>" >
             <div class="gui-icon"><i class="fa fa-users"></i></div>
             <span class="title">Clients</span>
@@ -233,8 +243,16 @@
         </a>
         <ul>
             <li class="<?php echo active_sub_menu('Produits'); ?>">
-                <a href="<?php echo BASE_URL.DS.'produits/liste'; ?>"><span class="title <?php echo active_sub_menu('Produits'); ?>">Les Produits</span></a></li>
-            <li><a href="<?php echo BASE_URL.DS.'profils/liste'; ?>"><span class="title <?php echo active_sub_menu('Categories'); ?>">Les Catégories</span></a></li>            
+                <a href="<?php echo BASE_URL.DS.'produits/liste'; ?>"><span class="title <?php echo active_sub_menu('Produits'); ?>">Les Produits</span></a>
+            </li>
+            <li class="<?php echo active_sub_menu('Categories'); ?>">
+                <a href="<?php echo BASE_URL.DS.'categories/liste'; ?>">
+                    <span class="title">Les Catégories</span>
+                </a>
+            </li>
+            <li class="<?php echo active_sub_menu('unitesMesure'); ?>">
+                <a href="<?php echo BASE_URL.DS.'unitesMesure/liste'; ?>"><span class="title <?php echo active_sub_menu('unitesMesure'); ?>">Les Unités De Mésure</span></a>
+            </li>            
         </ul>
     </li><!--end /menu-li -->
     <!-- END UI -->

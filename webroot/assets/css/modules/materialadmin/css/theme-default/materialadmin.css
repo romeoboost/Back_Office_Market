@@ -2838,7 +2838,9 @@ textarea.autosize {
   top: 0;
   margin-bottom: 0;
   font-size: 12px;
-  opacity: 0.5;
+  /*opacity: 0.5;*/
+  opacity: 1;
+  color: #0aa89e;
 }
 .form-group .form-control:focus {
   border-color: rgba(12, 12, 12, 0.12);
@@ -4121,6 +4123,7 @@ fieldset[disabled] .btn-icon-toggle {
 .btn-icon-toggle .glyphicon {
   margin: 0;
   line-height: 34px;
+  color: #0aa89e;
 }
 .btn-icon-toggle.btn-lg {
   width: 46px;
@@ -8136,5 +8139,40 @@ option.toUpCase{
 }
 .content-section-center{
   margin: 24px 12%;
+}
+
+.info-product-content{
+  padding: 30px 5px;
+}
+
+.info-category-content{
+  padding: 30px 25px;
+}
+
+.info-product-container{
+  padding: 10px !important;
+}
+.list-order-product-title{
+  text-transform: uppercase;
+  padding: 2px 10px;
+}
+.detail-product-img-content, .detail-category-img-content{
+  background-color: #568c884d;
+}
+.detail-product-img-content img{
+  height: 300px;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.detail-category-img-content img{
+  height: 150px;
+    padding: 5px;
+    margin: 0% 30%;
+    border-radius: 10px;
+}
+
+.tools i{
+  color: white !important;
 }
 

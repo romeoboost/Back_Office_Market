@@ -240,7 +240,7 @@ class CommandesController extends Controller {
 
       // Rename worksheet
       //        $objPHPExcel->getActiveSheet()->setTitle('Liste_des_moyennes_annuelles');
-      $objPHPExcel->getActiveSheet()->setTitle('Liste_eleve');
+      $objPHPExcel->getActiveSheet()->setTitle('Liste_commandes');
       // Set active sheet index to the first sheet, so Excel opens this as the first sheet
       $objPHPExcel->setActiveSheetIndex(0);
       // Redirect output to a client’s web browser (Excel2007)

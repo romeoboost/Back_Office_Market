@@ -1,5 +1,166 @@
 <?php
 
+function update($pdo, $req, $table){
+   $cond = array();
+   $sql = ' UPDATE '.$table.' SET ';
+   // $sql .= implode('=?, ', $req['fields']).'=?';
+   // $sql .= implode(', ', $req['fields']).')';
+   // $sql .= ' VALUE (:'.implode(', :',$req['fields']).')';
+   foreach ( $req['fields'] as $field ) {
+     $sql .= ' '.$field.' = :'.$field.',';
+   }
+   $sql = trim($sql, ","  );
+   // debugger($sql);
+   if( isset($req['condition']) ){
+          $sql .= ' WHERE '.$req['condition']; 
+    }
+   //die($sql);
+   // debugger($sql);
+   $pre = $pdo->prepare($sql);
+   $pre->execute($req['values']);
+}
+
+function html_list_clients($pdo, $clients, $nombre_total_produit, $offset){
+  $html = '';
+  $nbre_product_plus = $nombre_total_produit + 1;
+  $nbre_product_plus_offset = $nombre_total_produit - $offset;
+  foreach ($clients as $client) {
+    $html .= '<tr class="text-center '.$client->token.'">';
+    $html .=    '<td>'.$nbre_product_plus_offset--.'</td>';
+    $html .=    '<td class="nom">'.ucfirst( $client->nom ).'</td>';
+    $html .=    '<td class="prenom">'.ucfirst( $client->prenoms ).' </td>';
+    $html .=    '<td class="token">'.$client->token.' </td>';
+    $html .=    '<td class="">'.$client->tel.' </td>';
+    $html .=    '<td class="">'.$client->email .'</td>';
+    $sexe =     ($client->sexe == 1) ? 'HOMME' : 'FEMME';
+    $html .=    '<td  class="sexe">'.$sexe.'</td>';
+    $statut =   ($client->statut == 1) ? 'ACTIF' : 'NON ACTIF';
+    $html .=    '<td  class="statut">'.$statut.'</td>';
+    $html .=    '<td>'.dateFormat($client->date_creation).'</td>';
+    $html .=    '<td class="">'; 
+
+    if( $client->statut == 1 ){
+    $html .=    '<button type="button" class="btn btn-icon-toggle set-rejected-btn" data-toggle="tooltip" 
+                    data-placement="top" data-original-title="Desactiver le client " clients-id="'.$client->token.'">
+                    <i class="fa fa-times-circle-o"></i>
+                </button>';
+      }  
+    if( $client->statut == 0 ){
+    $html .=    '<button type="button" class="btn btn-icon-toggle set-restore-btn" data-toggle="tooltip" 
+                clients-id="'.$client->token.'" data-placement="top" data-original-title="Reactiver le client">
+                    <i class="md md-settings-backup-restore"></i>
+                </button>';
+      }
+    $html .=      '<button type="button" class="btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" clients-id="'.$client->token.'"
+                                         data-original-title="Voir les détails du client">
+                                         <a href="'.SITE_BASE_URL.'clients/details/'.$client->token.'">
+                                                    <i class="md md-description"></i>
+                                          </a>
+                    </button>';
+    $html .=       '<button type="button" class="btn delete-btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" clients-id="'.$client->token.'"
+                                         data-original-title="Supprimer le client"><i class="fa fa-trash-o"></i></button>';
+    $html .=    '</td>';
+
+    $html .= '</tr>';
+
+  }
+
+  return $html;
+}
+
+
+function html_list_categories($pdo, $categories, $nombre_total_produit, $offset){
+  $html = '';
+  $nbre_product_plus = $nombre_total_produit + 1;
+  $nbre_product_plus_offset = $nombre_total_produit - $offset;
+  foreach ($categories as $categorie) {
+    $html .= '<tr class="text-center '.$categorie->token.'">';
+    $html .=    '<td>'.$nbre_product_plus_offset--.'</td>';
+    $html .=    '<td> <img class="img-circle width-1" src="'.WEBROOT_URL_FRONT.'images/category/'.$categorie->image.'.png?1422538624" alt="" /> </td>';
+    $html .=    '<td class="name_category"> '.ucfirst( $categorie->nom ).' </td>';
+    $html .=    '<td> <i class="glyph-icon flaticon-'.$categorie->icon.'"></i> </td>';
+    $statut = ($categorie->statut == 1) ? 'ACTIF' : 'NON ACTIF';  
+    $html .=    '<td>'.$statut.'</td>';
+    $html .=    '<td>'.dateFormat($categorie->date_creation).'</td>';
+    $html .=    '<td class="">';      
+    $html .=      '<button type="button" class="btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" category-id="'.$categorie->token.'"
+                                         data-original-title="Modifier les informations de la categorie"> 
+                                            <a href=" '.SITE_BASE_URL.'categories/modifier/'.$categorie->token.'">
+                                                    <i class="fa fa-pencil"></i>
+                                            </a>
+                                         </button>';
+    $html .=      '<button type="button" class="btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" category-id="'.$categorie->token.'"
+                                         data-original-title="Voir les détails de la categorie">
+                                         <a href="'.SITE_BASE_URL.'categories/details/'.$categorie->token.'">
+                                                    <i class="md md-description"></i>
+                                          </a>
+                                         </button>';
+    $html .=       '<button type="button" class="btn delete-category-btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" category-id="'.$categorie->token.'"
+                                         data-original-title="Supprimer la categorie"><i class="fa fa-trash-o"></i></button>';
+    $html .=    '</td>';
+
+    $html .= '</tr>';
+
+  }
+
+  return $html;
+}
+
+
+//peut prendre les conditions listées dans un tableau ou pas
+function sql_select($pdo, $req, $table=null){
+   $sql = 'SELECT ';
+   //reglage pour les doublons
+   if(isset($req['distinct'])){
+      $sql .= 'DISTINCT '; 
+   }
+   //reglage pour les champs
+   if(isset($req['fields'])){
+      if(is_array($req['fields'])){
+          $sql .= implode(', ',$req['fields']); 
+       }else {
+          $sql .= $req['fields']; 
+       }              
+   }else{
+      $sql .= '*'; 
+   } 
+   $sql .= ' FROM '.$table;
+    //condition
+   if(isset($req['condition'])){
+       $sql .= ' WHERE ';
+       $sql .= $req['condition'];
+       
+   }
+   //group by
+   if(isset($req['group'])){
+      $sql .= ' GROUP BY '.$req['group'];             
+   }
+
+   //reglage order by
+   if(isset($req['order'])){
+      $sql .= ' ORDER BY '.$req['order']['champs'].' '.$req['order']['param'];              
+   }
+   //reglage pour LIMIT
+   if(isset($req['limit'])){
+      $sql .= ' LIMIT '.$req['limit'];              
+   }           
+   //die ($sql);
+   $pre = $pdo->prepare($sql);
+   if( isset( $req['array_filter'] ) ){
+      $pre->execute($req['array_filter']);  
+    }else{
+      $pre->execute(); 
+    }
+   
+   if(isset($req['assos'])){
+     return $pre->fetchAll(PDO::FETCH_ASSOC);  
+   }else{
+     return $pre->fetchAll(PDO::FETCH_OBJ);  
+   } 
+}
+
+
+
 function insert($pdo, $req, $table){
     $sql = ' INSERT INTO '.$table.' (';
     $sql .= implode(', ', $req['fields']).')';
@@ -15,6 +176,9 @@ function upload($file, $width, $height) {
    $image = explode('.',$img);
    $image_ext = end($image);
    $error = '';
+   if( empty( $img ) ){
+      return false;
+   }
    if( in_array( strtolower($image_ext),array('png','jpeg','jpg') ) === false ){
        $error = 'veuillez entrer une image valable';
        return false;
@@ -89,9 +253,9 @@ function html_list_product($pdo, $produits, $nombre_total_produit, $offset){
     $html .= '<tr class="'.$produit->token_produit.' '.color_ligne_product($produit).'">';
     $html .=    '<td>'.$nbre_product_plus_offset--.'</td>';
     $html .=    '<td> <img class="img-circle width-1" src="'.WEBROOT_URL_FRONT.'images/shop/'.$produit->image.'.jpg?1422538624" alt="" /> </td>';
-    $html .=    '<td class=""> '.ucfirst( $produit->nom_produit ).' </td>';
+    $html .=    '<td class="name_product"> '.ucfirst( $produit->nom_produit ).' </td>';
     $html .=    '<td> '.ucfirst( $produit->categorie ).' </td>';
-    $html .=    '<td > '.number_format($produit->stock, 0, '', ' ').' </td>';
+    $html .=    '<td class="stock_product"> '.number_format($produit->stock, 0, '', ' ').' </td>';
     $html .=    '<td class=""> '.number_format($produit->qtite_unit, 0, '', ' ').' </td>';
     $html .=    '<td class=""> '.ucfirst( $unit_mesure[$produit->unite] ).' </td>';
     $html .=    '<td> '.number_format($produit->prix_qtite_unit, 0, '', ' ').' </td>';
@@ -106,10 +270,18 @@ function html_list_product($pdo, $produits, $nombre_total_produit, $offset){
     $html .=    '<td class="text-right">';
       
     $html .=      '<button type="button" class="btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" product-id="'.$produit->token_produit.'"
-                                         data-original-title="Modifier les informations du produit"><i class="fa fa-pencil"></i></button>';
+                                         data-original-title="Modifier les informations du produit"> 
+                                            <a href=" '.SITE_BASE_URL.'produits/modifier/'.$produit->token_produit.'">
+                                                    <i class="fa fa-pencil"></i>
+                                            </a>
+                                         </button>';
     $html .=      '<button type="button" class="btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" product-id="'.$produit->token_produit.'"
-                                         data-original-title="Voir les détails du produit"><i class="md md-description"></i></button>';
-    $html .=       '<button type="button" class="btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" product-id="'.$produit->token_produit.'"
+                                         data-original-title="Voir les détails du produit">
+                                         <a href="'.SITE_BASE_URL.'produits/details/'.$produit->token_produit.'">
+                                                    <i class="md md-description"></i>
+                                          </a>
+                                         </button>';
+    $html .=       '<button type="button" class="btn delete-product-btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" product-id="'.$produit->token_produit.'"
                                          data-original-title="Supprimer le produit"><i class="fa fa-trash-o"></i></button>';
     $html .=    '</td>';
 
@@ -366,6 +538,23 @@ function getDuree($date_arrivee, $date_depart){
        return $resultat;
     }
       
+}
+
+function getTokenNumber($Nbre_Mbre_Actuel, $Abreviation_Pays, $Debut){
+
+  $Identifiant = $Debut;
+
+  $Date_Identifiant = date("Ym"); //
+  $Identifiant .= "".$Date_Identifiant;        
+  $Numero_Mbre = "".($Nbre_Mbre_Actuel + 1);
+  $Taille_Fixe = 4;
+  $Numero_Mbre_Good = str_pad($Numero_Mbre, $Taille_Fixe, "0", STR_PAD_LEFT);
+  $Identifiant .= $Numero_Mbre_Good;
+
+  //$Abreviation_Pays = 'CI'; // A automatiser
+  $Identifiant .= $Abreviation_Pays;
+
+  return $Identifiant;
 }
 
 function getProductNumber($Nbre_Mbre_Actuel, $Abreviation_Pays){

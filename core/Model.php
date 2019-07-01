@@ -230,7 +230,8 @@
             }
             if(isset($req['limit'])){
               $sql .= ' LIMIT '.$req['limit'];              
-            } 
+            }
+            // debug($sql); 
             $pre = $this->db->prepare($sql);
             if( isset( $req['array_filter'] ) ){
               $pre->execute($req['array_filter']);  

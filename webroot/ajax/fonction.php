@@ -1,5 +1,46 @@
 <?php
 
+function html_list_fournisseurs($pdo, $fournisseurs, $nombre_total_produit, $offset){
+
+  //recupere les unités de mésures
+
+  $html = '';
+  $nbre_product_plus = $nombre_total_produit + 1;
+  $nbre_product_plus_offset = $nombre_total_produit - $offset;
+  foreach ($fournisseurs as $fournisseur) {
+    $html .= '<tr class="text-center '.$fournisseur->token.'">';
+    $html .=    ' <td>'.$nbre_product_plus_offset--.'</td>
+                  <td class="token" >'.$fournisseur->token.' </td>
+                  <td class="name_supplier" >'.ucfirst( $fournisseur->nom ).'</td>
+                  <td> '.$fournisseur->tel.' </td>
+                  <td> '.$fournisseur->email.' </td>
+                  <td>'.dateFormat($fournisseur->date_creation).'</td>
+                  <td>'.dateFormat($fournisseur->date_modification).'</td>
+                  <td class="">
+                    <button type="button" class="btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" fournisseurs-id="'.$fournisseur->token.'"
+                     data-original-title="Modifier les informations du produit">
+                      <a href="'.BASE_URL.DS.'fournisseurs/modifier/'.$fournisseur->token.'">
+                          <i class="fa fa-pencil"></i>
+                      </a>
+                    </button>
+                    <button type="button" class="btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" fournisseurs-id="'.$fournisseur->token.'"
+                     data-original-title="Voir les détails du produit">
+                      <a href="'.BASE_URL.DS.'fournisseurs/details/'.$fournisseur->token.'">
+                          <i class="md md-description"></i>
+                      </a>
+                    </button>
+                    <button type="button" class="btn delete-btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" fournisseurs-id="'.$fournisseur->token.'"
+                     data-original-title="Supprimer le fournisseur"><i class="fa fa-trash-o"></i></button>
+                  </td>';
+    $html .= '</tr>';
+
+  }
+
+  return $html;
+}
+
+
+
 function update($pdo, $req, $table){
    $cond = array();
    $sql = ' UPDATE '.$table.' SET ';
@@ -18,6 +59,50 @@ function update($pdo, $req, $table){
    // debugger($sql);
    $pre = $pdo->prepare($sql);
    $pre->execute($req['values']);
+}
+
+//renvoi html pour la liste des produits
+function html_list_stocks($pdo, $stocks, $nombre_total_produit, $offset){
+
+  //recupere les unités de mésures
+  $unit_mesure = get_unit_mesure($pdo);
+
+  $html = '';
+  $nbre_product_plus = $nombre_total_produit + 1;
+  $nbre_product_plus_offset = $nombre_total_produit - $offset;
+  foreach ($stocks as $stock) {
+    $html .= '<tr class="'.$stock->stock_id.'">';
+    $html .=    ' <td>'.$nbre_product_plus_offset--.'</td>
+                  <td class="token" >'.$stock->stock_id.' </td>
+                  <td class="montant_ht" >'.number_format($stock->montant_ht, 0, '', ' ').' </td>
+                  <td class="frais_livraison" >'.number_format($stock->frais_livraison, 0, '', ' ').' </td>
+                  <td class="montant_total" >'.number_format($stock->montant_total, 0, '', ' ').' </td>
+                  <td class="produit" >'.$stock->produit.' </td>
+                  <td class="qtte" >'.number_format($stock->qtte, 0, '', ' ').' </td>
+                  <td class="unite" >'.ucfirst( $unit_mesure[$stock->unite] ).'</td>
+                  <td class="produit" >'.ucfirst( $stock->fournisseur_nom ).' </td>
+                  <td>'.dateFormat($stock->date_creation).'</td>
+                  <td>'.dateFormat($stock->date_modification).'</td>
+                  <td class="">
+                    <button type="button" class="btn btn-icon-toggle" data-toggle="tooltip" data-placement="top"
+                      stock-id="'.$stock->stock_id.'" data-original-title="Modifier le stock">
+                      <a href="'.BASE_URL.'stocks/modifier/'.$stock->stock_id.'">
+                        <i class="fa fa-pencil"></i>
+                      </a>
+                    </button>
+                    <button type="button" class="btn delete-btn btn-icon-toggle" data-toggle="tooltip" 
+                       data-placement="top" stock-id="'.$stock->stock_id.'" data-original-title="Supprimer le stock">
+                      <i class="fa fa-trash-o"></i>
+                    </button>
+                  </td>';
+
+    $html .= '</tr>';
+
+
+
+  }
+
+  return $html;
 }
 
 function html_list_clients($pdo, $clients, $nombre_total_produit, $offset){
@@ -505,7 +590,7 @@ function debugger($var, $second_var=null){
   print_r($var);
   print_r(' ');
   print_r($second_var);
-  die();
+  die( header("arret pour debuggage", true, 500) );
   return true;
 }
 
@@ -546,7 +631,7 @@ function getTokenNumber($Nbre_Mbre_Actuel, $Abreviation_Pays, $Debut){
 
   $Date_Identifiant = date("Ym"); //
   $Identifiant .= "".$Date_Identifiant;        
-  $Numero_Mbre = "".($Nbre_Mbre_Actuel + 1);
+  $Numero_Mbre = "".($Nbre_Mbre_Actuel + 0);
   $Taille_Fixe = 4;
   $Numero_Mbre_Good = str_pad($Numero_Mbre, $Taille_Fixe, "0", STR_PAD_LEFT);
   $Identifiant .= $Numero_Mbre_Good;

@@ -269,7 +269,7 @@ class CommandesController extends Controller {
       foreach ( $list_function_params as $function_param ) {
           # code...
         $spliter = explode( '&', $function_param);
-        $$spliter[0] = isset( $spliter[1] ) ?  $spliter[1] : '';
+        ${$spliter[0]} = isset( $spliter[1] ) ?  $spliter[1] : '';
       }  
       //debug($start_hour);
 

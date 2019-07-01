@@ -26,12 +26,28 @@ total users, total users avec commandes, total avis, total produits, produits pl
 			- Id Commande
 
 07. Commune livraison(+actif/non actif)
-08. Stocks
-09. Fournisseurs
+08. Stocks :
+	- Liste : OK
+	- Recherche multicritere : OK
+	- Pagination : OK
+	- Ajouter : OK
+	- Modifier : OK
+	- supprimer : OK
+	- Details : OK
+	- extraction : OK
+09. Fournisseurs : 
+	- Liste : OK
+	- Recherche multicritere : OK
+	- Pagination : OK
+	- Ajouter : OK
+	- Modifier : OK
+	- supprimer : OK
+	- Details : 
+	- extraction : 
 16. Publicités
 10. Les avis
 11. Les mails
-12. Clients (stat, liste (avec nombre de commandes), actions sur status, supprimer, details)
+12. Clients (stat, liste (avec nombre de commandes), actions sur status, supprimer, details) : OK
 13. Gestiln Utilisateurs Back Office
 14. Extraction pour les listes
 15. Recherche multicriteres(-periodes, identifiant, statut, -nom prouduits, nom element, tel client, email client)
@@ -119,6 +135,11 @@ VUE POUR GERER LES UNITE DE MESURE
 livreurs
 
 id, nom, prenom, tel, date_creation, date_modification
+
+**** ERREUR ***
+probleme de compatibilité pour phpExcell sur la version php5 et php7.
+correction : supprimer une directive 'break' ligne 581 dans un fichier de fonction (phpExcell/Classes/PHPExcel/Calculation/Functions.php)
+https://stackoverflow.com/questions/35918626/fatal-error-break-not-in-the-loop-or-switch-context-in-function-php
 
 *** Faire fonction de nouveau produit ****
 

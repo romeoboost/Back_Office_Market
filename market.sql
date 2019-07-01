@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  lun. 27 mai 2019 à 15:48
+-- Généré le :  jeu. 27 juin 2019 à 18:06
 -- Version du serveur :  5.7.21
 -- Version de PHP :  5.6.35
 
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `categories_produits` (
   `date_creation` datetime DEFAULT NULL,
   `date_modification` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `categories_produits`
@@ -87,9 +87,14 @@ INSERT INTO `categories_produits` (`id`, `nom`, `token`, `statut`, `image`, `ico
 (3, 'cremerie', 'jjhshgfcbcjhj4koi22', 1, 'jjhshgfcbcjhj4koi22', 'oil', '2018-11-01 00:00:00', '2018-11-01 00:00:00'),
 (4, 'poissonnerie', 'jfhcdstgsdhgfcbcjhj45ss', 1, 'jfhcdstgsdhgfcbcjhj45ss', 'fish', '2018-11-01 00:00:00', '2018-11-01 00:00:00'),
 (5, 'fruit', 'kbsedeadbcjhj45ss', 1, 'kbsedeadbcjhj45ss', 'fruit', '2018-11-01 00:00:00', '2018-11-01 00:00:00'),
-(6, 'céréale', 'jhergdvherjd', 1, 'jhergdvherjd', 'seed-bag', '2018-11-01 00:00:00', '2018-11-01 00:00:00'),
+(6, 'Céréales', 'jhergdvherjd', 1, '650b2de60935fb31340be95a729072e6', 'seed-bag', '2018-11-01 00:00:00', '2019-06-23 15:20:58'),
 (7, 'féculent', 'ergeverjkvfer', 1, 'ergeverjkvfer', 'potatoes', '2018-11-01 00:00:00', '2018-11-01 00:00:00'),
-(8, 'produit dérivé', 'dscfvrgher258451zdrcc', 1, 'dscfvrgher258451zdrcc', 'rice', '2018-11-02 00:00:00', '2018-11-02 00:00:00');
+(8, 'produit dérivé', 'dscfvrgher258451zdrcc', 1, 'dscfvrgher258451zdrcc', 'rice', '2018-11-02 00:00:00', '2018-11-02 00:00:00'),
+(13, 'Crustacés', 'CTP2019060009AM', 0, 'f797cd6ce7e5186a96482e1e99d9a35c', 'fruit', '2019-06-23 18:12:35', '2019-06-23 18:12:35'),
+(14, 'TEST', 'CTP2019060010AM', 1, '650b2de60935fb31340be95a729072e6', 'seed-bag', '2018-11-01 00:00:00', '2019-06-23 15:20:58'),
+(15, 'TEST 2350', 'CTP2019060011AM', 1, 'ergeverjkvfer', 'potatoes', '2018-11-01 00:00:00', '2018-11-01 00:00:00'),
+(16, 'TEST bibine', 'CTP2019060012AM', 1, 'dscfvrgher258451zdrcc', 'rice', '2018-11-02 00:00:00', '2018-11-02 00:00:00'),
+(17, 'Alcool', 'CTP2019060013AM', 0, 'f797cd6ce7e5186a96482e1e99d9a35c', 'fruit', '2019-06-23 18:12:35', '2019-06-23 18:12:35');
 
 -- --------------------------------------------------------
 
@@ -112,16 +117,24 @@ CREATE TABLE IF NOT EXISTS `clients` (
   `date_creation` datetime DEFAULT NULL,
   `date_modification` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `clients`
 --
 
 INSERT INTO `clients` (`id`, `token`, `nom`, `prenoms`, `tel`, `email`, `password`, `sexe`, `statut`, `image`, `date_creation`, `date_modification`) VALUES
-(1, 'chsdbcbsbhsd5222', 'MAGASSOUBA', 'Oumar Check Premier', '01010101', 'check.oumar@test.ci', 'f5b8569f25528d10c56fe9808b0aa9e3', 1, 1, 'chsdbcbsbhsd5222', '2018-12-03 15:00:00', '2019-04-28 18:12:22'),
-(2, 'fvevjhdfvj585csd', 'boss', 'boss', '01010102', 'boss@boss.ci', 'test1234', 0, 0, 'fvevjhdfvj585csd', '2018-12-03 00:00:00', '2018-12-03 00:00:00'),
-(6, 'CLI2019010003MKT', 'test', 'testeur', '01040507', ' ', '16d7a4fca7442dda3ad93c9a726597e4', 0, 1, NULL, '2019-01-01 23:52:26', '2019-01-01 23:52:26');
+(1, 'CLI2019010001MKT', 'MAGASSOUBA', 'Oumar Check Premier', '01010101', 'check.oumar@test.ci', 'f5b8569f25528d10c56fe9808b0aa9e3', 1, 1, 'chsdbcbsbhsd5222', '2018-12-03 15:00:00', '2019-04-28 18:12:22'),
+(2, 'CLI2019010002MKT', 'boss', 'boss', '01010102', 'boss@boss.ci', 'f5b8569f25528d10c56fe9808b0aa9e3', 0, 0, 'fvevjhdfvj585csd', '2018-12-03 00:00:00', '2018-12-03 00:00:00'),
+(6, 'CLI2019010003MKT', 'test', 'testeur', '01040507', ' ', '16d7a4fca7442dda3ad93c9a726597e4', 0, 1, NULL, '2019-01-01 23:52:26', '2019-01-01 23:52:26'),
+(7, 'CLI2019010004MKT', 'TEST', 'BOBI', '01010102', 'test4@boss.ci', 'f5b8569f25528d10c56fe9808b0aa9e3', 1, 0, 'CLI2019010004MKT', '2019-06-03 00:00:00', '2019-06-03 00:00:00'),
+(8, 'CLI2019010005MKT', 'MERLIN', 'MAGICIEN', '01040507', ' ', '16d7a4fca7442dda3ad93c9a726597e4', 0, 1, NULL, '2019-06-05 00:00:00', '2019-06-05 00:00:00'),
+(9, 'CLI2019010006MKT', 'AMINA', 'DIALO', '01040507', ' ', '16d7a4fca7442dda3ad93c9a726597e4', 0, 1, NULL, '2019-04-01 23:52:26', '2019-04-01 23:52:26'),
+(10, 'CLI2019010007MKT', 'TEST', 'Bobi', '01010102', 'bobi@boss.ci', 'f5b8569f25528d10c56fe9808b0aa9e3', 1, 1, 'CLI2019010008MKT', '2019-06-03 00:00:00', '2019-06-27 00:54:36'),
+(11, 'CLI2019010008MKT', 'MATHIEU', 'BIBO', '01040507', ' ', '16d7a4fca7442dda3ad93c9a726597e4', 0, 0, NULL, '2019-06-05 00:00:00', '2019-06-26 23:56:40'),
+(13, 'CLI2019010010MKT', 'titan', 'pere', '01040507', ' ', '16d7a4fca7442dda3ad93c9a726597e4', 1, 1, NULL, '2019-04-01 23:52:26', '2019-04-01 23:52:26'),
+(14, 'CLI2019010011MKT', 'ali', 'fere', '01010102', 'ali@boss.ci', 'f5b8569f25528d10c56fe9808b0aa9e3', 1, 0, 'CLI2019010008MKT', '2019-06-03 00:00:00', '2019-06-03 00:00:00'),
+(15, 'CLI2019010012MKT', 'EDWIGE', 'Bile', '01040507', ' ', '16d7a4fca7442dda3ad93c9a726597e4', 0, 1, NULL, '2019-06-05 00:00:00', '2019-06-05 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -139,6 +152,8 @@ CREATE TABLE IF NOT EXISTS `commandes` (
   `frais_livraison` float NOT NULL,
   `montant_total` float NOT NULL,
   `id_livraison_destination` int(11) NOT NULL,
+  `id_livreur` int(20) DEFAULT NULL,
+  `id_utilisateur` int(20) DEFAULT NULL,
   `motif_rejet` text,
   `date_creation` datetime NOT NULL,
   `date_modification` datetime NOT NULL,
@@ -150,47 +165,40 @@ CREATE TABLE IF NOT EXISTS `commandes` (
 -- Déchargement des données de la table `commandes`
 --
 
-INSERT INTO `commandes` (`id`, `token`, `id_client`, `statut`, `montant_ht`, `frais_livraison`, `montant_total`, `id_livraison_destination`, `motif_rejet`, `date_creation`, `date_modification`, `date_livraison`) VALUES
-(14, 'CMD2019040007MKT', 1, 2, 6500, 500, 7000, 1, NULL, '2019-04-22 19:06:01', '2019-04-28 18:21:16', NULL),
-(7, 'CMD2019030005MKT', 1, 4, 300, 500, 800, 1, NULL, '2019-03-31 01:58:02', '2019-03-31 01:58:02', NULL),
-(8, 'CMD2019030006MKT', 1, 1, 300, 500, 800, 1, NULL, '2019-03-31 02:02:50', '2019-03-31 02:02:50', NULL),
-(9, 'CMD2019040007MKT', 1, 2, 1100, 500, 1600, 1, NULL, '2019-04-03 08:52:06', '2019-04-28 18:21:16', NULL),
-(10, 'CMD2019040008MKT', 1, 1, 1800, 500, 2300, 1, NULL, '2019-04-19 10:31:31', '2019-04-27 15:19:58', NULL),
-(11, 'CMD2019040009MKT', 1, 2, 1800, 500, 2300, 1, NULL, '2019-04-06 10:39:02', '2019-04-06 10:39:02', NULL),
-(12, 'CMD2019040010MKT', 1, 0, 1800, 500, 2300, 1, NULL, '2019-04-21 10:56:29', '2019-04-06 10:56:29', NULL),
-(15, 'CMD2019050008MKT', 1, 0, 1000, 500, 1500, 1, NULL, '2019-04-23 08:39:56', '2019-05-18 08:39:56', NULL),
-(16, 'CMD2019050009MKT', 1, 0, 1100, 1500, 2600, 4, NULL, '2019-04-24 08:40:52', '2019-05-18 08:40:52', NULL),
-(17, 'CMD2019050010MKT', 1, 0, 1000, 500, 1500, 1, NULL, '2019-04-24 08:41:15', '2019-05-18 08:41:15', NULL),
-(18, 'CMD2019050011MKT', 1, 3, 6100, 500, 6600, 1, NULL, '2019-04-24 08:41:42', '2019-05-18 08:41:42', NULL),
-(19, 'CMD2019050012MKT', 1, 0, 1100, 1000, 2100, 3, NULL, '2019-04-25 08:42:27', '2019-05-18 08:42:27', NULL),
-(20, 'CMD2019050013MKT', 1, 0, 1500, 500, 2000, 1, NULL, '2019-04-26 08:43:39', '2019-05-18 08:43:39', NULL),
-(21, 'CMD2019050014MKT', 1, 0, 1000, 500, 1500, 1, NULL, '2019-04-27 08:44:00', '2019-05-18 08:44:00', NULL),
-(22, 'CMD2019050015MKT', 1, 0, 6000, 500, 6500, 1, NULL, '2019-04-28 08:44:15', '2019-05-18 08:44:15', NULL),
-(23, 'CMD2019050016MKT', 1, 0, 600, 500, 1100, 1, NULL, '2019-04-29 08:44:33', '2019-05-18 08:44:33', NULL),
-(24, 'CMD2019050017MKT', 1, 0, 600, 500, 1100, 1, NULL, '2019-04-30 08:45:16', '2019-05-18 08:45:16', NULL),
-(25, 'CMD2019050018MKT', 1, 0, 8100, 1500, 9600, 4, NULL, '2019-05-01 08:46:05', '2019-05-18 08:46:05', NULL),
-(26, 'CMD2019050019MKT', 1, 0, 2100, 500, 2600, 1, NULL, '2019-05-02 08:46:25', '2019-05-18 08:46:25', NULL),
-(27, 'CMD2019050020MKT', 1, 0, 1100, 500, 1600, 1, NULL, '2019-05-03 08:46:56', '2019-05-18 08:46:56', NULL),
-(28, 'CMD2019050021MKT', 1, 0, 2600, 500, 3100, 1, NULL, '2019-05-04 08:47:32', '2019-05-18 08:47:32', NULL),
-(29, 'CMD2019050022MKT', 1, 0, 6600, 1000, 7600, 3, NULL, '2019-05-05 08:47:59', '2019-05-18 08:47:59', NULL),
-(30, 'CMD2019050023MKT', 1, 0, 1700, 500, 2200, 1, NULL, '2019-05-06 08:48:18', '2019-05-18 08:48:18', NULL),
-(31, 'CMD2019050024MKT', 1, 0, 8000, 500, 8500, 1, NULL, '2019-05-06 08:48:50', '2019-05-18 08:48:50', NULL),
-(32, 'CMD2019050025MKT', 1, 0, 2100, 500, 2600, 1, NULL, '2019-05-06 08:49:07', '2019-05-18 08:49:07', NULL),
-(33, 'CMD2019050026MKT', 1, 0, 2000, 500, 2500, 1, NULL, '2019-05-07 08:50:28', '2019-05-18 08:50:28', NULL),
-(34, 'CMD2019050027MKT', 1, 0, 2200, 1500, 3700, 4, NULL, '2019-05-08 08:51:08', '2019-05-18 08:51:08', NULL),
-(35, 'CMD2019050028MKT', 1, 0, 2700, 500, 3200, 1, NULL, '2019-05-09 08:52:18', '2019-05-18 08:52:18', NULL),
-(36, 'CMD2019050029MKT', 1, 0, 5500, 1000, 6500, 2, NULL, '2019-05-23 08:52:42', '2019-05-18 08:52:42', NULL),
-(37, 'CMD2019050030MKT', 1, 0, 1000, 500, 1500, 1, NULL, '2019-05-23 08:53:09', '2019-05-18 08:53:09', NULL),
-(38, 'CMD2019050031MKT', 1, 0, 6500, 1500, 8000, 4, NULL, '2019-05-23 08:54:01', '2019-05-18 08:54:01', NULL),
-(39, 'CMD2019050032MKT', 1, 0, 5100, 500, 5600, 1, NULL, '2019-05-24 08:55:02', '2019-05-18 08:55:02', NULL),
-(40, 'CMD2019050033MKT', 1, 0, 1200, 500, 1700, 1, NULL, '2019-05-25 08:57:09', '2019-05-18 08:57:09', NULL),
-(41, 'CMD2019050034MKT', 1, 0, 6600, 500, 7100, 1, NULL, '2019-05-25 08:57:31', '2019-05-18 08:57:31', NULL),
-(42, 'CMD2019050035MKT', 1, 0, 15000, 500, 15500, 1, NULL, '2019-05-25 09:00:05', '2019-05-18 09:00:05', NULL),
-(43, 'CMD2019050036MKT', 1, 0, 1500, 1000, 2500, 2, NULL, '2019-05-26 09:01:01', '2019-05-18 09:01:01', NULL),
-(44, 'CMD2019050037MKT', 1, 1, 1100, 500, 1600, 1, NULL, '2019-05-26 09:01:34', '2019-05-18 09:01:34', NULL),
-(45, 'CMD2019050038MKT', 1, 1, 2600, 500, 3100, 1, NULL, '2019-05-26 09:02:40', '2019-05-18 09:02:40', NULL),
-(46, 'CMD2019050039MKT', 1, 1, 3100, 500, 3600, 1, NULL, '2019-05-26 09:03:10', '2019-05-18 09:03:10', NULL),
-(47, 'CMD2019050040MKT', 1, 0, 6600, 500, 7100, 1, NULL, '2019-05-26 09:03:30', '2019-05-18 09:03:30', NULL);
+INSERT INTO `commandes` (`id`, `token`, `id_client`, `statut`, `montant_ht`, `frais_livraison`, `montant_total`, `id_livraison_destination`, `id_livreur`, `id_utilisateur`, `motif_rejet`, `date_creation`, `date_modification`, `date_livraison`) VALUES
+(14, 'CMD2019040007MKT', 1, 2, 6500, 500, 7000, 1, NULL, 0, NULL, '2019-04-22 19:06:01', '2019-04-28 18:21:16', NULL),
+(7, 'CMD2019030005MKT', 1, 4, 300, 500, 800, 1, NULL, 0, NULL, '2019-03-31 01:58:02', '2019-03-31 01:58:02', NULL),
+(8, 'CMD2019030006MKT', 1, 1, 300, 500, 800, 1, 2, 0, NULL, '2019-03-31 02:02:50', '2019-03-31 02:02:50', NULL),
+(9, 'CMD2019040007MKT', 1, 2, 1100, 500, 1600, 1, NULL, 0, NULL, '2019-04-03 08:52:06', '2019-04-28 18:21:16', NULL),
+(10, 'CMD2019040008MKT', 1, 1, 1800, 500, 2300, 1, 2, 1, NULL, '2019-04-19 10:31:31', '2019-04-27 15:19:58', NULL),
+(11, 'CMD2019040009MKT', 1, 2, 1800, 500, 2300, 1, NULL, 0, NULL, '2019-04-06 10:39:02', '2019-04-06 10:39:02', NULL),
+(12, 'CMD2019040010MKT', 1, 4, 1800, 500, 2300, 1, NULL, 1, NULL, '2019-04-21 10:56:29', '2019-06-07 20:11:06', NULL),
+(15, 'CMD2019050008MKT', 1, 3, 1000, 500, 1500, 1, 3, 1, NULL, '2019-04-23 08:39:56', '2019-06-08 09:34:09', NULL),
+(16, 'CMD2019050009MKT', 1, 3, 1100, 1500, 2600, 4, 3, 0, NULL, '2019-04-24 08:40:52', '2019-06-06 17:56:25', NULL),
+(17, 'CMD2019050010MKT', 1, 3, 1000, 500, 1500, 1, 1, 0, NULL, '2019-04-24 08:41:15', '2019-06-06 16:28:18', NULL),
+(18, 'CMD2019050011MKT', 1, 3, 6100, 500, 6600, 1, 1, 0, NULL, '2019-04-24 08:41:42', '2019-05-18 08:41:42', NULL),
+(19, 'CMD2019050012MKT', 1, 3, 1100, 1000, 2100, 3, 2, 0, NULL, '2019-04-25 08:42:27', '2019-06-06 16:10:33', NULL),
+(20, 'CMD2019050013MKT', 1, 4, 1500, 500, 2000, 1, NULL, 1, NULL, '2019-04-26 08:43:39', '2019-06-07 20:11:18', NULL),
+(21, 'CMD2019050014MKT', 1, 0, 1000, 500, 1500, 1, NULL, 0, NULL, '2019-04-27 08:44:00', '2019-05-18 08:44:00', NULL),
+(22, 'CMD2019050015MKT', 1, 0, 6000, 500, 6500, 1, NULL, 0, NULL, '2019-04-28 08:44:15', '2019-05-18 08:44:15', NULL),
+(23, 'CMD2019050016MKT', 1, 3, 600, 500, 1100, 1, 2, 1, NULL, '2019-04-29 08:44:33', '2019-06-06 20:37:24', NULL),
+(25, 'CMD2019050018MKT', 1, 0, 8100, 1500, 9600, 4, NULL, 0, NULL, '2019-05-01 08:46:05', '2019-05-18 08:46:05', NULL),
+(26, 'CMD2019050019MKT', 1, 0, 2100, 500, 2600, 1, NULL, 0, NULL, '2019-05-02 08:46:25', '2019-05-18 08:46:25', NULL),
+(27, 'CMD2019050020MKT', 1, 3, 1100, 500, 1600, 1, 2, 0, NULL, '2019-05-03 08:46:56', '2019-06-06 16:34:48', NULL),
+(28, 'CMD2019050021MKT', 1, 3, 2600, 500, 3100, 1, 2, 0, NULL, '2019-05-04 08:47:32', '2019-06-06 08:33:06', NULL),
+(29, 'CMD2019050022MKT', 1, 3, 6600, 1000, 7600, 3, 2, 0, NULL, '2019-05-05 08:47:59', '2019-06-06 16:51:36', NULL),
+(30, 'CMD2019050023MKT', 1, 0, 1700, 500, 2200, 1, 2, 1, NULL, '2019-05-06 08:48:18', '2019-06-08 08:10:51', NULL),
+(32, 'CMD2019050025MKT', 1, 3, 2100, 500, 2600, 1, 1, 1, NULL, '2019-05-06 08:49:07', '2019-06-06 22:53:24', NULL),
+(33, 'CMD2019050026MKT', 1, 0, 2000, 500, 2500, 1, 2, 1, NULL, '2019-05-07 08:50:28', '2019-06-08 08:09:22', NULL),
+(34, 'CMD2019050027MKT', 1, 4, 2200, 1500, 3700, 4, 1, 1, 'TEST', '2019-05-08 08:51:08', '2019-06-08 19:43:13', NULL),
+(35, 'CMD2019050028MKT', 1, 0, 2700, 500, 3200, 1, NULL, 0, NULL, '2019-05-09 08:52:18', '2019-05-18 08:52:18', NULL),
+(36, 'CMD2019050029MKT', 1, 4, 5500, 1000, 6500, 2, 3, 1, 'je sais pas', '2019-05-23 08:52:42', '2019-06-08 19:41:12', NULL),
+(37, 'CMD2019050030MKT', 1, 0, 1000, 500, 1500, 1, 3, 1, NULL, '2019-05-23 08:53:09', '2019-06-06 22:53:41', NULL),
+(40, 'CMD2019050033MKT', 1, 0, 1200, 500, 1700, 1, 3, 1, NULL, '2019-05-25 08:57:09', '2019-06-06 22:48:26', NULL),
+(41, 'CMD2019050034MKT', 1, 3, 6600, 500, 7100, 1, 3, 1, 'Tu ne me plais pas du tout.', '2019-05-25 08:57:31', '2019-06-19 12:11:38', NULL),
+(45, 'CMD2019050038MKT', 1, 1, 2600, 500, 3100, 1, 2, 0, NULL, '2019-05-26 09:02:40', '2019-05-18 09:02:40', NULL),
+(46, 'CMD2019050039MKT', 1, 1, 3100, 500, 3600, 1, 1, 0, NULL, '2019-05-26 09:03:10', '2019-05-18 09:03:10', NULL),
+(47, 'CMD2019050040MKT', 1, 0, 6600, 500, 7100, 1, 3, 1, NULL, '2019-05-26 09:03:30', '2019-06-08 08:26:40', NULL);
 
 -- --------------------------------------------------------
 
@@ -217,9 +225,9 @@ CREATE TABLE IF NOT EXISTS `commandes_produits` (
 
 INSERT INTO `commandes_produits` (`id`, `id_commande`, `id_produit`, `quantite`, `qtte_unitaire`, `prix_qtte_unitaire`, `date_creation`, `date_modification`) VALUES
 (14, 7, 2, 1, 3, 100, '2019-03-31 01:58:02', '2019-03-31 01:58:02'),
-(15, 7, 8, 1, 3, 100, '2019-03-31 01:58:02', '2019-03-31 01:58:02'),
+(15, 7, 7, 1, 3, 100, '2019-03-31 01:58:02', '2019-03-31 01:58:02'),
 (16, 8, 2, 1, 3, 100, '2019-03-31 02:02:50', '2019-03-31 02:02:50'),
-(17, 8, 8, 1, 3, 500, '2019-03-31 02:02:50', '2019-03-31 02:02:50'),
+(17, 8, 7, 1, 3, 500, '2019-03-31 02:02:50', '2019-03-31 02:02:50'),
 (18, 9, 2, 1, 3, 600, '2019-04-03 08:52:06', '2019-04-03 08:52:06'),
 (19, 9, 1, 1, 5, 400, '2019-04-03 08:52:06', '2019-04-03 08:52:06'),
 (20, 9, 7, 1, 1, 150, '2019-04-03 08:52:06', '2019-04-03 08:52:06'),
@@ -251,8 +259,6 @@ INSERT INTO `commandes_produits` (`id`, `id_commande`, `id_produit`, `quantite`,
 (48, 22, 5, 1, 1, 5000, '2019-05-18 08:44:15', '2019-05-18 08:44:15'),
 (49, 23, 1, 1, 5, 500, '2019-05-18 08:44:33', '2019-05-18 08:44:33'),
 (50, 23, 2, 1, 3, 100, '2019-05-18 08:44:33', '2019-05-18 08:44:33'),
-(51, 24, 7, 1, 1, 500, '2019-05-18 08:45:16', '2019-05-18 08:45:16'),
-(52, 24, 2, 1, 3, 100, '2019-05-18 08:45:16', '2019-05-18 08:45:16'),
 (53, 25, 6, 1, 1, 1000, '2019-05-18 08:46:05', '2019-05-18 08:46:05'),
 (54, 25, 3, 1, 3, 1600, '2019-05-18 08:46:05', '2019-05-18 08:46:05'),
 (55, 25, 7, 1, 1, 500, '2019-05-18 08:46:05', '2019-05-18 08:46:05'),
@@ -268,10 +274,6 @@ INSERT INTO `commandes_produits` (`id`, `id_commande`, `id_produit`, `quantite`,
 (65, 29, 3, 1, 3, 1600, '2019-05-18 08:47:59', '2019-05-18 08:47:59'),
 (66, 30, 2, 1, 3, 100, '2019-05-18 08:48:18', '2019-05-18 08:48:18'),
 (67, 30, 3, 1, 3, 1600, '2019-05-18 08:48:18', '2019-05-18 08:48:18'),
-(68, 31, 1, 1, 5, 500, '2019-05-18 08:48:50', '2019-05-18 08:48:50'),
-(69, 31, 7, 1, 1, 500, '2019-05-18 08:48:50', '2019-05-18 08:48:50'),
-(70, 31, 5, 1, 1, 5000, '2019-05-18 08:48:50', '2019-05-18 08:48:50'),
-(71, 31, 6, 2, 1, 1000, '2019-05-18 08:48:50', '2019-05-18 08:48:50'),
 (72, 32, 3, 1, 3, 1600, '2019-05-18 08:49:07', '2019-05-18 08:49:07'),
 (73, 32, 7, 1, 1, 500, '2019-05-18 08:49:07', '2019-05-18 08:49:07'),
 (74, 33, 7, 4, 1, 500, '2019-05-18 08:50:28', '2019-05-18 08:50:28'),
@@ -288,9 +290,7 @@ INSERT INTO `commandes_produits` (`id`, `id_commande`, `id_produit`, `quantite`,
 (85, 38, 7, 1, 1, 500, '2019-05-18 08:54:01', '2019-05-18 08:54:01'),
 (86, 38, 6, 1, 1, 1000, '2019-05-18 08:54:01', '2019-05-18 08:54:01'),
 (87, 38, 5, 1, 1, 5000, '2019-05-18 08:54:01', '2019-05-18 08:54:01'),
-(88, 39, 2, 1, 3, 100, '2019-05-18 08:55:02', '2019-05-18 08:55:02'),
-(89, 39, 5, 1, 1, 5000, '2019-05-18 08:55:02', '2019-05-18 08:55:02'),
-(90, 40, 8, 1, 3, 200, '2019-05-18 08:57:09', '2019-05-18 08:57:09'),
+(90, 40, 7, 1, 3, 200, '2019-05-18 08:57:09', '2019-05-18 08:57:09'),
 (91, 40, 4, 1, 1, 1000, '2019-05-18 08:57:09', '2019-05-18 08:57:09'),
 (92, 41, 5, 1, 1, 5000, '2019-05-18 08:57:31', '2019-05-18 08:57:31'),
 (93, 41, 3, 1, 3, 1600, '2019-05-18 08:57:31', '2019-05-18 08:57:31'),
@@ -335,6 +335,33 @@ INSERT INTO `livraison_destinations` (`id`, `token`, `commune`, `frais`, `date_c
 (3, 'kdkckcdk15d4', 'Adjamé', 1000, '2018-11-01 00:00:00', '2018-12-05 00:00:00'),
 (4, 'mooc45dddcddd', 'Yopougon', 1500, '2018-12-05 00:00:00', '2018-12-05 00:00:00'),
 (5, 'mongsfsfccxxx', 'Marcory', 2000, '2018-12-05 00:00:00', '2018-12-05 00:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `livreurs`
+--
+
+DROP TABLE IF EXISTS `livreurs`;
+CREATE TABLE IF NOT EXISTS `livreurs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nom` varchar(255) NOT NULL,
+  `prenoms` varchar(255) NOT NULL,
+  `tel` varchar(255) NOT NULL,
+  `date_creation` datetime NOT NULL,
+  `date_modification` datetime NOT NULL,
+  `email` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `livreurs`
+--
+
+INSERT INTO `livreurs` (`id`, `nom`, `prenoms`, `tel`, `date_creation`, `date_modification`, `email`) VALUES
+(1, 'DHL', 'Ibrahim', '08091011', '2019-06-02 11:25:40', '2019-06-02 11:25:40', 'ibrahim.kone@dhl.com'),
+(2, 'CR Service', 'kesso', '07080502', '2019-06-02 11:25:40', '2019-06-02 11:25:40', 'kesso.dev@cr-service.com'),
+(3, 'CR SERVICE', 'Bernard', '65626364', '2019-05-03 11:25:40', '2019-05-03 11:25:40', 'bernard.livreur@cr-service.com');
 
 -- --------------------------------------------------------
 
@@ -428,21 +455,28 @@ CREATE TABLE IF NOT EXISTS `produits` (
   `date_creation` datetime DEFAULT NULL,
   `date_modification` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `produits`
 --
 
 INSERT INTO `produits` (`id`, `nom`, `description`, `token`, `stock`, `id_categorie_produit`, `id_unite`, `quantite_unitaire`, `prix_quantite_unitaire`, `id_taille`, `slug`, `statut`, `image`, `page_accueil`, `nouveau`, `promo`, `pourcentage_promo`, `date_creation`, `date_modification`) VALUES
-(1, 'tomate', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'aaaaaaaaa123', 55, 1, 3, 5, 500, 2, 'tomate-moyen-legume-aaaaaaaaa123', 1, 'aaaaaaaaa123', 1, 0, 0, 0, '2018-11-01 00:00:00', '2019-04-28 18:21:16'),
-(2, 'carotte', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'bbbbbbbbbbb589', 97, 1, 3, 3, 100, 4, 'carotte-moyen-bbbbbbbbbbb589', 1, 'bbbbbbbbbbb589', 1, 1, 0, 0, '2018-11-01 00:00:00', '2019-04-27 15:19:58'),
-(3, 'carpe', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'cccccccccccc256', 82, 4, 3, 3, 2000, 4, 'carpe-poissonnerie-cccccccccccc256', 1, 'cccccccccccc256', 1, 1, 1, 20, '2018-11-01 00:00:00', '2019-04-27 15:19:58'),
-(4, 'crevette', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'ddddddddddddd585', 498, 4, 1, 1, 1000, 4, 'crevette-poissonnerie-ddddddddddddd585', 1, 'ddddddddddddd585', 1, 0, 0, 0, '2018-11-01 00:00:00', '2018-11-01 00:00:00'),
-(5, 'poule pondeuse', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'zsfjchjzesg5555aaa', 88, 2, 3, 1, 5000, 4, 'poule-pondeuse-boucherie-zsfjchjzesg5555aaa', 1, 'zsfjchjzesg5555aaa', 1, 0, 0, 0, '2018-11-01 00:00:00', '2019-04-28 18:21:16'),
-(6, 'oignon', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'qdsfgersdgrd552000', 390, 1, 1, 1, 1000, 4, 'oignon-legume-qdsfgersdgrd552000', 1, 'qdsfgersdgrd552000', 1, 0, 0, 0, '2018-11-01 00:00:00', '2019-04-28 18:21:16'),
-(7, 'chou', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'mmmmmmmmmmm255', 475, 1, 3, 1, 500, 4, 'chou-legume-mmmmmmmmmmm255', 1, 'mmmmmmmmmmm255', 1, 0, 0, 0, '2018-11-01 00:00:00', '2018-11-01 00:00:00'),
-(8, 'orange', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'xsdrfghhnk25hhh', 94, 5, 3, 3, 200, 4, 'orange-fruits-xsdrfghhnk25hhh', 1, 'xsdrfghhnk25hhh', 1, 0, 0, 0, '2018-11-01 00:00:00', '2018-11-01 00:00:00');
+(1, 'Tomate', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'aaaaaaaaa123', 60, 1, 3, 5, 500, 2, 'Tomate-légume-aaaaaaaaa123', 1, '1f1254b42cb27debac63fdd769f4cac2', 1, 0, 1, 10, '2018-11-01 00:00:00', '2019-06-19 15:58:36'),
+(2, 'Carotte Grand', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'bbbbbbbbbbb589', 206, 1, 3, 3, 100, 4, 'Carotte Grand-légume-bbbbbbbbbbb589', 1, '5b7d767338c627979d3fcbc66508098b', 1, 1, 1, 10, '2018-11-01 00:00:00', '2019-06-19 09:29:06'),
+(3, 'Carpe', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'cccccccccccc256', 85, 4, 3, 3, 2000, 4, 'Carpe-poissonnerie-cccccccccccc256', 1, 'a0cfb5517cadec0fc259734038cf6495', 1, 1, 1, 20, '2018-11-01 00:00:00', '2019-06-19 14:37:19'),
+(4, 'Crevette', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'ddddddddddddd585', 498, 4, 1, 1, 1000, 4, 'Crevette-poissonnerie-ddddddddddddd585', 1, 'da84b7ca2bb73e4ccbdb0db14eca1f5e', 1, 0, 0, 0, '2018-11-01 00:00:00', '2019-06-19 14:36:52'),
+(5, 'Poule pondeuse', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'zsfjchjzesg5555aaa', 140, 2, 3, 1, 5000, 4, 'Poule pondeuse-boucherie-zsfjchjzesg5555aaa', 1, 'd9ad969f1f25a7d69cfeaf84e6b7fa37', 1, 0, 0, 0, '2018-11-01 00:00:00', '2019-06-19 14:38:29'),
+(6, 'Oignon', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'qdsfgersdgrd552000', 394, 1, 1, 1, 1000, 4, 'Oignon-légume-qdsfgersdgrd552000', 1, 'b17c6696aa1d8c8635f5b4bf1b0f720c', 1, 0, 0, 0, '2018-11-01 00:00:00', '2019-06-19 14:35:56'),
+(7, 'Chou', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'mmmmmmmmmmm255', 481, 1, 3, 1, 500, 4, 'Chou-légume-mmmmmmmmmmm255', 1, '4184b4d29624086be3b3c42d59ec20c2', 1, 0, 0, 0, '2018-11-01 00:00:00', '2019-06-19 14:36:26'),
+(8, 'Orange', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'xsdrfghhnk25hhh', 94, 5, 3, 3, 200, 4, 'Orange-fruit-xsdrfghhnk25hhh', 1, 'd3ac81a903ce60b5d588e70b292a3284', 1, 0, 0, 0, '2018-11-01 00:00:00', '2019-06-19 14:09:44'),
+(9, 'Mangue', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'PR20190600015AM', 94, 5, 3, 3, 200, 4, 'Mangue-fruit-PR20190600015AM', 1, '9a8b48d6e46a07df1513c6effab132c9', 1, 0, 0, 0, '2018-11-01 00:00:00', '2019-06-19 14:20:24'),
+(10, 'Banane Douce', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'PR20190600016AM', 94, 5, 3, 3, 200, 4, 'Banane Douce-fruit-PR20190600016AM', 0, '3bc1d6826ee416ece7aa8377e3d19b17', 1, 0, 0, 0, '2018-11-01 00:00:00', '2019-06-19 14:21:52'),
+(11, 'Piment Rouge', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'PR20190600013AM', 394, 1, 1, 5, 100, 4, 'Piment Rouge-légume-PR20190600013AMPiment-Rouge-légume-PR20190600013AM', 0, 'qdsfgersdgrd552000', 1, 0, 0, 0, '2018-11-01 00:00:00', '2019-06-21 13:40:55'),
+(12, 'Machoiron', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'PR20190600011AM', 0, 4, 3, 3, 2000, 4, 'Machoiron-poissonnerie-PR20190600011AM', 1, '07ac97d1054258cb3077d85364f09174', 1, 1, 1, 20, '2018-11-01 00:00:00', '2019-06-19 14:37:48'),
+(14, 'Piment', 'Tres bon piment', 'PDT2019060013MKT', 0, 1, 3, 20, 200, NULL, 'Piment-légume-PDT2019060013MKT', 1, '735decffc15cdbaf879be219a94cff5e', 0, 0, 0, 0, '2019-06-17 09:36:41', '2019-06-19 16:17:50'),
+(15, 'Gombo', 'TEST', 'PDT2019060014MKT', 0, 1, 3, 5, 150, NULL, 'Gombo-légume-PDT2019060014MKT', 0, 'f8aa12ef265bfcc76c76725bc206339f', 0, 0, 0, 0, '2019-06-17 09:40:46', '2019-06-17 09:40:46'),
+(17, 'Pommes de terre', 'TEST', 'PDT2019060015AM', 0, 7, 1, 1, 1500, NULL, 'Pommes de terre-féculent-PDT2019060015AM', 1, '96f9f25f1837a0e92cc6b4cb3ef5a586', 0, 0, 0, 0, '2019-06-19 21:39:03', '2019-06-19 21:39:03');
 
 -- --------------------------------------------------------
 
@@ -554,15 +588,21 @@ CREATE TABLE IF NOT EXISTS `stocks` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_produit` int(100) DEFAULT NULL,
   `quantite_initiale` int(100) DEFAULT NULL,
-  `quantite_reserve` int(100) DEFAULT NULL,
-  `quantite_paye` int(100) DEFAULT NULL,
-  `quantite_resta,te` int(100) DEFAULT NULL,
+  `montant` float NOT NULL,
   `statut` int(1) DEFAULT NULL COMMENT '1=en cours; 0=epuise',
   `id_fournisseur` int(100) DEFAULT NULL,
   `date_creation` datetime NOT NULL,
   `date_modification` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `stocks`
+--
+
+INSERT INTO `stocks` (`id`, `id_produit`, `quantite_initiale`, `montant`, `statut`, `id_fournisseur`, `date_creation`, `date_modification`) VALUES
+(1, 1, 100, 100000, 1, 1, '2019-06-12 06:23:34', '2019-06-12 06:23:34'),
+(2, 2, 2000, 156000, 1, 1, '2019-06-12 06:23:34', '2019-06-12 06:23:34');
 
 -- --------------------------------------------------------
 
@@ -597,6 +637,7 @@ INSERT INTO `tailles` (`id`, `nom`) VALUES
 DROP TABLE IF EXISTS `unites`;
 CREATE TABLE IF NOT EXISTS `unites` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `token` varchar(20) NOT NULL,
   `libelle` varchar(100) NOT NULL,
   `symbole` varchar(5) NOT NULL,
   `date_creation` datetime NOT NULL,
@@ -608,10 +649,10 @@ CREATE TABLE IF NOT EXISTS `unites` (
 -- Déchargement des données de la table `unites`
 --
 
-INSERT INTO `unites` (`id`, `libelle`, `symbole`, `date_creation`, `date_modification`) VALUES
-(1, 'kilogramme', 'Kg', '2018-11-01 00:00:00', '2018-11-01 00:00:00'),
-(2, 'litre', 'L', '2018-11-01 00:00:00', '2018-11-01 00:00:00'),
-(3, 'nombre', 'NA', '2018-11-01 00:00:00', '2018-11-01 00:00:00');
+INSERT INTO `unites` (`id`, `token`, `libelle`, `symbole`, `date_creation`, `date_modification`) VALUES
+(1, 'nfggggggd14', 'kilogramme', 'Kg', '2018-11-01 00:00:00', '2018-11-01 00:00:00'),
+(2, 'mpongzfs4522', 'litre', 'L', '2018-11-01 00:00:00', '2018-11-01 00:00:00'),
+(3, 'gdsfhsjhs0155', 'nombre', 'NA', '2018-11-01 00:00:00', '2018-11-01 00:00:00');
 
 -- --------------------------------------------------------
 

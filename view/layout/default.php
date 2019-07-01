@@ -87,6 +87,14 @@
     <span id="linkToRejectClients" class="hidden"><?php echo WEBROOT_URL.'ajax/RejectClients.php'; ?></span>
     <span id="linkToRestoreClients" class="hidden"><?php echo WEBROOT_URL.'ajax/RestoreClients.php'; ?></span>
     <span id="linkToDeleteClients" class="hidden"><?php echo WEBROOT_URL.'ajax/DeleteClients.php'; ?></span>
+    <span id="linkToSearchStocks" class="hidden"><?php echo WEBROOT_URL.'ajax/SearchStocks.php'; ?></span>
+    <span id="linkToAddStock" class="hidden"><?php echo WEBROOT_URL.'ajax/AddStock.php'; ?></span>
+    <span id="linkToUpdateStock" class="hidden"><?php echo WEBROOT_URL.'ajax/UpdateStock.php'; ?></span>
+    <span id="linkToDeleteStock" class="hidden"><?php echo WEBROOT_URL.'ajax/DeleteStock.php'; ?></span>
+    <span id="linkToSearchFournisseurs" class="hidden"><?php echo WEBROOT_URL.'ajax/SearchFournisseurs.php'; ?></span>
+    <span id="linkToAddFournisseur" class="hidden"><?php echo WEBROOT_URL.'ajax/AddFournisseur.php'; ?></span>
+    <span id="linkToUpdateSupplier" class="hidden"><?php echo WEBROOT_URL.'ajax/UpdateSupplier.php'; ?></span>
+    <span id="linkToDeleteSupplier" class="hidden"><?php echo WEBROOT_URL.'ajax/DeleteSupplier.php'; ?></span>
 
 
 <div class="headerbar">
@@ -267,7 +275,7 @@
     <!-- END TABLES -->
     
     <!-- BEGIN FORMS -->
-    <li class="">
+    <li class="<?php echo active_menu('Stocks'); ?>">
         <a href="<?php echo BASE_URL.DS.'stocks/liste'; ?>">
             <div class="gui-icon"><span class="md md-web"></span></div>
             <span class="title">Stocks</span>
@@ -276,7 +284,7 @@
     <!-- END FORMS -->
     
     <!-- BEGIN PAGES -->
-    <li class="">
+    <li class="<?php echo active_menu('Fournisseurs'); ?>">
         <a href="<?php echo BASE_URL.DS.'fournisseurs/liste'; ?>">
             <div class="gui-icon"><i class="fa fa-puzzle-piece fa-fw"></i></div>
             <span class="title">Fournisseurs</span>

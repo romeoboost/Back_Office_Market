@@ -54,9 +54,14 @@ if ($_POST) {
                 $icon_cotegory = trim( $icon_cotegory );
 
                 //recupere le nombre de categories
-                $req = $pdo->prepare('SELECT COUNT(id) as nbre FROM categories_produits '); 
-                $req->execute(array()); $Mbre_actuel_Obj = current($req->fetchAll(PDO::FETCH_OBJ));
-                $Nbre_Product_Actuel = $Mbre_actuel_Obj->nbre; // le nombe actuel des clients
+                // $req = $pdo->prepare('SELECT id as nbre FROM categories_produits order by id desc limit 0,1 '); 
+                // $req->execute(array()); $Mbre_actuel_Obj = current($req->fetchAll(PDO::FETCH_OBJ));
+                // $Nbre_Product_Actuel = isset($Mbre_actuel_Obj->nbre) ? $Mbre_actuel_Obj->nbre : 1 ; // le nombe actuel des clients
+
+                $req = $pdo->prepare(" SHOW TABLE STATUS LIKE 'categories_produits' ");
+                $req->execute( array() ); $Mbre_actuel_Obj = current( $req->fetchAll() );
+                $Nbre_Product_Actuel = isset($Mbre_actuel_Obj['Auto_increment']) ? intval( $Mbre_actuel_Obj['Auto_increment'] ) : 1;
+
 
                 $token = getTokenNumber($Nbre_Product_Actuel, 'AM', 'CTP'); // génère un token
                 

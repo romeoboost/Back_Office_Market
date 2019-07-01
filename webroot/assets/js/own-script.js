@@ -37,6 +37,16 @@
     var linkToRejectClients = $("#linkToRejectClients").html();
     var linkToRestoreClients = $("#linkToRestoreClients").html();
     var linkToDeleteClients = $("#linkToDeleteClients").html();
+    var linkToSearchStocks = $("#linkToSearchStocks").html();
+    var linkToAddStock = $("#linkToAddStock").html();
+    var linkToUpdateStock = $("#linkToUpdateStock").html();
+    var linkToDeleteStock = $("#linkToDeleteStock").html();
+    var linkToSearchFournisseurs = $("#linkToSearchFournisseurs").html();
+    var linkToAddFournisseur = $("#linkToAddFournisseur").html();
+    var linkToUpdateSupplier = $("#linkToUpdateSupplier").html();
+    var linkToDeleteSupplier = $("#linkToDeleteSupplier").html();
+
+
 
 
 
@@ -117,6 +127,591 @@
         }, 1000);
 
     }
+
+    //Cliquer sur le bouton pour supprimer un stock
+    $('#fournisseurs-list tbody').on('click', '.delete-btn', function(e){ // 
+        e.preventDefault();
+        var self = $(this);
+        var token = $(this).attr('fournisseurs-id');
+
+        // console.log( token );
+        var name_supplier = $('#fournisseurs-list tbody .'+token+' .name_supplier').html();
+
+        $("#form-delete-fournisseurs :input[name='name_supplier']").val(name_supplier);
+        $("#form-delete-fournisseurs :input[name='token']").val(token);
+        $("#form-delete-fournisseurs :input[name='password']").val('');
+
+        $('#modal-delete-fournisseurs').modal('show');
+        
+        return false;
+    });
+
+    //validation du formulaire de suppression du client
+    $('#form-delete-fournisseurs').on('submit',function(e){
+        e.preventDefault();
+        var self = $(this);
+        $(this).find("#confirm_btn").addClass('disabled');
+        $(this).find("#confirm_btn").addClass('running');
+        var delete_data = $(this).serialize();
+        delete_supplier( delete_data, self );
+    });
+
+    /*Function rejet de commande*/
+    function delete_supplier(delete_data, self){
+        // console.log(delete_product_data);       
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: linkToDeleteSupplier,
+            data: delete_data,
+            success: function (data, textStatus, jqXHR) {
+               // console.log(data);
+               //Arrete le spinner du boutnon de validation du formulaire
+                self.find("#confirm_btn").removeClass('disabled');
+                self.find("#confirm_btn").removeClass('running');
+                    
+                var password = '';
+                self.find(":input[name='password']").val(password);
+                $('#modal-delete-fournisseurs').modal('hide');
+                $('[data-toggle="tooltip"]').tooltip(); //reinitialiser le tooltip
+
+               Swal({
+                  title: data.error_text,
+                  text: data.error_text_second,
+                  type: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#0aa89e',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'OK'
+                }).then((result) => {
+                  if (result.value) {
+                    //supprimer la ligne de la categorie
+                    $("#fournisseurs-list tbody ."+data.token).fadeOut(700);
+                  }
+                });
+            },
+            error: function(jqXHR) {
+              self.find("#confirm_btn").removeClass('disabled');
+              self.find("#confirm_btn").removeClass('running');  
+              console.log(jqXHR.responseText);
+              if( jqXHR.responseJSON.error_html ){
+                $('.errorForm ').html(jqXHR.responseJSON.error_html);
+              }
+
+            }
+        });
+
+    }
+
+
+    //form modification categories
+    $('.supplier_update_form').on('submit', function (e) {
+        e.preventDefault();
+        var self = $(this);
+
+        console.log( $(this).serialize() );
+        $(this).find("#confirm_btn").addClass('disabled');
+        $(this).find("#confirm_btn").addClass('running');
+
+        update_supplier( $(this).serialize(), self );
+        return false;
+    });
+
+    //function de modification categories
+    function update_supplier(add_data, self){
+        // console.log( add_data );
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: linkToUpdateSupplier,
+            data: add_data,
+            success: function (data, textStatus, jqXHR) {
+                // $('.product_update_form')[0].reset();
+                if( self.find("#confirm_btn").hasClass('disabled') ){
+                    self.find("#confirm_btn").removeClass('disabled');
+                    self.find("#confirm_btn").removeClass('running');
+                }
+                console.log(data);
+                Swal({
+                  title: data.error_text,
+                  text: data.error_text_second,
+                  type: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#0aa89e',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'OK'
+                }).then((result) => {
+                  if (result.value) {
+                    window.location.replace(data.linkToList);
+                  }
+                });
+            },
+            error: function(jqXHR) {
+              console.log(jqXHR.responseText);
+              if( self.find("#confirm_btn").hasClass('disabled') ){
+                    self.find("#confirm_btn").removeClass('disabled');
+                    self.find("#confirm_btn").removeClass('running');
+                }
+              if( typeof jqXHR.responseJSON['error_html'] !== 'undefined' ){
+                    $('#errorForm').prepend(jqXHR.responseJSON['error_html']);
+                }
+            }
+        });
+    }
+
+    /**BEGIN SUPPLIER TRAITMENT**/
+    //form d'ajout de produit
+    $('.supplier_add_form').on('submit', function (e) {
+        e.preventDefault();
+        var self = $(this);
+
+        console.log( $(this).serialize() );
+        $(this).find("#confirm_btn").addClass('disabled');
+        $(this).find("#confirm_btn").addClass('running');
+
+        add_supplier( $(this).serialize(), self );
+
+        return false;
+
+    });
+
+    function add_supplier(add_data, self){
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: linkToAddFournisseur,
+            data: add_data,
+            success: function (data, textStatus, jqXHR) {
+                self.find("#confirm_btn").removeClass('disabled');
+                self.find("#confirm_btn").removeClass('running');
+                // self[0].reset();
+                console.log(data);
+                Swal({
+                  title: data.error_text,
+                  text: data.error_text_second,
+                  type: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#0aa89e',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'OK'
+                }).then((result) => {
+                  if (result.value) {
+                    window.location.replace(data.linkToList);
+                  }
+                });
+            },
+            error: function(jqXHR) {
+                console.log(jqXHR.responseText);
+                self.find("#confirm_btn").removeClass('disabled');
+                self.find("#confirm_btn").removeClass('running'); 
+                // $('#errorForm').prepend(jqXHR.responseJSON['error_html']);
+                if( typeof jqXHR.responseJSON['error_html'] !== 'undefined' ){
+                    $('#errorForm').prepend(jqXHR.responseJSON['error_html']);
+                }
+            }
+        });
+    }
+
+    //validation du formulaire de recherche de stocks
+    $('.fournisseurs_search_form').on('submit', function (e) {
+        e.preventDefault();
+        console.log( $(this).serialize() );
+        $(this).find("#confirm_filter").addClass('disabled');
+        $(this).find("#confirm_filter").addClass('running');
+        var self = $(this);
+        ///name_supplier&/tel&        
+        search_fournisseurs( $(this).serialize(), self );
+
+        var start_date = $(this).find(" :input[name='start_date']").val();
+        var start_hour = $(this).find(" :input[name='start_hour']").val();
+        var end_date = $(this).find(" :input[name='end_date']").val();
+        var end_hour = $(this).find(" :input[name='end_hour']").val();
+        var tel = $(this).find(" :input[name='tel']").val();
+        var name_supplier = $(this).find(" :input[name='name_supplier']").val();
+                       // filter-data-montant="" filter-data-nameProduct="" filter-data-nameSupplier=""
+        $('#fournisseurs-list').attr('filter-data-startDate', start_date);
+        $('#fournisseurs-list').attr('filter-data-startHour', start_hour);
+        $('#fournisseurs-list').attr('filter-data-endDate', end_date);
+        $('#fournisseurs-list').attr('filter-data-endHour', end_hour);
+        $('#fournisseurs-list').attr('filter-data-tel', tel);
+        $('#fournisseurs-list').attr('filter-data-nameSupplier', name_supplier);
+        // console.log( sexe );
+        return false;
+
+    });    
+    
+    //pagination de liste clients
+    $('#list-fournisseurs-pagination').on('click', '.page-link', function (e) {
+        e.preventDefault();
+        var numero = $(this).attr('href');
+        // console.log(numero);
+        var start_date = $('#fournisseurs-list').attr('filter-data-startDate');
+        var start_hour = $('#fournisseurs-list').attr('filter-data-startHour');
+        var end_date = $('#fournisseurs-list').attr('filter-data-endDate');
+        var end_hour = $('#fournisseurs-list').attr('filter-data-endHour');
+        var montant = $('#fournisseurs-list').attr('filter-data-tel');
+        var name_supplier = $('#fournisseurs-list').attr('filter-data-nameSupplier');
+        var pagination = true;        
+
+        var dataFilter = {start_date:start_date,start_hour:start_hour,end_date:end_date,end_hour:end_hour,pagination:pagination,
+            tel:tel,name_supplier:name_supplier,number_page_running:numero};
+        
+        if( !isNaN( parseInt(numero) ) ){
+            search_fournisseurs(dataFilter, 'pagination');      
+        }
+        //$(".cmd_search_form :input[name='number_page_running']").val(numero);
+        $('#fournisseurs-list').attr('filter-data-pageRunning', numero);
+        return false;
+    });
+    
+    //rechercher stock avec ajax
+    function search_fournisseurs(filter_data, self){
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: linkToSearchFournisseurs,
+            data: filter_data,
+            success: function (data, textStatus, jqXHR) {
+               
+               $(' #fournisseurs-list tbody ').hide().html( data.result.html_list_elements ).fadeIn(700);
+               $(' #list-fournisseurs-pagination ').hide().html( data.result.html_pagination ).fadeIn(700); 
+               console.log(data);
+               if(!filter_data.pagination){
+                    
+                    if( self.find("#confirm_filter").hasClass('disabled') ){
+                        self.find("#confirm_filter").removeClass('disabled');
+                        self.find("#confirm_filter").removeClass('running');
+                    }
+                    $('.total').hide().html( data.result.stat.total.nbre ).fadeIn(1000);
+                    // $('.total_nbre').hide().html( data.result.stat.nbre ).fadeIn(1000);
+               } 
+               
+               $('#extract-excel-btn').attr('href', data.result.link_for_extract);
+               $('[data-toggle="tooltip"]').tooltip(); //reinitialiser le tooltip
+
+            },
+            error: function(jqXHR) {
+                console.log(jqXHR.responseText);
+                if( self.find("#confirm_filter").hasClass('disabled') ){
+                    self.find("#confirm_filter").removeClass('disabled');
+                    self.find("#confirm_filter").removeClass('running');
+                }
+
+                if( typeof jqXHR.responseJSON['error_html'] !== 'undefined' ){
+                    $('#errorForm').prepend(jqXHR.responseJSON['error_html']);
+                }
+
+            }
+        });
+    }
+
+    /**ENDING SUPPLIER TRAITMENT**/
+
+
+
+
+
+    //form d'ajout de produit
+    $('.stocks_add_form').on('submit', function (e) {
+        e.preventDefault();
+        var self = $(this);
+
+        console.log( $(this).serialize() );
+        $(this).find("#confirm_btn").addClass('disabled');
+        $(this).find("#confirm_btn").addClass('running');
+
+        add_stock( $(this).serialize(), self );
+
+        return false;
+
+    });
+
+    function add_stock(add_data, self){
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: linkToAddStock,
+            data: add_data,
+            success: function (data, textStatus, jqXHR) {
+                self.find("#confirm_btn").removeClass('disabled');
+              self.find("#confirm_btn").removeClass('running');
+                // self[0].reset();
+                console.log(data);
+                Swal({
+                  title: data.error_text,
+                  text: data.error_text_second,
+                  type: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#0aa89e',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'OK'
+                }).then((result) => {
+                  if (result.value) {
+                    window.location.replace(data.linkToList);
+                  }
+                });
+            },
+            error: function(jqXHR) {
+                console.log(jqXHR.responseText);
+                self.find("#confirm_btn").removeClass('disabled');
+              self.find("#confirm_btn").removeClass('running'); 
+                // $('#errorForm').prepend(jqXHR.responseJSON['error_html']);
+                if( typeof jqXHR.responseJSON['error_html'] !== 'undefined' ){
+                    $('#errorForm').prepend(jqXHR.responseJSON['error_html']);
+                }
+            },
+            always: function(jqXHR) {
+              self.find("#confirm_btn").removeClass('disabled');
+              self.find("#confirm_btn").removeClass('running');
+            }
+        });
+    }
+
+    //validation du formulaire de recherche de stocks
+    $('.stocks_search_form').on('submit', function (e) {
+        e.preventDefault();
+        console.log( $(this).serialize() );
+        $(this).find("#confirm_filter").addClass('disabled');
+        $(this).find("#confirm_filter").addClass('running');
+        var self = $(this);
+                
+        search_stocks( $(this).serialize(), self );
+
+        var start_date = $(this).find(" :input[name='start_date']").val();
+        var start_hour = $(this).find(" :input[name='start_hour']").val();
+        var end_date = $(this).find(" :input[name='end_date']").val();
+        var end_hour = $(this).find(" :input[name='end_hour']").val();
+        var montant = $(this).find(" :input[name='montant']").val();
+        var name_product = $(this).find(" :input[name='name_product']").val();
+        var name_supplier = $(this).find(" :input[name='name_supplier']").val();
+                       // filter-data-montant="" filter-data-nameProduct="" filter-data-nameSupplier=""
+        $('#stocks-list').attr('filter-data-startDate', start_date);
+        $('#stocks-list').attr('filter-data-startHour', start_hour);
+        $('#stocks-list').attr('filter-data-endDate', end_date);
+        $('#stocks-list').attr('filter-data-endHour', end_hour);
+        $('#stocks-list').attr('filter-data-montant', montant);
+        $('#stocks-list').attr('filter-data-nameProduct', name_product);
+        $('#stocks-list').attr('filter-data-nameSupplier', name_supplier);
+        // console.log( sexe );
+        return false;
+
+    });
+
+    //pagination de liste clients
+    $('#list-stocks-pagination').on('click', '.page-link', function (e) {
+        e.preventDefault();
+        var numero = $(this).attr('href');
+        // console.log(numero);
+
+        var start_date = $('#stocks-list').attr('filter-data-startDate');
+        var start_hour = $('#stocks-list').attr('filter-data-startHour');
+        var end_date = $('#stocks-list').attr('filter-data-endDate');
+        var end_hour = $('#stocks-list').attr('filter-data-endHour');
+        var montant = $('#stocks-list').attr('filter-data-montant');
+        var name_product = $('#stocks-list').attr('filter-data-nameProduct');
+        var name_supplier = $('#stocks-list').attr('filter-data-nameSupplier');
+        var pagination = true;        
+
+        var dataFilter = {start_date:start_date,start_hour:start_hour,end_date:end_date,end_hour:end_hour,pagination:pagination,
+            montant:montant,name_product:name_product,name_supplier:name_supplier,number_page_running:numero};
+        
+        if( !isNaN( parseInt(numero) ) ){
+            search_stocks(dataFilter, 'pagination');      
+        }
+        //$(".cmd_search_form :input[name='number_page_running']").val(numero);
+        $('#order-list').attr('filter-data-pageRunning', numero);
+        return false;
+    });
+    
+    //rechercher stock avec ajax
+    function search_stocks(filter_data, self){
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: linkToSearchStocks,
+            data: filter_data,
+            success: function (data, textStatus, jqXHR) {
+               
+               $(' #stocks-list tbody ').hide().html( data.result.html_list_stocks ).fadeIn(700);
+               $(' #list-stocks-pagination ').hide().html( data.result.html_pagination ).fadeIn(700); 
+               console.log(data);
+               if(!filter_data.pagination){
+                    
+                    if( self.find("#confirm_filter").hasClass('disabled') ){
+                        self.find("#confirm_filter").removeClass('disabled');
+                        self.find("#confirm_filter").removeClass('running');
+                    }
+                    $('.total_montant').hide().html( data.result.stat.montant ).fadeIn(1000);
+                    $('.total_nbre').hide().html( data.result.stat.nbre ).fadeIn(1000);
+               } 
+               
+               $('#extract-excel-btn').attr('href', data.result.link_for_extract);
+               $('[data-toggle="tooltip"]').tooltip(); //reinitialiser le tooltip
+
+            },
+            error: function(jqXHR) {
+                console.log(jqXHR.responseText);
+                if( self.find("#confirm_filter").hasClass('disabled') ){
+                    self.find("#confirm_filter").removeClass('disabled');
+                    self.find("#confirm_filter").removeClass('running');
+                }
+
+                if( typeof jqXHR.responseJSON['error_html'] !== 'undefined' ){
+                    $('#errorForm').prepend(jqXHR.responseJSON['error_html']);
+                }
+
+            }
+        });
+    }
+
+    //form modification categories
+    $('.stocks_update_form').on('submit', function (e) {
+        e.preventDefault();
+        var self = $(this);
+
+        console.log( $(this).serialize() );
+        $(this).find("#confirm_btn").addClass('disabled');
+        $(this).find("#confirm_btn").addClass('running');
+
+        update_stocks( $(this).serialize(), self );
+        return false;
+    });
+
+    //function de modification categories
+    function update_stocks(add_data, self){
+        // console.log( add_data );
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: linkToUpdateStock,
+            data: add_data,
+            success: function (data, textStatus, jqXHR) {
+                // $('.product_update_form')[0].reset();
+                if( self.find("#confirm_btn").hasClass('disabled') ){
+                    self.find("#confirm_btn").removeClass('disabled');
+                    self.find("#confirm_btn").removeClass('running');
+                }
+                console.log(data);
+                Swal({
+                  title: data.error_text,
+                  text: data.error_text_second,
+                  type: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#0aa89e',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'OK'
+                }).then((result) => {
+                  if (result.value) {
+                    window.location.replace(data.linkToList);
+                  }
+                });
+
+            },
+            error: function(jqXHR) {
+              console.log(jqXHR.responseText);
+              if( self.find("#confirm_btn").hasClass('disabled') ){
+                    self.find("#confirm_btn").removeClass('disabled');
+                    self.find("#confirm_btn").removeClass('running');
+                }
+              if( typeof jqXHR.responseJSON['error_html'] !== 'undefined' ){
+                    $('#errorForm').prepend(jqXHR.responseJSON['error_html']);
+                }
+
+            },
+            complete: function(jqXHR){
+                 
+            }
+        });
+    }
+
+    //Cliquer sur le bouton pour supprimer un stock
+    $('#stocks-list tbody').on('click', '.delete-btn', function(e){ // 
+        e.preventDefault();
+        var self = $(this);
+        var token = $(this).attr('stock-id');
+
+        console.log( token );
+        var produit = $('#stocks-list tbody .'+token+' .produit').html();
+        var qtte = $('#stocks-list tbody .'+token+' .qtte').html();
+        var unite = $('#stocks-list tbody .'+token+' .unite').html();
+
+        $("#form-delete-stock :input[name='product_name']").val(produit);
+        $("#form-delete-stock :input[name='qtte']").val(qtte);
+        $("#form-delete-stock :input[name='unite']").val(unite);
+        $("#form-delete-stock :input[name='token']").val(token);
+        $("#form-delete-stock :input[name='password']").val('');
+
+        $('#modal-delete-stock').modal('show');
+        
+        return false;
+    });
+
+    //validation du formulaire de suppression du client
+    $('#form-delete-stock').on('submit',function(e){
+        e.preventDefault();
+        var self = $(this);
+        $(this).find("#confirm_btn").addClass('disabled');
+        $(this).find("#confirm_btn").addClass('running');
+        var delete_data = $(this).serialize();
+        delete_stock( delete_data, self );
+    });
+
+    /*Function rejet de commande*/
+    function delete_stock(delete_data, self){
+        // console.log(delete_product_data);       
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: linkToDeleteStock,
+            data: delete_data,
+            success: function (data, textStatus, jqXHR) {
+               // console.log(data);
+               //Arrete le spinner du boutnon de validation du formulaire
+                self.find("#confirm_btn").removeClass('disabled');
+                self.find("#confirm_btn").removeClass('running');
+                    
+                var password = '';
+                self.find(":input[name='password']").val(password);
+                $('#modal-delete-stock').modal('hide');
+                $('[data-toggle="tooltip"]').tooltip(); //reinitialiser le tooltip
+
+               Swal({
+                  title: data.error_text,
+                  text: data.error_text_second,
+                  type: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#0aa89e',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'OK'
+                }).then((result) => {
+                  if (result.value) {
+                    //supprimer la ligne de la categorie
+                    $("#stocks-list tbody ."+data.token).fadeOut(700);
+                  }
+                });
+            },
+            error: function(jqXHR) {
+              self.find("#confirm_btn").removeClass('disabled');
+              self.find("#confirm_btn").removeClass('running');  
+              console.log(jqXHR.responseText);
+              if( jqXHR.responseJSON.error_html ){
+                $('.errorForm ').html(jqXHR.responseJSON.error_html);
+              }
+
+            }
+        });
+
+    }
+    
+
+    /**ENDING STOCK TRAITMENT**/
+
+
+
+
+
+
+
     /***BEGIN CLIENTS TRAITMENT***/
     $('.clients_search_form').on('submit', function (e) {
         e.preventDefault();
@@ -205,6 +800,7 @@
                } 
                
                $('#extract-excel-btn').attr('href', data.result.link_for_extract);
+               $('[data-toggle="tooltip"]').tooltip(); //reinitialiser le tooltip
 
             },
             error: function(jqXHR) {
@@ -281,6 +877,7 @@
                 $("#modal-reject-clients-confirm-btn").removeClass('running');
                 //cacher la fenetre modal du formulaire du rejet
                 $('#modal-reject-clients').modal('hide');
+                $('[data-toggle="tooltip"]').tooltip(); //reinitialiser le tooltip
 
                Swal({
                   title: data.error_text,
@@ -334,6 +931,7 @@
         $("#form-delete-clients :input[name='prenom']").val(prenom);
         // $("#form-reject-clients :input[name='cmd_montant_ttc']").val(montant_ttc);
         $("#form-delete-clients :input[name='client_id']").val(client_id);
+        $("#form-delete-clients :input[name='password']").val('');
 
         $('#modal-delete-clients').modal('show');
         
@@ -368,6 +966,7 @@
                 var password = '';
                 self.find(":input[name='password']").val(password);
                 $('#modal-delete-clients').modal('hide');
+                $('[data-toggle="tooltip"]').tooltip(); //reinitialiser le tooltip
 
                Swal({
                   title: data.error_text,
@@ -441,6 +1040,7 @@
                 //Ajouter class pour laction du bouton
                 $("#clients-list tbody ."+data.client_id+" .set-restore-btn").addClass('set-rejected-btn');
                 $("#clients-list tbody ."+data.client_id+" .set-restore-btn").removeClass('set-restore-btn');
+                $('[data-toggle="tooltip"]').tooltip(); //reinitialiser le tooltip
 
                Swal({
                   title: data.error_text,
@@ -555,6 +1155,7 @@
                } 
                
                $('#extract-excel-btn').attr('href', data.result.link_for_extract);
+               $('[data-toggle="tooltip"]').tooltip(); //reinitialiser le tooltip
 
             },
             error: function(jqXHR) {
@@ -1069,6 +1670,7 @@
                } 
                
                $('#extract-excel-btn').attr('href', data.result.link_for_extract);
+               $('[data-toggle="tooltip"]').tooltip();
 
             },
             error: function(jqXHR) {
@@ -1338,6 +1940,7 @@
         $("#form-delete-order :input[name='cmd_frais_livraison']").val(frais_livraison);
         $("#form-delete-order :input[name='cmd_montant_ttc']").val(montant_ttc);
         $("#form-delete-order :input[name='cmd_id']").val(cmd_id);
+        $("#form-delete-order :input[name='password']").val('');
 
         $('#modal-delete-order').modal('show');
               
@@ -1393,7 +1996,8 @@
                     // $('.total_produit_stock_off').hide().html( data.result.stat.produits_stock_off ).fadeIn(1000);
                     // $('.total_never_cmd').hide().html( data.result.stat.produits_non_cmd ).fadeIn(1000);
                     // $('.total_non_actif').hide().html( data.result.stat.produits_non_actif ).fadeIn(1000);
-               } 
+               }
+               $('[data-toggle="tooltip"]').tooltip();
                
                $('#extract-excel-btn').attr('href', data.result.link_for_extract);
 
@@ -1499,6 +2103,7 @@
 
                     //Ajouter bouton liver
                     $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").before( data.btn_rejected_html );
+                    $('[data-toggle="tooltip"]').tooltip();
 
                Swal({
                   title: data.error_text,
@@ -1561,6 +2166,7 @@
                     //palce la classe permetant de selectionner l'action d'arreter une livraison
                     $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").addClass('set-restore-btn');
                     $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").removeClass('set-rejected-btn');
+                    $('[data-toggle="tooltip"]').tooltip();
 
                     var rejected_message = '';
                     $("#form-reject-order :input[name='rejected_message']").val(rejected_message);
@@ -1639,6 +2245,7 @@
                     //remplacer bouton "rejeter" par "arreter livraison"
                     $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").attr('data-original-title', 'Arrêter la livraison');
                     $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").html('<i class="fa fa-pause"></i>');
+                    $('[data-toggle="tooltip"]').tooltip();
                     //palce la classe permetant de selectionner l'action d'arreter une livraison
                     $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").addClass('set-stop-shipping-btn');
                     $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").removeClass('set-rejected-btn');
@@ -1702,6 +2309,7 @@
                     //remplacer bouton "arreter livraison" par "rejeter"
                     $("#order-list tbody ."+data.cmd_id+" .set-stop-shipping-btn").attr('data-original-title', 'Rejetter la commande');
                     $("#order-list tbody ."+data.cmd_id+" .set-stop-shipping-btn").html('<i class="fa fa-times-circle-o"></i>');
+                    $('[data-toggle="tooltip"]').tooltip();
 
                     //Ajouter class pour laction du bouton
                     $("#order-list tbody ."+data.cmd_id+" .set-stop-shipping-btn").addClass('set-rejected-btn');

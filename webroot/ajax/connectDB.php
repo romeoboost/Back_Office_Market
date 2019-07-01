@@ -7,4 +7,6 @@ define('WEBROOT_URL_FRONT', 'http://localhost/Market/webroot/');
 // define('WEBROOT_FRONT_DIR', 'C:\wamp\www\Market\webroot\\');
 define('WEBROOT_FRONT_DIR', 'C:/wamp64/www/Market/webroot/');
 define('SITE_BASE_URL', 'http://localhost/Back_Office_Market/');
+define('BASE_URL', 'http://localhost/Back_Office_Market/');
+define('DS', '/');
 //echo 'bd bien chargé';

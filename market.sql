@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  jeu. 27 juin 2019 à 18:06
+-- Généré le :  lun. 01 juil. 2019 à 17:22
 -- Version du serveur :  5.7.21
--- Version de PHP :  5.6.35
+-- Version de PHP :  7.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `categories_produits` (
   `date_creation` datetime DEFAULT NULL,
   `date_modification` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `categories_produits`
@@ -94,7 +94,8 @@ INSERT INTO `categories_produits` (`id`, `nom`, `token`, `statut`, `image`, `ico
 (14, 'TEST', 'CTP2019060010AM', 1, '650b2de60935fb31340be95a729072e6', 'seed-bag', '2018-11-01 00:00:00', '2019-06-23 15:20:58'),
 (15, 'TEST 2350', 'CTP2019060011AM', 1, 'ergeverjkvfer', 'potatoes', '2018-11-01 00:00:00', '2018-11-01 00:00:00'),
 (16, 'TEST bibine', 'CTP2019060012AM', 1, 'dscfvrgher258451zdrcc', 'rice', '2018-11-02 00:00:00', '2018-11-02 00:00:00'),
-(17, 'Alcool', 'CTP2019060013AM', 0, 'f797cd6ce7e5186a96482e1e99d9a35c', 'fruit', '2019-06-23 18:12:35', '2019-06-23 18:12:35');
+(17, 'Alcool', 'CTP2019060013AM', 0, 'f797cd6ce7e5186a96482e1e99d9a35c', 'fruit', '2019-06-23 18:12:35', '2019-06-23 18:12:35'),
+(18, 'TEST', 'CTP2019060018AM', 0, 'f18ecb7faff47e319b555211f07d8fd3', 'oil', '2019-06-30 11:21:30', '2019-06-30 11:21:30');
 
 -- --------------------------------------------------------
 
@@ -311,6 +312,34 @@ INSERT INTO `commandes_produits` (`id`, `id_commande`, `id_produit`, `quantite`,
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `fournisseurs`
+--
+
+DROP TABLE IF EXISTS `fournisseurs`;
+CREATE TABLE IF NOT EXISTS `fournisseurs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `token` varchar(100) NOT NULL,
+  `nom` varchar(255) NOT NULL,
+  `tel` varchar(50) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `date_creation` datetime NOT NULL,
+  `date_modification` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `fournisseurs`
+--
+
+INSERT INTO `fournisseurs` (`id`, `token`, `nom`, `tel`, `email`, `date_creation`, `date_modification`) VALUES
+(1, 'FNS20190001AM', 'KONE Abou', '09841171', NULL, '2019-06-18 08:42:17', '2019-06-18 08:42:17'),
+(2, 'FNS20190002AM', 'Gueu manou', '59791682', NULL, '2019-06-18 08:42:17', '2019-06-18 08:42:17'),
+(4, 'FNS2019060004AM', 'Vié Coulibaly', '04523685', 'test@fournisseur.som', '2019-06-30 14:21:11', '2019-06-30 15:01:26'),
+(5, 'FNS2019060005AM', 'Kouakou édouard', '57525654', 'edouard@fournisseur.som', '2019-06-30 14:23:28', '2019-06-30 14:23:28');
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `livraison_destinations`
 --
 
@@ -455,28 +484,29 @@ CREATE TABLE IF NOT EXISTS `produits` (
   `date_creation` datetime DEFAULT NULL,
   `date_modification` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `produits`
 --
 
 INSERT INTO `produits` (`id`, `nom`, `description`, `token`, `stock`, `id_categorie_produit`, `id_unite`, `quantite_unitaire`, `prix_quantite_unitaire`, `id_taille`, `slug`, `statut`, `image`, `page_accueil`, `nouveau`, `promo`, `pourcentage_promo`, `date_creation`, `date_modification`) VALUES
-(1, 'Tomate', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'aaaaaaaaa123', 60, 1, 3, 5, 500, 2, 'Tomate-légume-aaaaaaaaa123', 1, '1f1254b42cb27debac63fdd769f4cac2', 1, 0, 1, 10, '2018-11-01 00:00:00', '2019-06-19 15:58:36'),
-(2, 'Carotte Grand', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'bbbbbbbbbbb589', 206, 1, 3, 3, 100, 4, 'Carotte Grand-légume-bbbbbbbbbbb589', 1, '5b7d767338c627979d3fcbc66508098b', 1, 1, 1, 10, '2018-11-01 00:00:00', '2019-06-19 09:29:06'),
-(3, 'Carpe', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'cccccccccccc256', 85, 4, 3, 3, 2000, 4, 'Carpe-poissonnerie-cccccccccccc256', 1, 'a0cfb5517cadec0fc259734038cf6495', 1, 1, 1, 20, '2018-11-01 00:00:00', '2019-06-19 14:37:19'),
-(4, 'Crevette', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'ddddddddddddd585', 498, 4, 1, 1, 1000, 4, 'Crevette-poissonnerie-ddddddddddddd585', 1, 'da84b7ca2bb73e4ccbdb0db14eca1f5e', 1, 0, 0, 0, '2018-11-01 00:00:00', '2019-06-19 14:36:52'),
+(1, 'Tomate', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'aaaaaaaaa123', 100, 1, 3, 5, 500, 2, 'Tomate-légume-aaaaaaaaa123', 1, '1f1254b42cb27debac63fdd769f4cac2', 1, 0, 1, 10, '2018-11-01 00:00:00', '2019-06-30 11:09:44'),
+(2, 'Carotte Grand', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'bbbbbbbbbbb589', 140, 1, 3, 3, 100, 4, 'Carotte Grand-légume-bbbbbbbbbbb589', 1, '5b7d767338c627979d3fcbc66508098b', 1, 1, 1, 10, '2018-11-01 00:00:00', '2019-06-30 11:12:24'),
+(3, 'Carpe', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'cccccccccccc256', 85, 4, 3, 3, 2000, 4, 'Carpe-poissonnerie-cccccccccccc256', 1, 'a0cfb5517cadec0fc259734038cf6495', 1, 1, 1, 20, '2018-11-01 00:00:00', '2019-06-30 11:10:06'),
+(4, 'Crevette', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'ddddddddddddd585', 558, 4, 1, 1, 1000, 4, 'Crevette-poissonnerie-ddddddddddddd585', 1, 'da84b7ca2bb73e4ccbdb0db14eca1f5e', 1, 0, 0, 0, '2018-11-01 00:00:00', '2019-06-30 11:07:55'),
 (5, 'Poule pondeuse', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'zsfjchjzesg5555aaa', 140, 2, 3, 1, 5000, 4, 'Poule pondeuse-boucherie-zsfjchjzesg5555aaa', 1, 'd9ad969f1f25a7d69cfeaf84e6b7fa37', 1, 0, 0, 0, '2018-11-01 00:00:00', '2019-06-19 14:38:29'),
-(6, 'Oignon', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'qdsfgersdgrd552000', 394, 1, 1, 1, 1000, 4, 'Oignon-légume-qdsfgersdgrd552000', 1, 'b17c6696aa1d8c8635f5b4bf1b0f720c', 1, 0, 0, 0, '2018-11-01 00:00:00', '2019-06-19 14:35:56'),
-(7, 'Chou', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'mmmmmmmmmmm255', 481, 1, 3, 1, 500, 4, 'Chou-légume-mmmmmmmmmmm255', 1, '4184b4d29624086be3b3c42d59ec20c2', 1, 0, 0, 0, '2018-11-01 00:00:00', '2019-06-19 14:36:26'),
+(6, 'Oignon', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'qdsfgersdgrd552000', 400, 1, 1, 1, 1000, 4, 'Oignon-légume-qdsfgersdgrd552000', 1, 'b17c6696aa1d8c8635f5b4bf1b0f720c', 1, 0, 0, 0, '2018-11-01 00:00:00', '2019-06-29 17:34:43'),
+(7, 'Chou', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'mmmmmmmmmmm255', 571, 1, 3, 1, 500, 4, 'Chou-légume-mmmmmmmmmmm255', 1, '4184b4d29624086be3b3c42d59ec20c2', 1, 0, 0, 0, '2018-11-01 00:00:00', '2019-07-01 04:35:07'),
 (8, 'Orange', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'xsdrfghhnk25hhh', 94, 5, 3, 3, 200, 4, 'Orange-fruit-xsdrfghhnk25hhh', 1, 'd3ac81a903ce60b5d588e70b292a3284', 1, 0, 0, 0, '2018-11-01 00:00:00', '2019-06-19 14:09:44'),
 (9, 'Mangue', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'PR20190600015AM', 94, 5, 3, 3, 200, 4, 'Mangue-fruit-PR20190600015AM', 1, '9a8b48d6e46a07df1513c6effab132c9', 1, 0, 0, 0, '2018-11-01 00:00:00', '2019-06-19 14:20:24'),
-(10, 'Banane Douce', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'PR20190600016AM', 94, 5, 3, 3, 200, 4, 'Banane Douce-fruit-PR20190600016AM', 0, '3bc1d6826ee416ece7aa8377e3d19b17', 1, 0, 0, 0, '2018-11-01 00:00:00', '2019-06-19 14:21:52'),
+(10, 'Banane Douce', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'PR20190600016AM', 680, 5, 3, 3, 200, 4, 'Banane Douce-fruit-PR20190600016AM', 0, '3bc1d6826ee416ece7aa8377e3d19b17', 1, 0, 0, 0, '2018-11-01 00:00:00', '2019-06-29 21:11:44'),
 (11, 'Piment Rouge', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'PR20190600013AM', 394, 1, 1, 5, 100, 4, 'Piment Rouge-légume-PR20190600013AMPiment-Rouge-légume-PR20190600013AM', 0, 'qdsfgersdgrd552000', 1, 0, 0, 0, '2018-11-01 00:00:00', '2019-06-21 13:40:55'),
-(12, 'Machoiron', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'PR20190600011AM', 0, 4, 3, 3, 2000, 4, 'Machoiron-poissonnerie-PR20190600011AM', 1, '07ac97d1054258cb3077d85364f09174', 1, 1, 1, 20, '2018-11-01 00:00:00', '2019-06-19 14:37:48'),
+(12, 'Machoiron', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'PR20190600011AM', 500, 4, 3, 3, 2000, 4, 'Machoiron-poissonnerie-PR20190600011AM', 1, '07ac97d1054258cb3077d85364f09174', 1, 1, 1, 20, '2018-11-01 00:00:00', '2019-06-30 11:10:30'),
 (14, 'Piment', 'Tres bon piment', 'PDT2019060013MKT', 0, 1, 3, 20, 200, NULL, 'Piment-légume-PDT2019060013MKT', 1, '735decffc15cdbaf879be219a94cff5e', 0, 0, 0, 0, '2019-06-17 09:36:41', '2019-06-19 16:17:50'),
-(15, 'Gombo', 'TEST', 'PDT2019060014MKT', 0, 1, 3, 5, 150, NULL, 'Gombo-légume-PDT2019060014MKT', 0, 'f8aa12ef265bfcc76c76725bc206339f', 0, 0, 0, 0, '2019-06-17 09:40:46', '2019-06-17 09:40:46'),
-(17, 'Pommes de terre', 'TEST', 'PDT2019060015AM', 0, 7, 1, 1, 1500, NULL, 'Pommes de terre-féculent-PDT2019060015AM', 1, '96f9f25f1837a0e92cc6b4cb3ef5a586', 0, 0, 0, 0, '2019-06-19 21:39:03', '2019-06-19 21:39:03');
+(15, 'Gombo', 'TEST', 'PDT2019060014MKT', 90, 1, 3, 5, 150, NULL, 'Gombo-légume-PDT2019060014MKT', 0, 'f8aa12ef265bfcc76c76725bc206339f', 0, 0, 0, 0, '2019-06-17 09:40:46', '2019-06-30 11:12:06'),
+(17, 'Pommes de terre', 'TEST', 'PDT2019060015AM', 290, 7, 1, 1, 1500, NULL, 'Pommes de terre-féculent-PDT2019060015AM', 1, '96f9f25f1837a0e92cc6b4cb3ef5a586', 0, 0, 0, 0, '2019-06-19 21:39:03', '2019-06-29 17:32:47'),
+(19, 'Obergine', 'TEST', 'PDT2019060016AM', 0, 1, 3, 3, 1000, NULL, 'Obergine-légume-PDT2019060016AMObergine-légume-PDT2019060016AM', 0, '61b4380d1d7efae4df2f6ba1da114946', 0, 0, 0, 0, '2019-06-29 14:28:22', '2019-06-29 14:28:22');
 
 -- --------------------------------------------------------
 
@@ -587,22 +617,31 @@ DROP TABLE IF EXISTS `stocks`;
 CREATE TABLE IF NOT EXISTS `stocks` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_produit` int(100) DEFAULT NULL,
+  `token` varchar(50) NOT NULL,
   `quantite_initiale` int(100) DEFAULT NULL,
   `montant` float NOT NULL,
+  `frais_livraison` float NOT NULL DEFAULT '0',
+  `montant_ttc` float NOT NULL DEFAULT '0',
   `statut` int(1) DEFAULT NULL COMMENT '1=en cours; 0=epuise',
   `id_fournisseur` int(100) DEFAULT NULL,
   `date_creation` datetime NOT NULL,
   `date_modification` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `stocks`
 --
 
-INSERT INTO `stocks` (`id`, `id_produit`, `quantite_initiale`, `montant`, `statut`, `id_fournisseur`, `date_creation`, `date_modification`) VALUES
-(1, 1, 100, 100000, 1, 1, '2019-06-12 06:23:34', '2019-06-12 06:23:34'),
-(2, 2, 2000, 156000, 1, 1, '2019-06-12 06:23:34', '2019-06-12 06:23:34');
+INSERT INTO `stocks` (`id`, `id_produit`, `token`, `quantite_initiale`, `montant`, `frais_livraison`, `montant_ttc`, `statut`, `id_fournisseur`, `date_creation`, `date_modification`) VALUES
+(1, 5, 'STK20190001AM', 10, 25000, 500, 25500, 1, 2, '2019-06-12 06:23:34', '2019-06-29 17:35:31'),
+(11, 12, 'STK2019060011AM', 450, 45000, 0, 45000, NULL, 2, '2019-06-30 11:10:30', '2019-06-30 11:10:30'),
+(3, 1, 'STK2019060003AM', 1000, 20000, 500, 20500, NULL, 2, '2019-06-29 01:35:36', '2019-06-29 21:39:48'),
+(6, 1, 'STK2019060004AM', 250, 2000, 0, 2000, NULL, 1, '2019-06-29 20:40:57', '2019-06-29 20:40:57'),
+(12, 15, 'STK2019060012AM', 90, 68700, 300, 69000, NULL, 2, '2019-06-30 11:12:06', '2019-06-30 11:12:06'),
+(10, 4, 'STK2019060010AM', 60, 52000, 1450, 60000, NULL, 1, '2019-06-30 11:07:55', '2019-06-30 11:07:55'),
+(13, 2, 'STK2019060013AM', 40, 5200, 0, 5200, NULL, 1, '2019-06-30 11:12:24', '2019-06-30 11:12:24'),
+(14, 7, 'STK2019070014AM', 90, 18000, 500, 18500, NULL, 5, '2019-07-01 04:35:07', '2019-07-01 04:35:07');
 
 -- --------------------------------------------------------
 

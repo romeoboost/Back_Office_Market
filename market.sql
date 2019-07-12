@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  lun. 01 juil. 2019 à 17:22
+-- Généré le :  ven. 12 juil. 2019 à 19:23
 -- Version du serveur :  5.7.21
 -- Version de PHP :  7.2.4
 
@@ -374,6 +374,7 @@ INSERT INTO `livraison_destinations` (`id`, `token`, `commune`, `frais`, `date_c
 DROP TABLE IF EXISTS `livreurs`;
 CREATE TABLE IF NOT EXISTS `livreurs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `token` varchar(50) NOT NULL,
   `nom` varchar(255) NOT NULL,
   `prenoms` varchar(255) NOT NULL,
   `tel` varchar(255) NOT NULL,
@@ -381,16 +382,19 @@ CREATE TABLE IF NOT EXISTS `livreurs` (
   `date_modification` datetime NOT NULL,
   `email` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `livreurs`
 --
 
-INSERT INTO `livreurs` (`id`, `nom`, `prenoms`, `tel`, `date_creation`, `date_modification`, `email`) VALUES
-(1, 'DHL', 'Ibrahim', '08091011', '2019-06-02 11:25:40', '2019-06-02 11:25:40', 'ibrahim.kone@dhl.com'),
-(2, 'CR Service', 'kesso', '07080502', '2019-06-02 11:25:40', '2019-06-02 11:25:40', 'kesso.dev@cr-service.com'),
-(3, 'CR SERVICE', 'Bernard', '65626364', '2019-05-03 11:25:40', '2019-05-03 11:25:40', 'bernard.livreur@cr-service.com');
+INSERT INTO `livreurs` (`id`, `token`, `nom`, `prenoms`, `tel`, `date_creation`, `date_modification`, `email`) VALUES
+(1, 'LVR201900001AM', 'DHL', 'Ibrahim', '08091011', '2019-06-02 11:25:40', '2019-06-02 11:25:40', 'ibrahim.kone@dhl.com'),
+(2, 'LVR201900002AM', 'CR Service', 'kesso', '07080502', '2019-06-02 11:25:40', '2019-06-02 11:25:40', 'kesso.dev@cr-service.com'),
+(3, 'LVR201900003AM', 'CR SERVICE', 'Bernard', '65626364', '2019-05-03 11:25:40', '2019-05-03 11:25:40', 'bernard.livreur@cr-service.com'),
+(4, 'LVR2019070004AM', 'TEST', 'TEST', '01040705', '2019-07-03 18:46:47', '2019-07-03 19:33:37', ''),
+(5, 'LVR2019070005AM', 'yao', 'eudoxy', '01050608', '2019-07-03 18:50:01', '2019-07-03 18:50:01', 'test@amarket.com'),
+(6, 'LVR2019070006AM', 'ahmed', 'terrain', '01052555', '2019-07-03 18:51:55', '2019-07-03 19:32:26', '');
 
 -- --------------------------------------------------------
 
@@ -682,7 +686,7 @@ CREATE TABLE IF NOT EXISTS `unites` (
   `date_creation` datetime NOT NULL,
   `date_modification` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `unites`
@@ -691,7 +695,9 @@ CREATE TABLE IF NOT EXISTS `unites` (
 INSERT INTO `unites` (`id`, `token`, `libelle`, `symbole`, `date_creation`, `date_modification`) VALUES
 (1, 'nfggggggd14', 'kilogramme', 'Kg', '2018-11-01 00:00:00', '2018-11-01 00:00:00'),
 (2, 'mpongzfs4522', 'litre', 'L', '2018-11-01 00:00:00', '2018-11-01 00:00:00'),
-(3, 'gdsfhsjhs0155', 'nombre', 'NA', '2018-11-01 00:00:00', '2018-11-01 00:00:00');
+(3, 'gdsfhsjhs0155', 'nombre', 'NA', '2018-11-01 00:00:00', '2018-11-01 00:00:00'),
+(4, 'UM2019070004AM', 'Hectare', 'Ha', '2019-07-04 05:05:07', '2019-07-04 05:05:07'),
+(5, 'UM2019070005AM', 'metre carré', 'M²', '2019-07-04 05:09:33', '2019-07-04 05:09:33');
 
 -- --------------------------------------------------------
 

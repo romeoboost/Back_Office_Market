@@ -5,7 +5,7 @@
             <ol class="breadcrumb">
                 <li><a href="<?php echo BASE_URL.DS.'produits/liste'; ?>">Produits</a></li>
                 <li class="active">Détails</li>
-                <li class="active">Nom Produit/</li>
+                <li class="active"><?php echo ucfirst( $produit->nom_produit ); ?> /</li>
             </ol>
         </div>
 

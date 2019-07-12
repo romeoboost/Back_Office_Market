@@ -45,6 +45,7 @@
     var linkToAddFournisseur = $("#linkToAddFournisseur").html();
     var linkToUpdateSupplier = $("#linkToUpdateSupplier").html();
     var linkToDeleteSupplier = $("#linkToDeleteSupplier").html();
+    // linkToSearchElements
 
 
 
@@ -129,6 +130,357 @@
     }
 
     //Cliquer sur le bouton pour supprimer un stock
+    $('#units-list tbody').on('click', '.delete-btn', function(e){ // 
+        e.preventDefault();
+        var self = $(this);
+        var token = $(this).attr('unite-id');
+
+        // console.log( token );
+        var libelle_unit = $('tbody .'+token+' .libelle_unit').html();
+        var symbole_unit = $('tbody .'+token+' .symbole_unit').html();
+
+        $("#form-delete-units :input[name='libelle_unit']").val(libelle_unit);
+        $("#form-delete-units :input[name='symbole_unit']").val(symbole_unit);
+        $("#form-delete-units :input[name='token']").val(token);
+        $("#form-delete-units :input[name='password']").val('');
+
+        $('#modal-delete-units').modal('show');
+        
+        return false;
+    });
+
+    //validation du formulaire de suppression du client
+    $('#form-delete-units').on('submit',function(e){
+        e.preventDefault();
+        var url_process = $('#linkToWebroot').html()+$('#linkToDeleteElement').html()
+        var self = $(this);
+        // $(this).find("#confirm_btn").addClass('disabled');
+        // $(this).find("#confirm_btn").addClass('running');
+        var delete_data = $(this).serialize();
+        delete_element_default( delete_data, self, url_process );
+    });
+
+    //form d'ajout unit
+    $('.unit_add_form').on('submit', function (e) {
+        e.preventDefault();
+        var self = $(this);
+
+        var url_process = $('#linkToWebroot').html()+$('#linkToGetElement').html()
+
+        console.log( $(this).serialize() );
+        console.log( url_process );
+        $(this).find("#confirm_btn").addClass('disabled');
+        $(this).find("#confirm_btn").addClass('running');
+
+        add_element_default( $(this).serialize(), self, url_process );
+
+        return false;
+
+    });
+
+    //Form unit update submit
+    $('.unit_update_form').on('submit', function (e) {
+        e.preventDefault();
+        var url_process = $('#linkToWebroot').html()+$('#linkToGetElement').html()
+        var self = $(this);
+
+        console.log( $(this).serialize() );
+        $(this).find("#confirm_btn").addClass('disabled');
+        $(this).find("#confirm_btn").addClass('running');
+
+        update_element_default( $(this).serialize(), self, url_process );
+        return false;
+    });
+
+
+/**BEGIN delivrer PROCESS**/
+//Cliquer sur le bouton pour supprimer un stock
+    $('#livreurs-list tbody').on('click', '.delete-btn', function(e){ // 
+        e.preventDefault();
+        var self = $(this);
+        var token = $(this).attr('livreurs-id');
+
+        // console.log( token );
+        var name_delivrer = $('#livreurs-list tbody .'+token+' .name_delivrer').html();
+
+        $("#form-delete-livreurs :input[name='name_delivrer']").val(name_delivrer);
+        $("#form-delete-livreurs :input[name='token']").val(token);
+        $("#form-delete-livreurs :input[name='password']").val('');
+
+        $('#modal-delete-livreurs').modal('show');
+        
+        return false;
+    });
+
+    //validation du formulaire de suppression du client
+    $('#form-delete-livreurs').on('submit',function(e){
+        e.preventDefault();
+        var url_process = $('#linkToWebroot').html()+$('#linkToDeleteElement').html()
+        var self = $(this);
+        $(this).find("#confirm_btn").addClass('disabled');
+        $(this).find("#confirm_btn").addClass('running');
+        var delete_data = $(this).serialize();
+        delete_element_default( delete_data, self, url_process );
+    });
+
+    /*Function rejet de commande*/
+    function delete_element_default(delete_data, self, url_process){
+        // console.log(delete_product_data);       
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: url_process,
+            data: delete_data,
+            success: function (data, textStatus, jqXHR) {
+               // console.log(data);
+               //Arrete le spinner du boutnon de validation du formulaire
+                self.find("#confirm_btn").removeClass('disabled');
+                self.find("#confirm_btn").removeClass('running');
+                    
+                var password = '';
+                self.find(":input[name='password']").val(password);
+                $('.modal').modal('hide');
+
+               Swal({
+                  title: data.error_text,
+                  text: data.error_text_second,
+                  type: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#0aa89e',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'OK'
+                }).then((result) => {
+                  if (result.value) {
+                    //supprimer la ligne de la categorie
+                    $(" tbody ."+data.token).fadeOut(700);
+                  }
+                });
+            },
+            error: function(jqXHR) {
+              self.find("#confirm_btn").removeClass('disabled');
+              self.find("#confirm_btn").removeClass('running');  
+              console.log(jqXHR.responseText);
+              if( jqXHR.responseJSON.error_html ){
+                $('.errorForm ').html(jqXHR.responseJSON.error_html);
+              }
+
+            }
+        });
+
+    }
+
+//validation du formulaire de recherche de stocks
+    $('.livreurs_search_form').on('submit', function (e) {
+        e.preventDefault();
+        console.log( $(this).serialize() );
+        var linkToSearchElements = $('#linkToWebroot').html()+$('#linkToGetElement').html()
+        console.log( linkToSearchElements );
+        $(this).find("#confirm_filter").addClass('disabled');
+        $(this).find("#confirm_filter").addClass('running');
+        var self = $(this);
+        ///name_supplier&/tel&        
+        search_elements( $(this).serialize(), self, linkToSearchElements );
+
+        var start_date = $(this).find(" :input[name='start_date']").val();
+        var start_hour = $(this).find(" :input[name='start_hour']").val();
+        var end_date = $(this).find(" :input[name='end_date']").val();
+        var end_hour = $(this).find(" :input[name='end_hour']").val();
+        var tel = $(this).find(" :input[name='tel']").val();
+        var name_supplier = $(this).find(" :input[name='name_delivrer']").val();
+                       // filter-data-montant="" filter-data-nameProduct="" filter-data-nameSupplier=""
+        $('#fournisseurs-list').attr('filter-data-startDate', start_date);
+        $('#fournisseurs-list').attr('filter-data-startHour', start_hour);
+        $('#fournisseurs-list').attr('filter-data-endDate', end_date);
+        $('#fournisseurs-list').attr('filter-data-endHour', end_hour);
+        $('#fournisseurs-list').attr('filter-data-tel', tel);
+        $('#fournisseurs-list').attr('filter-data-nameDelivrer', name_supplier);
+        // console.log( sexe );
+        return false;
+
+    });    
+    
+    //pagination de liste clients
+    $('#list-livreurs-pagination').on('click', '.page-link', function (e) {
+        e.preventDefault();
+        var linkToSearchElements = $('#linkToWebroot').html()+$('#linkToGetElement').html()
+        var numero = $(this).attr('href');
+        // console.log(numero);
+        var start_date = $('#livreurs-list').attr('filter-data-startDate');
+        var start_hour = $('#livreurs-list').attr('filter-data-startHour');
+        var end_date = $('#livreurs-list').attr('filter-data-endDate');
+        var end_hour = $('#livreurs-list').attr('filter-data-endHour');
+        var montant = $('#livreurs-list').attr('filter-data-tel');
+        var name_delivrer = $('#livreurs-list').attr('filter-data-nameDelivrer');
+        var pagination = true;        
+
+        var dataFilter = {start_date:start_date,start_hour:start_hour,end_date:end_date,end_hour:end_hour,pagination:pagination,
+            tel:tel,name_delivrer:name_delivrer,number_page_running:numero};
+        
+        if( !isNaN( parseInt(numero) ) ){é
+            search_livreurs(dataFilter, 'pagination', linkToSearchElements);      
+        }
+        //$(".cmd_search_form :input[name='number_page_running']").val(numero);
+        $('#livreurs-list').attr('filter-data-pageRunning', numero);
+        return false;
+    });
+    
+    //rechercher stock avec ajax
+    function search_elements(filter_data, self, linkToSearchElements){
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: linkToSearchElements,
+            data: filter_data,
+            success: function (data, textStatus, jqXHR) {
+               
+               $(' tbody ').hide().html( data.result.html_list_elements ).fadeIn(700);
+               $(' .pagination ').hide().html( data.result.html_pagination ).fadeIn(700); 
+               console.log(data);
+               if(!filter_data.pagination){
+                    
+                    if( self.find("#confirm_filter").hasClass('disabled') ){
+                        self.find("#confirm_filter").removeClass('disabled');
+                        self.find("#confirm_filter").removeClass('running');
+                    }
+                    $('.total').hide().html( data.result.stat.total.nbre ).fadeIn(1000);
+                    // $('.total_nbre').hide().html( data.result.stat.nbre ).fadeIn(1000);
+               } 
+               
+               $('#extract-excel-btn').attr('href', data.result.link_for_extract);
+               $('[data-toggle="tooltip"]').tooltip(); //reinitialiser le tooltip
+
+            },
+            error: function(jqXHR) {
+                console.log(jqXHR.responseText);
+                if( self.find("#confirm_filter").hasClass('disabled') ){
+                    self.find("#confirm_filter").removeClass('disabled');
+                    self.find("#confirm_filter").removeClass('running');
+                }
+
+                if( typeof jqXHR.responseJSON['error_html'] !== 'undefined' ){
+                    $('#errorForm').prepend(jqXHR.responseJSON['error_html']);
+                }
+
+            }
+        });
+    }
+
+    //form d'ajout de produit
+    $('.delivrer_add_form').on('submit', function (e) {
+        e.preventDefault();
+        var self = $(this);
+
+        var url_process = $('#linkToWebroot').html()+$('#linkToGetElement').html()
+
+        console.log( $(this).serialize() );
+        console.log( url_process );
+        $(this).find("#confirm_btn").addClass('disabled');
+        $(this).find("#confirm_btn").addClass('running');
+
+        add_element_default( $(this).serialize(), self, url_process );
+
+        return false;
+
+    });
+
+    function add_element_default( add_data, self, url_process ){
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: url_process,
+            data: add_data,
+            success: function (data, textStatus, jqXHR) {
+                self.find("#confirm_btn").removeClass('disabled');
+                self.find("#confirm_btn").removeClass('running');
+                // self[0].reset();
+                console.log(data);
+                Swal({
+                  title: data.error_text,
+                  text: data.error_text_second,
+                  type: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#0aa89e',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'OK'
+                }).then((result) => {
+                  if (result.value) {
+                    window.location.replace(data.linkToList);
+                  }
+                });
+            },
+            error: function(jqXHR) {
+                console.log(jqXHR.responseText);
+                self.find("#confirm_btn").removeClass('disabled');
+                self.find("#confirm_btn").removeClass('running'); 
+                // $('#errorForm').prepend(jqXHR.responseJSON['error_html']);
+                if( typeof jqXHR.responseJSON['error_html'] !== 'undefined' ){
+                    $('#errorForm').prepend(jqXHR.responseJSON['error_html']);
+                }
+            }
+        });
+    }
+
+//form modification categories
+    $('.delivrer_update_form').on('submit', function (e) {
+        e.preventDefault();
+        var url_process = $('#linkToWebroot').html()+$('#linkToGetElement').html()
+        var self = $(this);
+
+        console.log( $(this).serialize() );
+        $(this).find("#confirm_btn").addClass('disabled');
+        $(this).find("#confirm_btn").addClass('running');
+
+        update_element_default( $(this).serialize(), self, url_process );
+        return false;
+    });
+
+    //function de modification categories
+    function update_element_default(add_data, self, url_process){
+        // console.log( add_data );
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: url_process,
+            data: add_data,
+            success: function (data, textStatus, jqXHR) {
+                // $('.product_update_form')[0].reset();
+                if( self.find("#confirm_btn").hasClass('disabled') ){
+                    self.find("#confirm_btn").removeClass('disabled');
+                    self.find("#confirm_btn").removeClass('running');
+                }
+                console.log(data);
+                Swal({
+                  title: data.error_text,
+                  text: data.error_text_second,
+                  type: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#0aa89e',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'OK'
+                }).then((result) => {
+                  if (result.value) {
+                    window.location.replace(data.linkToList);
+                  }
+                });
+            },
+            error: function(jqXHR) {
+              console.log(jqXHR.responseText);
+              if( self.find("#confirm_btn").hasClass('disabled') ){
+                    self.find("#confirm_btn").removeClass('disabled');
+                    self.find("#confirm_btn").removeClass('running');
+                }
+              if( typeof jqXHR.responseJSON['error_html'] !== 'undefined' ){
+                    $('#errorForm').prepend(jqXHR.responseJSON['error_html']);
+                }
+            }
+        });
+    }
+
+    /**ENDNG delivrer PROCESS**/
+
+
+    /**BEGIN SUPPLIER TRAITMENT**/
+    //Cliquer sur le bouton pour supprimer un stock
     $('#fournisseurs-list tbody').on('click', '.delete-btn', function(e){ // 
         e.preventDefault();
         var self = $(this);
@@ -203,7 +555,6 @@
 
     }
 
-
     //form modification categories
     $('.supplier_update_form').on('submit', function (e) {
         e.preventDefault();
@@ -258,8 +609,7 @@
             }
         });
     }
-
-    /**BEGIN SUPPLIER TRAITMENT**/
+    
     //form d'ajout de produit
     $('.supplier_add_form').on('submit', function (e) {
         e.preventDefault();
@@ -356,7 +706,7 @@
         var dataFilter = {start_date:start_date,start_hour:start_hour,end_date:end_date,end_hour:end_hour,pagination:pagination,
             tel:tel,name_supplier:name_supplier,number_page_running:numero};
         
-        if( !isNaN( parseInt(numero) ) ){
+        if( !isNaN( parseInt(numero) ) ){é
             search_fournisseurs(dataFilter, 'pagination');      
         }
         //$(".cmd_search_form :input[name='number_page_running']").val(numero);

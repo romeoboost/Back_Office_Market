@@ -1,7 +1,45 @@
 <?php
 
-function html_list_fournisseurs($pdo, $fournisseurs, $nombre_total_produit, $offset){
+function html_list_livreurs($pdo, $livreurs, $nombre_total_livreur, $offset){
+  
+  $html = '';
+  $nbre_product_plus = $nombre_total_livreur + 1;
+  $nbre_product_plus_offset = $nombre_total_livreur - $offset;
+  foreach ($livreurs as $livreur) {
+    $html .= '<tr class="text-center '.$livreur->token.'">';
+    $html .=    ' <td>'.$nbre_product_plus_offset--.'</td>
+                  <td class="token" >'.$livreur->token.' </td>
+                  <td class="name_supplier" >'.ucfirst( $livreur->nom ).' '.ucfirst( $livreur->prenoms ).'</td>
+                  <td> '.$livreur->tel.' </td>
+                  <td> '.$livreur->email.' </td>
+                  <td>'.dateFormat($livreur->date_creation).'</td>
+                  <td>'.dateFormat($livreur->date_modification).'</td>
+                  <td class="">
+                    <button type="button" class="btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" livreurs-id="'.$livreur->token.'"
+                     data-original-title="Modifier les informations du livreur">
+                      <a href="'.BASE_URL.DS.'livreurs/modifier/'.$livreur->token.'">
+                          <i class="fa fa-pencil"></i>
+                      </a>
+                    </button>
+                    <button type="button" class="btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" livreurs-id="'.$livreur->token.'"
+                     data-original-title="Voir les détails du livreur">
+                      <a href="'.BASE_URL.DS.'livreurs/details/'.$livreur->token.'">
+                          <i class="md md-description"></i>
+                      </a>
+                    </button>
+                    <button type="button" class="btn delete-btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" livreurs-id="'.$livreur->token.'"
+                     data-original-title="Supprimer le livreur"><i class="fa fa-trash-o"></i></button>
+                  </td>';
+    $html .= '</tr>';
 
+  }
+
+  return $html;
+}
+
+
+
+function html_list_fournisseurs($pdo, $fournisseurs, $nombre_total_produit, $offset){
   //recupere les unités de mésures
 
   $html = '';
@@ -590,7 +628,7 @@ function debugger($var, $second_var=null){
   print_r($var);
   print_r(' ');
   print_r($second_var);
-  die( header("arret pour debuggage", true, 500) );
+  die( header("arret pour debuggage", true, 501) );
   return true;
 }
 

@@ -112,36 +112,32 @@ class UnitesMesureController extends Controller {
     public function modifier( $token ){
       conf::redir();
       $this->loadmodel('Produits');
-      $_SESSION['bo_menu'] = 'Produits';  $_SESSION['bo_sub_menu'] = 'Categories';
+      $_SESSION['bo_menu'] = 'Produits';  $_SESSION['bo_sub_menu'] = 'unitesMesure';
       $d['token'] = $token;
       if( !isset($token) || empty($token) ){
-        header('Location: '.BASE_URL.DS.'categories/liste');
+        header('Location: '.BASE_URL.DS.'unitesMesure/liste');
       }else{
         //recupere les informations de la categorie
-        $d['categorie'] = current( $this->Produits->find(array(
-              'order' => array('champs' => 'nom','param' => 'ASC'),
+        $d['unite'] = current( $this->Produits->find(array(
+              'order' => array('champs' => 'id','param' => 'DESC'),
               'condition' => 'token = "'.$token.'"', //
               'limit' => '0,1'
-            ),'categories_produits') );
+            ),'unites') );
 
-        if( empty($d['categorie']) ){ //verifie que la categorie existe
-          header('Location: '.BASE_URL.DS.'categories/liste'); // renvoi vers liste de categorie si la categorie n'existe pas
+        if( empty($d['unite']) ){ //verifie que la categorie existe
+          header('Location: '.BASE_URL.DS.'unitesMesure/liste'); // renvoi vers liste de categorie si la categorie n'existe pas
         }
 
       }
 
-      // debug($d);
-      $d['icons'] = ['chicken','fish','fruit','oil','potatoes','rice','seed-bag','vegetable'];
       $this->set($d);
     }
 
     public function ajouter(){
       conf::redir();
       $this->loadmodel('Produits');
-      $_SESSION['bo_menu'] = 'Produits';  $_SESSION['bo_sub_menu'] = 'Categories';
+      $_SESSION['bo_menu'] = 'Produits';  $_SESSION['bo_sub_menu'] = 'unitesMesure';
       $d = array();
-      $d['icons'] = ['chicken','fish','fruit','oil','potatoes','rice','seed-bag','vegetable'];
-      // $d['categories'] = $this->get_category();
       // debug($_SESSION['bo_sub_menu']);
       $this->set($d);
     }
@@ -149,7 +145,7 @@ class UnitesMesureController extends Controller {
     public function details($token){
       conf::redir();
       $this->loadmodel('Produits');
-      $_SESSION['bo_menu'] = 'Produits';  $_SESSION['bo_sub_menu'] = 'Categories';
+      $_SESSION['bo_menu'] = 'Produits';  $_SESSION['bo_sub_menu'] = 'unitesMesure';
       $d['token'] = $token;
 
       if( !isset($token) || empty($token) ){

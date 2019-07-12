@@ -1,5 +1,6 @@
 <div id="content">
     <!-- BEGIN TABLE HOVER -->
+    <span id="linkToDeleteElement" class="hidden">ajax/DeleteUnit.php</span>
     <section class="">
         <div class="section-header">
             <ol class="breadcrumb">
@@ -52,13 +53,13 @@
                 <div class="card-body">
                   <div class="table-responsive">
 
-                      <table id="unit-list" class="table table-hover" 
+                      <table id="units-list" class="table table-hover" 
                         filter-data-startDate="" filter-data-startHour="" filter-data-endDate="" filter-data-endHour=""
                         filter-data-libelle="" filter-data-symbole="" filter-data-pageRunning="<?php echo $numero_page_encours; ?>" 
                         >
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th class="text-center">#</th>
                                     <th class="text-center">Libéllé</th>
                                     <th class="text-center">Symbole</th>
                                     <th class="text-center">Date création</th>
@@ -71,20 +72,20 @@
                                 <?php if( !empty( $unites ) ): ?>
                                 <?php foreach ( $unites as $unite ): ?>
                                 <tr class="text-center <?php echo $unite->token; ?>">
-                                    <td><?php echo $nbre_cmd_plus--; ?></td>
-                                    <td class="libelle_unit" ><?php echo ucfirst( $unite->libelle ); ?></td>
-                                    <td class="symbole_unit"><?php echo ($unite->symbole == 'NA') ? 'Nombre' : $unite->symbole; ?></td>
-                                    <td><?php echo dateFormat($unite->date_creation); ?></td>
-                                    <td><?php echo dateFormat($unite->date_modification); ?></td>
-                                    <td class="">
+                                    <td class="text-center"><?php echo $nbre_cmd_plus--; ?></td>
+                                    <td class="text-center libelle_unit" ><?php echo ucfirst( $unite->libelle ); ?></td>
+                                    <td class="text-center symbole_unit"><?php echo ($unite->symbole == 'NA') ? 'Nombre' : $unite->symbole; ?></td>
+                                    <td class="text-center"><?php echo dateFormat($unite->date_creation); ?></td>
+                                    <td class="text-center"><?php echo dateFormat($unite->date_modification); ?></td>
+                                    <td class="text-center ">
                                         <button type="button" class="btn btn-icon-toggle" data-toggle="tooltip" data-placement="top"
-                                            unite-id="<?php echo $unite->token; ?>" data-original-title="Modifier les informations du produit">
+                                            unite-id="<?php echo $unite->token; ?>" data-original-title="Modifier les informations de l'unité de mesure">
                                             <a href="<?php echo BASE_URL.DS.'unitesMesure/modifier/'.$unite->token; ?>">
                                                 <i class="fa fa-pencil"></i>
                                             </a>
                                         </button>
-                                        <button type="button" class="btn delete-unit-btn btn-icon-toggle" data-toggle="tooltip" 
-                                           data-placement="top" unite-id="<?php echo $unite->token; ?>" data-original-title="Supprimer le produit">
+                                        <button type="button" class="btn delete-btn btn-icon-toggle" data-toggle="tooltip" 
+                                           data-placement="top" unite-id="<?php echo $unite->token; ?>" data-original-title="Supprimer l'unité de mesure">
                                             <i class="fa fa-trash-o"></i>
                                         </button>
                                     </td>
@@ -102,7 +103,7 @@
 
 
 <!-- START MODAL DELETE ORDER -->
-<div class="modal own-modal fade" id="modal-delete-category" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+<div class="modal own-modal fade" id="modal-delete-units" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -111,12 +112,12 @@
         </button>
         <h4 class="modal-title text-uppercase" id="exampleModalLongTitle"> SUPPRIMER LA CATEGORIE </h4>
       </div>
-      <form id="form-delete-category" class="form">
+      <form id="form-delete-units" class="form">
       <div class="modal-body order-confirmation-body">
         <div class="row">
             <div id="" class="col-md-12 text-center">
                 <em class="text-caption">
-                    (*) Champs obligatoires. On ne peut supprimer les catégories déjà liées à un produit.
+                    (*) Champs obligatoires. On ne peut supprimer les unités de mésure déjà liées à un produit.
                 </em><br>
             </div>    
             <div class="card-body ">
@@ -124,8 +125,14 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <input type="text" name="name_category" class="form-control"  disabled>
-                            <label for="name_category"> Nom de la Catégorie </label>
+                            <input type="text" name="libelle_unit" class="form-control"  disabled>
+                            <label for="libelle_unit"> Libéllé</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <input type="text" name="symbole_unit" class="form-control"  disabled>
+                            <label for="symbole_unit"> Symbole </label>
                         </div>
                     </div> 
                 </div>
@@ -137,13 +144,13 @@
                         </div>
                     </div>
                 </div>
-                <input type="hidden" name="category_id" value="">
+                <input type="hidden" name="token" value="">
             </div>
         </div>
       </div>
       <div class="modal-footer text-center">
             <div class="card-actionbar-row">
-                <button id="modal-delete-category-confirm-btn" class="btn btn-primary btn-raised ld-ext-right " type="submit">
+                <button id="confirm_btn" class="btn btn-primary btn-raised ld-ext-right " type="submit">
                         CONFIRMER
                         <div class="ld ld-ring ld-spin"></div>
                 </button>

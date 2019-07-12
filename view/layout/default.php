@@ -97,6 +97,8 @@
     <span id="linkToDeleteSupplier" class="hidden"><?php echo WEBROOT_URL.'ajax/DeleteSupplier.php'; ?></span>
 
 
+    <span id="linkToWebroot" class="hidden"><?php echo WEBROOT_URL; ?></span>
+
 <div class="headerbar">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="headerbar-left">

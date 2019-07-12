@@ -42,8 +42,8 @@ total users, total users avec commandes, total avis, total produits, produits pl
 	- Ajouter : OK
 	- Modifier : OK
 	- supprimer : OK
-	- Details : 
-	- extraction : 
+	- Details : OK
+	- extraction : OK
 16. Publicités
 10. Les avis
 11. Les mails
@@ -56,7 +56,6 @@ total users, total users avec commandes, total avis, total produits, produits pl
 
 <script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/core/demo/Demo.js"></script>
 <script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/core/demo/DemoDashboard.js"></script>
-
 
 
 statProducts logic
@@ -134,6 +133,8 @@ VUE POUR GERER LES UNITE DE MESURE
 
 livreurs
 
+de l'unité de mesure
+
 id, nom, prenom, tel, date_creation, date_modification
 
 **** ERREUR ***
@@ -142,8 +143,13 @@ correction : supprimer une directive 'break' ligne 581 dans un fichier de foncti
 https://stackoverflow.com/questions/35918626/fatal-error-break-not-in-the-loop-or-switch-context-in-function-php
 
 *** Faire fonction de nouveau produit ****
+https://redstapler.co/detect-user-location-javascript/
 
 
+------------------
+email jumia : romkesso92@gmail.com
+mdp jumia = 8F7Z7vUWUQ2uRZf
 
 
-
+-----------
+aPI KEY GOOGLE : AIzaSyAI5Fl8Szne6NLGFhCONQSyDOPeXEE13OY

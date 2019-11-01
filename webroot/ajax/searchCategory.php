@@ -75,7 +75,7 @@ if ($_POST) {
             }
 
             //ordonner plus recent au plus ancien
-            $order_sql = array('champs' => 'nom', 'param' => 'ASC');
+            $order_sql = array('champs' => 'id', 'param' => 'DESC');
 
             //nombre de commande
             $limit = " $nombre_product OFFSET $offset ";

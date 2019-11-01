@@ -86,11 +86,13 @@ function productPrice($prix_quantite_unitaire, $pourcentage_promo){
 /*
 *$date au format YYYY-mm-dd H:i:s
 */
-function dateFormat($date){
+function dateFormat($date, $format=null){
+  $format_string = isset( $format ) ? $format : 'd-m-Y H:i';
   $date_c = new DateTime($date);
   $dateFormated = $date_c->format('d-m-Y H:i');
   return $dateFormated;
 }
+
 
 function debug($var){
     

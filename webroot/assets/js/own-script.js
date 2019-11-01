@@ -49,9 +49,6 @@
 
 
 
-
-
-
     if( $('.with_date')[0] ){
         //console.log('formDate');
         $('#StartDate').datetimepicker({
@@ -129,7 +126,543 @@
 
     }
 
-    //Cliquer sur le bouton pour supprimer un stock
+    /**START MAIL PROCESS**/
+
+    var mailBox = document.getElementById('simple-summernote');
+    if( mailBox != null ){
+        $('#simple-summernote').summernote();
+    }
+
+    //form envoi de nouveau lail
+    $('.formulaire_envoi_mail').on('submit', function (e) {
+        e.preventDefault();
+        var self = $(this);
+        var url_process = $('#linkToWebroot').html()+$('#linkToSendNewMail').html();
+        console.log( $(this).serialize() );
+        // console.log( url_process );
+        $(this).find("#confirm_btn").addClass('disabled');
+        $(this).find("#confirm_btn").addClass('running');
+
+        // update_element_default( $(this).serialize(), self, url_process );
+        add_element_default( $(this).serialize(), self, url_process );
+
+        return false;
+    });
+
+    //form reponse à un mail
+    $('.formulaire_repondre_mail').on('submit', function (e) {
+        e.preventDefault();
+        var self = $(this);
+        var url_process = $('#linkToWebroot').html()+$('#linkToResponseMail').html();
+        console.log( $(this).serialize() );
+        // console.log( url_process );
+        $(this).find("#confirm_btn").addClass('disabled');
+        $(this).find("#confirm_btn").addClass('running');
+
+        // update_element_default( $(this).serialize(), self, url_process );
+        add_element_default( $(this).serialize(), self, url_process );
+
+        return false;
+    });
+
+    ////Cliquer sur le bouton pour supprimer la ligne de pub
+    $('.box-mail-message').on('click', '.email-delete-btn', function(e){ // 
+        e.preventDefault();
+        var self = $(this);
+        var token = $(this).attr('element-id');
+        var url_process = $('#linkToWebroot').html()+$('#linkToDeleteElement').html();
+
+        var textinfo = "Ce mail sera supprimé du Back Office.";
+
+        console.log( url_process );
+        Swal({
+          title: 'Êtes vous sure ?',
+          text: textinfo,
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#0aa89e',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Annuler'
+        }).then((result) => {
+          if (result.value) {
+            // set_home(token, isAccueil, self, url_process); 
+            // APPELER FONCTION DE SUPPRESSION
+            var dataFilter = {token:token};
+            delete_mails(dataFilter, url_process);
+          }
+        });
+       
+        return false;
+    });
+
+    /**END MAIL PROCESS**/
+
+    /** START COMMENTS PROCESS **/
+
+    //validation du formulaire de recherche des éléments
+    $('.avis_search_form').on('submit', function (e) {
+        e.preventDefault();
+        console.log( $(this).serialize() );
+        var linkToSearchElements = $('#linkToWebroot').html()+$('#linkToGetElement').html()
+        console.log( linkToSearchElements );
+        $(this).find("#confirm_filter").addClass('disabled');
+        $(this).find("#confirm_filter").addClass('running');
+        var self = $(this);
+        ///name_supplier&/tel&        
+        search_elements( $(this).serialize(), self, linkToSearchElements );
+
+        var start_date = $(this).find(" :input[name='start_date']").val();
+        var start_hour = $(this).find(" :input[name='start_hour']").val();
+        var end_date = $(this).find(" :input[name='end_date']").val();
+        var end_hour = $(this).find(" :input[name='end_hour']").val();
+        var filter_content = $(this).find(" :input[name='filter_content']").val();
+        var filter_status = $(this).find(" :input[name='filter_status']").val();
+
+        $('#avis-list').attr('filter-data-startDate', start_date);
+        $('#avis-list').attr('filter-data-startHour', start_hour);
+        $('#avis-list').attr('filter-data-endDate', end_date);
+        $('#avis-list').attr('filter-data-endHour', end_hour);
+        $('#avis-list').attr('filter-data-filterStatus', filter_status);
+        $('#avis-list').attr('filter-data-content', filter_content);
+        // console.log( sexe );
+        return false;
+    });
+
+    //pagination de liste clients
+    $('#list-avis-pagination').on('click', '.page-link', function (e) {
+        e.preventDefault();
+        var linkToSearchElements = $('#linkToWebroot').html()+$('#linkToGetElement').html()
+        var numero = $(this).attr('href');
+        // console.log(numero);
+        var start_date = $('#avis-list').attr('filter-data-startDate');
+        var start_hour = $('#avis-list').attr('filter-data-startHour');
+        var end_date = $('#avis-list').attr('filter-data-endDate');
+        var end_hour = $('#avis-list').attr('filter-data-endHour');
+        var filter_status = $('#avis-list').attr('filter-data-filterStatus');
+        var filter_content = $('#avis-list').attr('filter-data-content');
+        var pagination = true;        
+
+        var dataFilter = {start_date:start_date,start_hour:start_hour,end_date:end_date,end_hour:end_hour,pagination:pagination,
+            filter_status:filter_status,filter_content:filter_content,number_page_running:numero};
+        
+        if( !isNaN( parseInt(numero) ) ){
+            search_elements(dataFilter, 'pagination', linkToSearchElements);      
+        }
+        //$(".cmd_search_form :input[name='number_page_running']").val(numero);
+        $('#avis-list').attr('filter-data-pageRunning', numero);
+        return false;
+    });
+    
+    //form d'ajout frais
+    $('.post_response_form').on('submit', function (e) {
+        e.preventDefault();
+        var self = $(this);
+        var url_process = $('#linkToWebroot').html()+$('#linkToUpdateElement').html();
+        console.log( $(this).serialize() );
+        console.log( url_process );
+        $(this).find("#confirm_btn").addClass('disabled');
+        $(this).find("#confirm_btn").addClass('running');
+
+        update_element_default( $(this).serialize(), self, url_process );
+
+        return false;
+    });
+    
+    //Cliquer sur le bouton pour reactiver un client
+    $('#avis-list tbody').on('click', '.set-home-btn', function(e){ // 
+        e.preventDefault();
+        var self = $(this);
+        //console.log(self);
+        var token = $(this).attr('element-id');
+        var isAccueil = $(this).attr('page-acceuil-value');
+        var url_process = $('#linkToWebroot').html()+$('#linkSetHomeElement').html();
+        var textinfo = '';
+        if( parseInt(isAccueil) ==  0){
+            textinfo = "Vous vous apprêter à mettre l'avis sur la page d'accueil.";
+        }else{
+            textinfo = "Vous vous apprêter à rétirer l'avis de la page d'accueil.";
+        }
+
+         Swal({
+          title: 'Êtes vous sure ?',
+          text: textinfo,
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#0aa89e',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Annuler'
+        }).then((result) => {
+          if (result.value) {
+            //console.log(self);
+            set_home(token, isAccueil, self, url_process);            
+          }
+        });        
+        return false;
+    });
+
+    /*Function rejet de commande*/
+    function set_home(token, isAccueil, self, url_process){
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: url_process,
+            data: {token:token,isAccueil:isAccueil},
+            success: function (data, textStatus, jqXHR) {
+               // console.log(data);
+                //mettre a jour l'intitulé du statut de la commande
+               $('#avis-list tbody .'+token+' .isHome').html(data.status_libelle);
+               //  //mettre a jour les bouton d'actions
+                    
+                //remplacer
+                $("#avis-list tbody ."+token+" .set-home-btn").attr('data-original-title', data.status_action);
+                $("#avis-list tbody ."+token+" .set-home-btn").attr('page-acceuil-value', data.status_value);
+                $("#avis-list tbody ."+token+" .set-home-btn").html(data.status_action_icon_html);
+                // console.log($("#avis-list tbody ."+token+" .set-home-btn"));
+                $('[data-toggle="tooltip"]').tooltip(); //reinitialiser le tooltip
+
+               Swal({
+                  title: data.error_text,
+                  text: data.error_text_second,
+                  type: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#0aa89e',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'OK'
+                }).then((result) => {
+                  if (result.value) {
+                    $("#avis-list tbody ."+token).fadeOut(250).fadeIn(250).fadeOut(250).fadeIn(250);
+                  }
+                });
+            },
+            error: function(jqXHR) {
+              console.log(jqXHR.responseText);
+              //$('.contact-form .error-text').html(jqXHR.responseJSON.error_html);
+              if(jqXHR.responseJSON){
+                    //$('#confirm-order-modal').hide();
+                    Swal({
+                      type: 'error',
+                      title: jqXHR.responseJSON.error_text,
+                      text: jqXHR.responseJSON.error_text_second
+                    });
+                    //return html_status_initial;
+              }
+
+            }
+        });
+
+    }
+
+    //Cliquer sur le bouton pour supprimer la ligne de pub
+    $('#avis-list tbody').on('click', '.delete-btn', function(e){ // 
+        e.preventDefault();
+        var self = $(this);
+        var token = $(this).attr('element-id');
+
+        // console.log( token );
+        var nom = $('tbody .'+token+' .Nom').html();
+        var produit = $('tbody .'+token+' .Produit').html();
+        var contenu = $('tbody .'+token+' .contenu').html();
+        // var token = $('tbody .'+token+' .element-id').html();
+        console.log( token );
+
+        $("#form-delete :input[name='nom']").val(nom);
+        $("#form-delete :input[name='produit']").val(produit);
+        $("#form-delete .contenu-comments-form").html(contenu);
+        $("#form-delete :input[name='token']").val(token);
+
+        $('#modal-delete').modal('show');
+        
+       return false;
+    });
+
+    //validation du formulaire de suppression de pub
+    // $('#form-delete').on('submit',function(e){
+    //     e.preventDefault();
+    //     var url_process = $('#linkToWebroot').html()+$('#linkToDeleteElement').html()
+    //     var self = $(this);
+    //     $(this).find("#confirm_btn").addClass('disabled');
+    //     $(this).find("#confirm_btn").addClass('running');
+    //     var delete_data = $(this).serialize();
+    //     delete_element_default( delete_data, self, url_process );
+    // });
+
+
+    
+    /** STOP COMMENTS PROCESS **/
+
+    /** START PUB PROCESS */
+    //form d'ajout de pub
+    $('.pub_add_form').on('submit', function (e) {
+        e.preventDefault();
+
+        var form = $('.pub_add_form')[0]; // You need to use standard javascript object here
+        var formData = new FormData(form);
+
+        var self = $(this);
+        var url_process = $('#linkToWebroot').html()+$('#linkToAddElement').html();
+        console.log( $(this).serialize() );
+        console.log( url_process );
+        $(this).find("#confirm_btn").addClass('disabled');
+        $(this).find("#confirm_btn").addClass('running');
+        
+        add_pub( formData, self, url_process );
+
+        return false;
+
+    });
+
+    //form de modification de pub
+    $('.pub_update_form').on('submit', function (e) {
+        e.preventDefault();
+
+        var form = $('.pub_update_form')[0]; // You need to use standard javascript object here
+        var formData = new FormData(form);
+
+        var self = $(this);
+        var url_process = $('#linkToWebroot').html()+$('#linkToUpdateElement').html();
+        console.log( $(this).serialize() );
+        console.log( url_process );
+        $(this).find("#confirm_btn").addClass('disabled');
+        $(this).find("#confirm_btn").addClass('running');
+        
+        add_pub( formData, self, url_process );
+
+        return false;
+
+    });
+
+    //Cliquer sur le bouton pour supprimer la ligne de pub
+    $('#pubs-list tbody').on('click', '.delete-btn', function(e){ // 
+        e.preventDefault();
+        var self = $(this);
+        var token = $(this).attr('element-id');
+
+        // console.log( token );
+        var min = $('tbody .'+token+' .date_debut_pub').html();
+        var max = $('tbody .'+token+' .date_fin_pub').html();
+        var fee = $('tbody .'+token+' .element_name').html();
+        // console.log( min );
+
+        $("#form-delete :input[name='date_debut_pub']").val(min);
+        $("#form-delete :input[name='date_fin_pub']").val(max);
+        $("#form-delete :input[name='element_name']").val(fee);
+        $("#form-delete :input[name='password']").val('');
+        $("#form-delete :input[name='token']").val(token);
+
+        $('#modal-delete').modal('show');
+        
+       return false;
+    });
+
+    //validation du formulaire de suppression de pub
+    $('#form-delete').on('submit',function(e){
+        e.preventDefault();
+        var url_process = $('#linkToWebroot').html()+$('#linkToDeleteElement').html()
+        var self = $(this);
+        $(this).find("#confirm_btn").addClass('disabled');
+        $(this).find("#confirm_btn").addClass('running');
+        var delete_data = $(this).serialize();
+        delete_element_default( delete_data, self, url_process );
+    });
+
+    function add_pub(add_data, self, linkToAddPub){
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: linkToAddPub,
+            data: add_data,
+            contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
+            processData: false, // NEEDED, DON'T OMIT THIS
+            success: function (data, textStatus, jqXHR) {
+                self.find("#confirm_btn").removeClass('disabled');
+                self.find("#confirm_btn").removeClass('running');
+                // $('.cotegory_add_form')[0].reset();
+                console.log(data);
+                Swal({
+                  title: data.error_text,
+                  text: data.error_text_second,
+                  type: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#0aa89e',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'OK'
+                }).then((result) => {
+                  if (result.value) {
+                    window.location.replace(data.linkToList);
+                  }
+                });
+
+            },
+            error: function(jqXHR) {
+                console.log(jqXHR.responseText);
+                self.find("#confirm_btn").removeClass('disabled');
+                self.find("#confirm_btn").removeClass('running');  
+                $('#errorForm').prepend(jqXHR.responseJSON['error_html']);
+            }
+        });
+    }
+
+    //validation du formulaire de recherche de pubs
+    $('.pubs_search_form').on('submit', function (e) {
+        e.preventDefault();
+        console.log( $(this).serialize() );
+        var linkToSearchElements = $('#linkToWebroot').html()+$('#linkToGetElement').html()
+        console.log( linkToSearchElements );
+        $(this).find("#confirm_filter").addClass('disabled');
+        $(this).find("#confirm_filter").addClass('running');
+        var self = $(this);
+        ///name_supplier&/tel&        
+        search_elements( $(this).serialize(), self, linkToSearchElements );
+
+        var start_date = $(this).find(" :input[name='start_date']").val();
+        var start_hour = $(this).find(" :input[name='start_hour']").val();
+        var end_date = $(this).find(" :input[name='end_date']").val();
+        var end_hour = $(this).find(" :input[name='end_hour']").val();
+        var filter_name = $(this).find(" :input[name='filter_name']").val();
+        var filter_status = $(this).find(" :input[name='filter_status']").val();
+                       // filter-data-montant="" filter-data-nameProduct="" filter-data-nameSupplier=""
+        $('#pubs-list').attr('filter-data-startDate', start_date);
+        $('#pubs-list').attr('filter-data-startHour', start_hour);
+        $('#pubs-list').attr('filter-data-endDate', end_date);
+        $('#pubs-list').attr('filter-data-endHour', end_hour);
+        $('#pubs-list').attr('filter-data-filterStatus', filter_status);
+        $('#pubs-list').attr('filter-data-nameCompagny', filter_name);
+        // console.log( sexe );
+        return false;
+
+    });
+
+    //pagination de liste pub
+    $('#list-pubs-pagination').on('click', '.page-link', function (e) {
+        e.preventDefault();
+        var linkToSearchElements = $('#linkToWebroot').html()+$('#linkToGetElement').html()
+        var numero = $(this).attr('href');
+        // console.log(numero);
+        var start_date = $('#pubs-list').attr('filter-data-startDate');
+        var start_hour = $('#pubs-list').attr('filter-data-startHour');
+        var end_date = $('#pubs-list').attr('filter-data-endDate');
+        var end_hour = $('#pubs-list').attr('filter-data-endHour');
+        var filter_status = $('#pubs-list').attr('filter-data-filterStatus');
+        var filter_name = $('#pubs-list').attr('filter-data-nameCompagny');
+        var pagination = true;        
+
+        var dataFilter = {start_date:start_date,start_hour:start_hour,end_date:end_date,end_hour:end_hour,pagination:pagination,
+            filter_status:filter_status,filter_name:filter_name,number_page_running:numero};
+        
+        if( !isNaN( parseInt(numero) ) ){
+            search_elements(dataFilter, 'pagination', linkToSearchElements);      
+        }
+        //$(".cmd_search_form :input[name='number_page_running']").val(numero);
+        $('#pubs-list').attr('filter-data-pageRunning', numero);
+        return false;
+    });
+
+
+    /** END PUB PROCESS **/
+
+
+    /***START FEES PROCESS**/
+    //form d'ajout frais
+    $('.fee_add_form').on('submit', function (e) {
+        e.preventDefault();
+        var self = $(this);
+        var url_process = $('#linkToWebroot').html()+$('#linkToAddElement').html();
+        console.log( $(this).serialize() );
+        console.log( url_process );
+        $(this).find("#confirm_btn").addClass('disabled');
+        $(this).find("#confirm_btn").addClass('running');
+
+        add_element_default( $(this).serialize(), self, url_process );
+
+        return false;
+    });
+
+    //form d'ajout frais
+    $('.fee_update_form').on('submit', function (e) {
+        e.preventDefault();
+        var self = $(this);
+        var url_process = $('#linkToWebroot').html()+$('#linkToUpdateElement').html();
+        console.log( $(this).serialize() );
+        console.log( url_process );
+        $(this).find("#confirm_btn").addClass('disabled');
+        $(this).find("#confirm_btn").addClass('running');
+
+        update_element_default( $(this).serialize(), self, url_process );
+
+        return false;
+    });
+
+    //Cliquer sur le bouton pour supprimer frais livr
+    $('#fees-list tbody').on('click', '.delete-btn', function(e){ // 
+        e.preventDefault();
+        var self = $(this);
+        var token = $(this).attr('fee-id');
+
+        // console.log( token );
+        var min = $('tbody .'+token+' .min').html();
+        var max = $('tbody .'+token+' .max').html();
+        var fee = $('tbody .'+token+' .fee').html();
+        // console.log( min );
+
+        $("#form-delete-fee :input[name='min_amount']").val(min);
+        $("#form-delete-fee :input[name='max_amount']").val(max);
+        $("#form-delete-fee :input[name='fee']").val(fee);
+        $("#form-delete-fee :input[name='password']").val('');
+        $("#form-delete-fee :input[name='token']").val(token);
+
+        $('#modal-delete-fee').modal('show');
+        
+       return false;
+    });
+
+    //validation du formulaire de suppression du client
+    $('#form-delete-fee').on('submit',function(e){
+        e.preventDefault();
+        var url_process = $('#linkToWebroot').html()+$('#linkToDeleteElement').html()
+        var self = $(this);
+        $(this).find("#confirm_btn").addClass('disabled');
+        $(this).find("#confirm_btn").addClass('running');
+        var delete_data = $(this).serialize();
+        delete_element_default( delete_data, self, url_process );
+    });
+
+
+    //validation du formulaire de recherche de communes
+    $('.commune_search_form').on('submit', function (e) {
+        e.preventDefault();
+        console.log( $(this).serialize() );
+        var linkToSearchElements = $('#linkToWebroot').html()+$('#linkToGetElement').html()
+        console.log( linkToSearchElements );
+        $(this).find("#confirm_filter").addClass('disabled');
+        $(this).find("#confirm_filter").addClass('running');
+        var self = $(this);
+        ///name_supplier&/tel&        
+        search_elements( $(this).serialize(), self, linkToSearchElements );
+
+        var start_date = $(this).find(" :input[name='start_date']").val();
+        var start_hour = $(this).find(" :input[name='start_hour']").val();
+        var end_date = $(this).find(" :input[name='end_date']").val();
+        var end_hour = $(this).find(" :input[name='end_hour']").val();
+        var filter_name = $(this).find(" :input[name='filter_name']").val();
+        var filter_status = $(this).find(" :input[name='filter_status']").val();
+                       // filter-data-montant="" filter-data-nameProduct="" filter-data-nameSupplier=""
+        $('#commune-list').attr('filter-data-startDate', start_date);
+        $('#commune-list').attr('filter-data-startHour', start_hour);
+        $('#commune-list').attr('filter-data-endDate', end_date);
+        $('#commune-list').attr('filter-data-endHour', end_hour);
+        $('#commune-list').attr('filter-data-filterName', filter_name);
+        $('#commune-list').attr('filter-data-filterStatus', filter_status);
+        // console.log( sexe );
+        return false;
+
+    });
+
+    /**END FEES PROCESS**/
+
+
+    //Cliquer sur le bouton pour supprimer une unité de mesure
     $('#units-list tbody').on('click', '.delete-btn', function(e){ // 
         e.preventDefault();
         var self = $(this);
@@ -149,13 +682,14 @@
         return false;
     });
 
+    
     //validation du formulaire de suppression du client
     $('#form-delete-units').on('submit',function(e){
         e.preventDefault();
         var url_process = $('#linkToWebroot').html()+$('#linkToDeleteElement').html()
         var self = $(this);
-        // $(this).find("#confirm_btn").addClass('disabled');
-        // $(this).find("#confirm_btn").addClass('running');
+        $(this).find("#confirm_btn").addClass('disabled');
+        $(this).find("#confirm_btn").addClass('running');
         var delete_data = $(this).serialize();
         delete_element_default( delete_data, self, url_process );
     });
@@ -164,9 +698,7 @@
     $('.unit_add_form').on('submit', function (e) {
         e.preventDefault();
         var self = $(this);
-
-        var url_process = $('#linkToWebroot').html()+$('#linkToGetElement').html()
-
+        var url_process = $('#linkToWebroot').html()+$('#linkToGetElement').html();
         console.log( $(this).serialize() );
         console.log( url_process );
         $(this).find("#confirm_btn").addClass('disabled');
@@ -175,7 +707,6 @@
         add_element_default( $(this).serialize(), self, url_process );
 
         return false;
-
     });
 
     //Form unit update submit
@@ -223,7 +754,7 @@
         delete_element_default( delete_data, self, url_process );
     });
 
-    /*Function rejet de commande*/
+    /*Function de suppression d'élément*/
     function delete_element_default(delete_data, self, url_process){
         // console.log(delete_product_data);       
         $.ajax({
@@ -262,6 +793,56 @@
               console.log(jqXHR.responseText);
               if( jqXHR.responseJSON.error_html ){
                 $('.errorForm ').html(jqXHR.responseJSON.error_html);
+              }
+
+            }
+        });
+
+    }
+
+    /*Function de suppression d'élément*/
+    function delete_mails(delete_data, url_process){
+        // console.log(delete_product_data);       
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: url_process,
+            data: delete_data,
+            success: function (data, textStatus, jqXHR) {
+               // console.log(data);
+               Swal({
+                  title: data.error_text,
+                  text: data.error_text_second,
+                  type: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#0aa89e',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'OK'
+                }).then((result) => {
+                  if (result.value) {
+                    //actualiser la page
+                    window.location.replace(data.linkToList);
+                  }
+                });
+            },
+            error: function(jqXHR) {
+              console.log(jqXHR.responseText);
+              if( jqXHR.responseJSON.error_html ){
+                $('.errorForm ').html(jqXHR.responseJSON.error_html);
+                Swal({
+                  title: data.error_text,
+                  text: data.error_text_second,
+                  type: 'error',
+                  showCancelButton: false,
+                  confirmButtonColor: '#0aa89e',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'OK'
+                }).then((result) => {
+                  if (result.value) {
+                    //supprimer la ligne de la categorie
+                    // $(" tbody ."+data.token).fadeOut(700);
+                  }
+                });
               }
 
             }
@@ -316,7 +897,7 @@
         var dataFilter = {start_date:start_date,start_hour:start_hour,end_date:end_date,end_hour:end_hour,pagination:pagination,
             tel:tel,name_delivrer:name_delivrer,number_page_running:numero};
         
-        if( !isNaN( parseInt(numero) ) ){é
+        if( !isNaN( parseInt(numero) ) ){
             search_livreurs(dataFilter, 'pagination', linkToSearchElements);      
         }
         //$(".cmd_search_form :input[name='number_page_running']").val(numero);
@@ -335,7 +916,7 @@
                
                $(' tbody ').hide().html( data.result.html_list_elements ).fadeIn(700);
                $(' .pagination ').hide().html( data.result.html_pagination ).fadeIn(700); 
-               console.log(data);
+               // console.log(data);
                if(!filter_data.pagination){
                     
                     if( self.find("#confirm_filter").hasClass('disabled') ){
@@ -344,6 +925,16 @@
                     }
                     $('.total').hide().html( data.result.stat.total.nbre ).fadeIn(1000);
                     // $('.total_nbre').hide().html( data.result.stat.nbre ).fadeIn(1000);
+
+                    if( typeof data.result.stat.actifs !== 'undefined'  ){
+                        $('.actifs').hide().html( data.result.stat.actifs ).fadeIn(1000);
+                    }
+                    if( typeof data.result.stat.non_actifs !== 'undefined'  ){
+                        $('.non_actifs').hide().html( data.result.stat.non_actifs ).fadeIn(1000);
+                    }
+                    if( typeof data.result.stat.no_order !== 'undefined'  ){
+                        $('.no_order').hide().html( data.result.stat.no_order ).fadeIn(1000);
+                    }
                } 
                
                $('#extract-excel-btn').attr('href', data.result.link_for_extract);

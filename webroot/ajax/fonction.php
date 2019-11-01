@@ -1,5 +1,240 @@
 <?php
 
+function send_mail($to, $Subject, $message){
+  require_once('../phpmailer/class.phpmailer.php');
+  //include("class.smtp.php"); // optional, gets called from within class.phpmailer.php if not already loaded
+
+  $mail             = new PHPMailer();
+
+  // $body             = file_get_contents('contents.html');
+  // $body             = "TEST TEST";
+  $body             = str_replace("\\",'',$message);
+
+  $mail->IsSMTP(); // telling the class to use SMTP
+  // $mail->Host       = "mail.yourdomain.com"; // SMTP server
+  $mail->SMTPDebug  = 1;                     // enables SMTP debug information (for testing)
+                                             // 1 = errors and messages
+                                             // 2 = messages only
+  $mail->SMTPAuth   = true;                  // enable SMTP authentication
+  $mail->SMTPSecure = "tls";                 // sets the prefix to the servier
+  $mail->Host       = "smtp.gmail.com";      // sets GMAIL as the SMTP server
+  $mail->Port       = 25;                   // set the SMTP port for the GMAIL server
+  //$mail->Username   = "test.ngser@gmail.com";  // GMAIL username
+  $mail->Username   = "romkesso92@gmail.com"; //"test.application.ngser@gmail.com";
+  $mail->Password   = "romeokesso123";//"password2018#"; //"@dtngser";            // GMAIL password
+
+  $mail->SetFrom('service.clients@afromart.com', 'SERVICE CLIENT AFROMART');
+
+  $mail->AddReplyTo("service.clients@afromart.com","SERVICE CLIENT");
+
+  $mail->Subject    = $Subject;
+
+  $mail->AltBody    = "Pour afficher le message, veuillez utiliser un client de méssagerie électronique compatible HTML!"; // optional, comment out and test
+
+  $mail->MsgHTML($body);
+
+  $address = $to;
+  $mail->AddAddress($address, $to);
+
+  // $mail->AddAttachment("images/phpmailer.gif");      // attachment
+  // $mail->AddAttachment("images/phpmailer_mini.gif"); // attachment
+
+  if(!$mail->Send()) {
+    return "Mailer Error: " . $mail->ErrorInfo;
+  } else {
+    return true;
+  }
+}
+
+
+function html_list_avis($elements, $offset ){
+  $html = '';
+  // debugger($elements);
+  //$elements['liste'], $elements['stat']['total']['nbre'], $offset, $elements['liste_order']
+  $nbre_product_plus = $elements['stat']['total']['nbre'] + 1;
+  $nbre_product_plus_offset = $elements['stat']['total']['nbre'] - $offset;
+  foreach ($elements['liste'] as $element) {
+    $isClient = ($element->id_c == 0) ? 'NON' : 'OUI' ;
+    $nom = ($element->id_c == 0) ? $element->nom_avis.' '.$element->prenoms_avis : $element->nom_client.' '.$element->prenoms_client;
+    $email = ($element->id_c == 0) ? $element->email_avis : $element->email_client;
+    $reponse_admin_contenu = !empty($element->reponse_admin_contenu) ? "REPONSE ".$element->reponse_admin_contenu : '';
+    $page_accueil = ($element->page_accueil == 0) ? 'NON' : 'OUI' ;
+    $statut = ($element->statut == 0) ? 'EN ATTENTE' : 'REPONDU' ;
+    $contenu = substr($element->contenu, 60) ; 
+    $contenu .= strlen($element->contenu) > 60 ? '...' : $element->contenu ;
+
+    $html .= '<tr class="text-center '.$element->token.'">';
+    $html .=    '<td>'.$nbre_product_plus_offset-- .'</td>';
+    $html .=    '<td class="isClient" >'.$isClient .'</td>
+                <td class="Nom" >'.ucfirst($nom) .'</td>
+                <td class="Email" >'.$email .'</td>
+                <td class="Produit" >'.$element->produit .'</td>
+                <td class="Contenu">
+                  '.$contenu .'
+                </td>
+                <td class="isHome" >'.$page_accueil .'</td>
+                <td class="statut" >'.$statut .'</td>
+                <td class="date_debut">'.dateFormat($element->date_creation).'</td>
+                <td class="">';
+    if( empty($element->reponse_admin_contenu) ){
+    $html .=  '<button type="button" class="btn btn-icon-toggle response-btn" data-toggle="tooltip" data-placement="top" 
+                element-id="'.$element->token .'" data-original-title="Repondre au commentaire">
+                <a href="'.BASE_URL.'avis/modifier/'.$element->token .'">
+                    <i class="md md-insert-comment"></i>
+                </a>
+              </button>';
+    }else{ 
+    $html .=  '<button type="button" class="btn btn-icon-toggle update-response-btn " data-toggle="tooltip" data-placement="top" 
+                element-id="'.$element->token .'" data-original-title="Modifier la reponse au commentaire">
+                <a href="'.BASE_URL.'avis/modifier/'.$element->token .'">
+                    <i class="fa fa-pencil"></i>
+                </a>
+              </button>';
+    }
+    if( $element->page_accueil == 0 ){
+    $html .=  '<button type="button" class="btn btn-icon-toggle response-btn" data-toggle="tooltip" data-placement="top" 
+                element-id="'.$element->token .'" data-original-title="Afficher sur la page d\'acceuil">
+                    <i class="md md-home"></i>
+              </button>';
+    }else{ 
+    $html .=  '<button type="button" class="btn btn-icon-toggle update-response-btn " data-toggle="tooltip" data-placement="top" 
+                element-id="'.$element->token .'" data-original-title="Rétirer de la page d\'acceuil">
+                    <i class="md md-check-box-outline-blank"></i>
+              </button>';
+    } 
+    $html .=  '<button type="button" class="btn btn-icon-toggle detail-element-btn " data-toggle="tooltip" data-placement="top" category-id="'.$element->token .'"
+                 data-original-title="Voir les détails du commentaire">
+                  <a href="'.BASE_URL.'avis/details/'.$element->token .'">
+                      <i class="md md-description"></i>
+                  </a>
+                </button>
+                <button type="button" class="btn delete-btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" element-id="'.$element->token .'"
+                 data-original-title="Supprimer l\'element"><i class="fa fa-trash-o"></i>
+                </button>
+              </td>';    
+    $html .= '</tr>';
+  }
+
+  return $html;
+
+}
+
+function html_list_pubs($elements, $offset ){
+  $html = '';
+  // debugger($elements);
+  //$elements['liste'], $elements['stat']['total']['nbre'], $offset, $elements['liste_order']
+  $nbre_product_plus = $elements['stat']['total']['nbre'] + 1;
+  $nbre_product_plus_offset = $elements['stat']['total']['nbre'] - $offset;
+  foreach ($elements['liste'] as $element) {
+    $status = ($element->statut == 1) ? 'ACTIF' : 'NON ACTIF';
+    $html .= '<tr class="text-center '.$element->token.'">';
+    $html .=    '<td>'.$nbre_product_plus_offset-- .'</td>
+                 <td class="element_name" >'.ucfirst( $element->entreprise ).'</td>
+        <td>'.$element->position.'</td>
+        <td><img class="img-circle width-1" src="'.WEBROOT_URL_FRONT.'images/pub/'.$element->image.'.png?1422538624" alt="" /></td>
+        
+        <td>'.$status.'</td>
+        <td class="date_debut_pub">'.dateFormat($element->date_debut).'</td>
+        <td class="date_fin_pub">'.dateFormat($element->date_fin).'</td>
+        <td class="">
+          <button type="button" class="btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" 
+            element-id="'.$element->token.'" data-original-title="Modifier les informations de l\'element">
+            <a href="'.BASE_URL.'pubs/modifier/'.$element->token.'">
+                <i class="fa fa-pencil"></i>
+            </a>
+          </button>
+          <button type="button" class="btn delete-btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" element-id="'.$element->token.'"
+           data-original-title="Supprimer la element"><i class="fa fa-trash-o"></i>
+          </button>
+        </td>';
+    $html .= '</tr>';
+  }
+
+  return $html;
+}
+
+function html_list_communes($communes, $offset ){
+  $html = '';
+  // debugger($communes);
+  //$communes['liste'], $communes['stat']['total']['nbre'], $offset, $communes['liste_order']
+  $nbre_product_plus = $communes['stat']['total']['nbre'] + 1;
+  $nbre_product_plus_offset = $communes['stat']['total']['nbre'] - $offset;
+  foreach ($communes['liste'] as $commune) {
+    $status = ($commune->statut == 1) ? 'ACTIF' : 'NON ACTIF';
+    $html .= '<tr class="text-center '.$commune->token.'">';
+    $html .=    '<td>'.$nbre_product_plus_offset-- .'</td>
+                  <td class="element_name" >'.ucfirst( $commune->commune ) .'</td>
+                  <td>'.$status.'</td>
+                  <td>'.number_format($communes['liste_order'][$commune->id], 0, '', ' ') .'</td>
+                  <td>'.$commune->longitude .'</td>
+                  <td>'.$commune->lagitude .'</td>
+                  <td>'.dateFormat($commune->date_creation) .'</td>
+                  <td>'.dateFormat($commune->date_modification) .'</td>
+                  <td class="">
+                    <button type="button" class="btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" commune-id="'.$commune->token .'"
+                     data-original-title="Modifier les informations de la commune">
+                      <a href="'.BASE_URL.DS.'communesLivraison/modifier/'.$commune->token .'">
+                          <i class="fa fa-pencil"></i>
+                      </a>
+                    </button>
+                    <button type="button" class="btn delete-btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" commune-id="'.$commune->token .'"
+                     data-original-title="Supprimer la commune"><i class="fa fa-trash-o"></i>
+                    </button>
+                  </td>';
+    $html .= '</tr>';
+  }
+
+  return $html;
+}
+
+function getNeverOrderPlace($pdo, $request_params){
+      $req = [
+              'fieldsmain' => ['id as idDest'],
+              'fieldstwo' => ['id_livraison_destination'],
+              'count' => [  'champs' => 'commandes.id_livraison_destination',  'alias' => 'nbre'  ]
+              ,'fields' => array(  array(  'main' => 'id',  'second' => 'id_livraison_destination'  )  )
+              ,'group' => 'id_livraison_destination'
+              ,'condition' => $request_params['condition']." AND id_livraison_destination is null"
+              ,'array_filter' => $request_params['array_filter']
+          ];    
+      $nbre = count( findLeftJoin($pdo, $req, 'livraison_destinations','commandes') );
+      unset($req['condition']);
+
+      $listeSql = findLeftJoin($pdo, $req, 'livraison_destinations','commandes');
+      $listeArray = array();
+      foreach ($listeSql as $c) {
+        $listeArray[$c->idDest] = $c->nbre;
+      }
+
+      return [ 'nbre' => $nbre, 'liste' => $listeArray];
+
+    }
+
+function isSetAsFees($pdo, $amount, $selfElementToken=null){
+
+  $shippingFees = false; // initie les frais à 0
+
+  $req['condition'] = ' min <= :min AND max >= :max '; // recupere les frais dans le pallier adequat  
+  $req['array_filter'] = [
+    ':min' => $amount,
+    ':max' => $amount
+  ];
+  if ( isset( $selfElementToken ) ){ //au cas ou ne souhaite pas inclure une ligne frais dans la verification
+    $req['condition'] .= " AND token NOT LIKE :token " ;
+    $req['array_filter'][':token'] =  $selfElementToken ;
+  }
+  // debugger($req);
+
+  $feeRow = current( sql_select($pdo, $req, 'frais_livraison') );
+  
+  if( !empty( $feeRow ) ){
+    $shippingFees = true;
+    // debugger($feeRow);
+  }
+
+  return $shippingFees;
+}
+
 function html_list_livreurs($pdo, $livreurs, $nombre_total_livreur, $offset){
   
   $html = '';
@@ -36,8 +271,6 @@ function html_list_livreurs($pdo, $livreurs, $nombre_total_livreur, $offset){
 
   return $html;
 }
-
-
 
 function html_list_fournisseurs($pdo, $fournisseurs, $nombre_total_produit, $offset){
   //recupere les unités de mésures
@@ -76,8 +309,6 @@ function html_list_fournisseurs($pdo, $fournisseurs, $nombre_total_produit, $off
 
   return $html;
 }
-
-
 
 function update($pdo, $req, $table){
    $cond = array();
@@ -191,7 +422,6 @@ function html_list_clients($pdo, $clients, $nombre_total_produit, $offset){
   return $html;
 }
 
-
 function html_list_categories($pdo, $categories, $nombre_total_produit, $offset){
   $html = '';
   $nbre_product_plus = $nombre_total_produit + 1;
@@ -229,6 +459,91 @@ function html_list_categories($pdo, $categories, $nombre_total_produit, $offset)
   return $html;
 }
 
+function findJoinType($pdo, $req, $maintable, $secondtable, $thirdtable=NULL){
+    $sql = ' SELECT ';            
+    $sql .= $maintable.'.'.implode(', '.$maintable.'.',$req['fieldsmain']);
+    $sql .= ', '.$secondtable.'.'.implode(', '.$secondtable.'.',$req['fieldstwo']);
+    if(isset($thirdtable)){
+        $sql .= ', '.$thirdtable.'.'.implode(', '.$thirdtable.'.',$req['fieldsthree']);
+    }
+    $sql .= ' FROM '.$maintable;
+    $sql .= ' '.$req['fields'][0]['type'];
+    $sql .= ' '.$secondtable.' ON '.$maintable.'.'.$req['fields'][0]['main'].' = '.$secondtable.'.'.$req['fields'][0]['second'];
+    if(isset($thirdtable)){
+      $sql .= ' '.$req['fields'][1]['type'];
+      $sql .= ' '.$thirdtable.' ON '.$maintable.'.'.$req['fields'][1]['main'].' = '.$thirdtable.'.'.$req['fields'][1]['third']; 
+    }
+    if(isset($req['condition'])){
+          $sql .= ' WHERE '.$req['condition']; 
+    }
+    if(isset($req['order'])){
+        if(is_array($req['order'])){
+           $sql .= ' ORDER BY '.$req['order']['champs'].' '.$req['order']['param']; 
+        }else{
+          $sql .= ' ORDER BY '.$req['order'].' ASC';  
+        }
+    }
+    //reglage pour LIMIT
+   if(isset($req['limit'])){
+      $sql .= ' LIMIT '.$req['limit'];              
+   }
+    //die ($sql);
+   $pre = $pdo->prepare($sql);
+
+   if( isset( $req['array_filter'] ) ){
+      // debugger($req['array_filter']);    
+      $pre->execute($req['array_filter']);  
+    }else{
+      $pre->execute(); 
+    }
+   
+   if(isset($req['assos'])){
+     return $pre->fetchAll(PDO::FETCH_ASSOC);  
+   }else{
+     return $pre->fetchAll(PDO::FETCH_OBJ);  
+   }
+}
+
+
+function findLeftJoin($pdo, $req, $maintable, $secondtable, $thirdtable=NULL){
+    $sql = ' SELECT ';            
+    $sql .= $maintable.'.'.implode(', '.$maintable.'.',$req['fieldsmain']);
+    $sql .= ', '.$secondtable.'.'.implode(', '.$secondtable.'.',$req['fieldstwo']);
+    if(isset($thirdtable)){
+        $sql .= ', '.$thirdtable.'.'.implode(', '.$thirdtable.'.',$req['fieldsthree']);
+    }
+    if(isset($req['count'])){
+      $sql .= ', COUNT('.$req['count']['champs'].') AS '.$req['count']['alias'];
+    }
+    $sql .= ' FROM '.$maintable;
+    $sql .= ' LEFT JOIN '.$secondtable.' ON '.$maintable.'.'.$req['fields'][0]['main'].' = '.$secondtable.'.'.$req['fields'][0]['second'];
+    if(isset($thirdtable)){
+      $sql .= ' INNER JOIN '.$thirdtable.' ON '.$maintable.'.'.$req['fields'][1]['main'].' = '.$thirdtable.'.'.$req['fields'][1]['third']; 
+    }
+    if(isset($req['condition'])){
+          $sql .= ' WHERE '.$req['condition']; 
+    }
+    if(isset($req['order'])){
+        if(is_array($req['order'])){
+           $sql .= ' ORDER BY '.$req['order']['champs'].' '.$req['order']['param']; 
+        }else{
+          $sql .= ' ORDER BY '.$req['order'].' ASC';  
+        }
+    }
+
+    //group by
+    if(isset($req['group'])){
+      $sql .= ' GROUP BY '.$req['group'];             
+    }
+    // debug($sql);
+    $pre = $pdo->prepare($sql);
+    if( isset( $req['array_filter'] ) ){  
+      $pre->execute($req['array_filter']);  
+    }else{
+      $pre->execute(); 
+    }
+    return $pre->fetchAll(PDO::FETCH_OBJ);
+}
 
 //peut prendre les conditions listées dans un tableau ou pas
 function sql_select($pdo, $req, $table=null){
@@ -270,6 +585,7 @@ function sql_select($pdo, $req, $table=null){
    //die ($sql);
    $pre = $pdo->prepare($sql);
    if( isset( $req['array_filter'] ) ){
+      // debugger($req['array_filter']);    
       $pre->execute($req['array_filter']);  
     }else{
       $pre->execute(); 

@@ -52,6 +52,7 @@
 
         <link type="text/css" rel="stylesheet" href="<?php echo WEBROOT_URL; ?>assets/css/modules/materialadmin/css/theme-default/materialadmin_print.css?1422823243"  media="print"/>
 
+        <link type="text/css" rel="stylesheet" href="<?php echo WEBROOT_URL; ?>assets/css/modules/materialadmin/css/theme-default/libs/summernote/summernote.css?1422823374" />
         <!-- END STYLESHEETS -->
 
 
@@ -266,14 +267,35 @@
         </ul>
     </li><!--end /menu-li -->
     <!-- END UI -->
+
+    <!-- BEGIN UI -->
+    <li class="gui-folder <?php echo active_menu('FraisLivraison'); ?>">
+        <a >
+            <div class="gui-icon"><i class="glyphicon glyphicon-map-marker"></i></div>
+            <span class="title">Frais Livraison</span>
+        </a>
+        <ul>
+            <li class="<?php echo active_sub_menu('FraisLivraison'); ?>">
+                <a href="<?php echo BASE_URL.DS.'fraisLivraison/liste'; ?>">
+                    <span class="title <?php echo active_sub_menu('FraisLivraison'); ?>">Grille de frais</span>
+                </a>
+            </li>
+            <li class="<?php echo active_sub_menu('CommunesLivraison'); ?>">
+                <a href="<?php echo BASE_URL.DS.'communesLivraison/liste'; ?>">
+                    <span class="title <?php echo active_sub_menu('CommunesLivraison'); ?>">Communes</span>
+                </a>
+            </li>           
+        </ul>
+    </li><!--end /menu-li -->
+    <!-- END UI -->
     
     <!-- BEGIN TABLES -->
-    <li class="">
-        <a href="<?php echo SITE_BASE_URL.'communes_livraison/liste'; ?>">
+    <!-- <li class="">
+        <a href="<?php //echo SITE_BASE_URL.'communes_livraison/liste'; ?>">
             <div class="gui-icon"><i class="glyphicon glyphicon-map-marker"></i></div>
             <span class="title">Communes Livraison</span>
         </a>
-    </li><!--end /menu-li -->
+    </li> --><!--end /menu-li -->
     <!-- END TABLES -->
     
     <!-- BEGIN FORMS -->
@@ -298,8 +320,8 @@
             <span class="title">Livreurs</span>
         </a>
     </li>
-    <li class="">
-        <a href="<?php echo BASE_URL.DS.'pub/liste'; ?>">
+    <li class="<?php echo active_menu('Pubs'); ?>">
+        <a href="<?php echo BASE_URL.DS.'pubs/liste'; ?>">
             <div class="gui-icon"><i class="fa fa-image"></i></div>
             <span class="title">Bannières publicitaires</span>
         </a>
@@ -308,14 +330,14 @@
     <!-- END FORMS -->
     
     <!-- BEGIN CHARTS -->
-    <li>
+    <li class="<?php echo active_menu('Avis'); ?>">
         <a href="<?php echo BASE_URL.DS.'avis/liste'; ?>" >
             <div class="gui-icon"><i class="glyphicon glyphicon-comment"></i></div>
             <span class="title">Avis</span>
         </a>
     </li>
 
-    <li>
+    <li class="<?php echo active_menu('Messages'); ?>">
         <a href="<?php echo BASE_URL.DS.'mails/liste'; ?>" >
             <div class="gui-icon"><i class="md md-email"></i></div>
             <span class="title">Mails</span>
@@ -333,7 +355,7 @@
         <!--start submenu -->
         <ul>
             <li><a href="<?php echo BASE_URL.DS.'utilisateurs/liste'; ?>"><span class="title">Utilisateurs</span></a></li>
-            <li><a href="<?php echo BASE_URL.DS.'profils/liste'; ?>"><span class="title">Profils</span></a></li>            
+            <!-- <li><a href="<?php echo BASE_URL.DS.'profils/liste'; ?>"><span class="title">Profils</span></a></li>             -->
         </ul><!--end /submenu -->
     </li><!--end /menu-li -->
     <!-- END LEVELS -->
@@ -649,9 +671,13 @@
 <script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/core/demo/Demo.js"></script>
 <script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/core/demo/DemoFormComponents.js"></script>
 
+<script type="text/javascript" src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/libs/summernote/summernote.min.js"></script>
+
 <script type="text/javascript" src="<?php echo WEBROOT_URL; ?>assets/js/own-script.js?<?php echo VERSION; ?>"></script>
 <script type="text/javascript" src="<?php echo WEBROOT_URL; ?>assets/js/sweetalert2.min.js?<?php echo VERSION; ?>"></script>
 <script type="text/javascript" src="<?php echo WEBROOT_URL; ?>assets/js/bootstrap_select.min.js?<?php echo VERSION; ?>"></script>
+
+
 
     
     <!-- END JAVASCRIPT -->

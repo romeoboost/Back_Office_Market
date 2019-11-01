@@ -56,7 +56,7 @@ if( !isset($_POST) || empty($_POST) || !isset($_POST['token']) || !isset($_POST[
       if( empty($unit) ){ 
         $error_statut = true;
         $error_text = "Oups, Erreur !";
-        $error_text_second = "Echec de suppression de la catégorie.";
+        $error_text_second = "Echec de suppression de l'unité de mésure.";
       }else{
         //recupere la liste des produits liés à la catégorie
         $req_recup = $pdo->prepare('SELECT * FROM produits WHERE id_unite = :id_unite ORDER BY id DESC'); 

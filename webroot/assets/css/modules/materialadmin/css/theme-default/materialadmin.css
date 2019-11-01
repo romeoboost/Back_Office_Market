@@ -6465,7 +6465,8 @@ sub.badge {
 .list-group-item.focus,
 .list-group-item.focus:hover,
 .list-group-item.focus:focus {
-  background-color: #f2f3f3;
+  /*background-color: #f2f3f3;*/
+  background-color: #e5e6e6;
 }
 .list-group-item.focus .list-group-item-heading,
 .list-group-item.focus:hover .list-group-item-heading,
@@ -8175,4 +8176,56 @@ option.toUpCase{
 .tools i{
   color: white !important;
 }
+
+.detail-comments-box{
+  margin-left: 7em;
+  /*margin-top: 3em;
+  padding : 2em 2em 2em 2em;*/
+}
+
+.detail-comments-box h4, .detail-comments-box h5{
+  margin-top: 1em;
+}
+
+.detail-comments-box p{
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+.detail-product-img-content-comment, .detail-comments-box .list-group  {
+    box-shadow: 0px 0px 10px 2px #23212173;
+}
+
+.detail-product-img-content-comment img {
+    height: 290px;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.form-delete-paraph-title{
+  opacity: 1;
+  color: #0aa89e;
+}
+
+thead tr {
+  text-transform: uppercase;
+  background-color: #2b323a;
+  color: #d9dadc;
+}
+.box-mail-message , .box-mail-guide{
+  padding-top: 1em;
+}
+
+.list-email a.list-group-item   h5 {
+  margin-top: 0.5em;
+}
+
+.user-content-message-detail{
+  padding: 1em;
+  background-color: #e5e6e6;
+}
+.list-email-box{
+  margin-top: 1em;
+}
+
 

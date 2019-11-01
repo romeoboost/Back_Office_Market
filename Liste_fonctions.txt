@@ -52,6 +52,14 @@ total users, total users avec commandes, total avis, total produits, produits pl
 14. Extraction pour les listes
 15. Recherche multicriteres(-periodes, identifiant, statut, -nom prouduits, nom element, tel client, email client)
 16. Livreurs
+17. communes livraison
+	- Liste
+	- Recherche
+	- pagination
+	- ajouter
+	- modifier
+	- suprimer
+	- extraire
 
 
 <script src="<?php echo WEBROOT_URL; ?>assets/js/modules/materialadmin/core/demo/Demo.js"></script>
@@ -129,18 +137,37 @@ d- Categorie produits
 	Recherche Multicritere
 	Extraction
 
-VUE POUR GERER LES UNITE DE MESURE
 
-livreurs
+VUE POUR GERER LES UNITE DE MESURE : OK
 
-de l'unité de mesure
+livreurs : OK
 
-id, nom, prenom, tel, date_creation, date_modification
+de l'unité de mesure : OK
+
+id, nom, prenom, tel, date_creation, date_modification : 
+
+Tables frais 
+id
+token
+nom
+min
+max
+date_creation
+date_modification
+
+fonctions impactées par la mise à jour de la gestion des frais
+Front office : 
+	- Ajout produit au panier
+	- diminuer produit du panier
+	- retirer produit du panier
+
 
 **** ERREUR ***
-probleme de compatibilité pour phpExcell sur la version php5 et php7.
+- probleme de compatibilité pour phpExcell sur la version php5 et php7.
 correction : supprimer une directive 'break' ligne 581 dans un fichier de fonction (phpExcell/Classes/PHPExcel/Calculation/Functions.php)
 https://stackoverflow.com/questions/35918626/fatal-error-break-not-in-the-loop-or-switch-context-in-function-php
+
+- champs mysql en format 'FLOAT' n'accepte pas la valeur 1000001, on a donc du mettre le type du champs à 'INT'
 
 *** Faire fonction de nouveau produit ****
 https://redstapler.co/detect-user-location-javascript/
@@ -153,3 +180,48 @@ mdp jumia = 8F7Z7vUWUQ2uRZf
 
 -----------
 aPI KEY GOOGLE : AIzaSyAI5Fl8Szne6NLGFhCONQSyDOPeXEE13OY
+----------------
+mv /etc/init.d/wsbdeciehub.sh /root/wsbdeciehub.sh
+mv /etc/init.d/wsbdecie.sh /root/wsbdecie.sh
+mv /etc/init.d/redis_6379 /root/redis_6379
+mv /etc/init.d/firewall /root/firewall
+mv /etc/init.d/backeagencecie.sh /root/backeagencecie.sh
+mv /etc/init.d/gedeagence.sh /root/gedeagence.sh
+
+ensuite
+##pour le serv web1
+/var/www/html/gedeagence/user_docs      10.108.34.117(ro,sync,no_subtree_check)
+/var/www/html/gedeagence/user_dec_sin      10.108.34.117(ro,sync,no_subtree_check)
+/var/www/html/gedeagence/user_recl      10.108.34.117(ro,sync,no_subtree_check)
+
+##pour le serv web2
+/var/www/html/gedeagence/user_docs      10.108.34.118(ro,sync,no_subtree_check)
+/var/www/html/gedeagence/user_dec_sin      10.108.34.118(ro,sync,no_subtree_check)
+/var/www/html/gedeagence/user_recl      10.108.34.118(ro,sync,no_subtree_check)
+
+CREATE USER "clownbdcloude"@"10.108.34.119" IDENTIFIED BY "bas3D33ci3";
+Grant replication slave on ECIE.* to "clownbdcloude"@"10.108.34.119";
+FLUSH PRIVILEGES ;
+
+
+
+data-toggle="tooltip" data-placement="top" category-id="'.$element->token .'"
+                   data-original-title="'.$element->reponse_admin_contenu .'"
+
+<?php if( $element->statut == 1 ){ ?>
+                                <br>
+                                <hr/>
+                                <div class="user-content-message-detail">  
+                                <?php $email = ($element->id_c == 0) ? $element->email_messages : $element->email_client; ?>                                  
+                                            <p>
+                                                <?php $nom = ($element->id_c == 0) ? $element->nom_prenoms_messages : $element->nom_client.' '.$element->prenoms_client; ?>
+                                                <strong>De:</strong> <?php echo ucfirst($nom) ?> [ <?php echo $email; ?> ]<br/> 
+                                                <strong>Date:</strong>  <?php echo dateFormat($element->date_creation) ?> ‎‎<br/>
+                                                <strong>À:</strong>  <?php echo APPLI_NAME ?>
+                                            </p>
+                                            <p>
+                                                <?php echo $element->contenu ?>
+                                            </p>
+                                </div>
+                                <?php } ?>
+

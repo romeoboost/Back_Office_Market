@@ -248,6 +248,9 @@
             if(isset($thirdtable)){
                 $sql .= ', '.$thirdtable.'.'.implode(', '.$thirdtable.'.',$req['fieldsthree']);
             }
+            if(isset($req['count'])){
+              $sql .= ', COUNT('.$req['count']['champs'].') AS '.$req['count']['alias'];
+            }
             $sql .= ' FROM '.$maintable;
             $sql .= ' LEFT JOIN '.$secondtable.' ON '.$maintable.'.'.$req['fields'][0]['main'].' = '.$secondtable.'.'.$req['fields'][0]['second'];
             if(isset($thirdtable)){
@@ -263,6 +266,12 @@
                   $sql .= ' ORDER BY '.$req['order'].' ASC';  
                 }
             }
+
+            //group by
+            if(isset($req['group'])){
+              $sql .= ' GROUP BY '.$req['group'];             
+            }
+            // debug($sql);
             $pre = $this->db->prepare($sql);
             $pre->execute();
             return $pre->fetchAll(PDO::FETCH_OBJ);

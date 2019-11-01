@@ -5,7 +5,7 @@
         <div class="section-header">
             <ol class="breadcrumb">
                 <li><a href="<?php echo BASE_URL.DS.'unitesMesure/liste'; ?>"> Unité de Mésure </a></li>
-                <li class="active">Ajouter/</li>
+                <li class="active">Modifier/</li>
             </ol>
         </div>
         <div class="row align-items-center" >

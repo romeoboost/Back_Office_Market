@@ -1,0 +1,51 @@
+TRUNCATE activites  ;                                     
+TRUNCATE activites_contribuables ;                        
+TRUNCATE activites_taxes  ;                               
+TRUNCATE app_collect_val_inactives    ;                   
+TRUNCATE brands  ;                                        
+TRUNCATE brands_categories  ;                             
+TRUNCATE caracteristiques  ;                              
+TRUNCATE categories ;                                     
+TRUNCATE collecteurs ;                                    
+TRUNCATE collecteurs_valinactive ;                        
+TRUNCATE collecteurs_versements_collecteurs_valinactives ;
+TRUNCATE contribuables ;                                  
+TRUNCATE contribuables_vehicule ;                         
+TRUNCATE entreprenants ;                                  
+TRUNCATE migrations ;                                
+TRUNCATE paiement_particuliers ;                          
+TRUNCATE paiement_professionnels ;                        
+TRUNCATE password_resets ;                                
+TRUNCATE payparticulier ;                                 
+TRUNCATE payprofessionnel ;                                   
+TRUNCATE quartier_sous_quartier  ;                        
+TRUNCATE quartiers ;                                       
+TRUNCATE sous_quartiers;                                  
+TRUNCATE taxes;                                           
+TRUNCATE users;                                           
+TRUNCATE valinactives ;                                   
+TRUNCATE vehicules;                                       
+TRUNCATE vers_collects;
+
+
+TRUNCATE declaration_deces ;
+TRUNCATE declaration_mariages   ;
+TRUNCATE declaration_naissances ;
+TRUNCATE entreprenants  ;
+TRUNCATE logstransaction   ;
+TRUNCATE password_resets   ;
+TRUNCATE sessions  ;
+TRUNCATE transaction ;
+TRUNCATE users ;
+
+select * from permissions;
+select * from role_has_permissions;
+select * from model_has_roles;
+
+
+*role_has_permissions
+*roles
+*permissions
+*model_has_permissions
+*model_has_roles
+*sessions

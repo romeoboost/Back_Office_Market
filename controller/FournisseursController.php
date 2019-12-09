@@ -129,7 +129,7 @@ class FournisseursController extends Controller {
       }else{
         //recupere les informations de la categorie
 
-        $d['fournisseur'] = current( $this->Fournisseurs->find( array( 'condition' => 'fournisseurs.token = "'.$token.'"' ),'fournisseurs') );
+        $d['fournisseur'] = current( $this->Fournisseurs->find( array( 'condition' => 'token = "'.$token.'"' ),'fournisseurs') );
 
         if( empty($d['fournisseur']) ){ //verifie que la categorie existe
           header('Location: '.BASE_URL.DS.'fournisseurs/liste'); // renvoi vers liste de categorie si la categorie n'existe pas
@@ -159,7 +159,7 @@ class FournisseursController extends Controller {
         header('Location: '.BASE_URL.DS.'fournisseurs/liste');
       }else{
         //recupere les informations du fournisseur
-        $d['fournisseur'] = current( $this->Fournisseurs->find( array( 'condition' => 'fournisseurs.token = "'.$token.'"' ),'fournisseurs') );
+        $d['fournisseur'] = current( $this->Fournisseurs->find( array( 'condition' => 'token = "'.$token.'"' ),'fournisseurs') );
 
         if( empty($d['fournisseur']) ){ //verifie que le fournisseur existe
           header('Location: '.BASE_URL.DS.'fournisseurs/liste'); // renvoi vers liste de categorie si la categorie n'existe pas

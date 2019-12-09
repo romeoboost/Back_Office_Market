@@ -36,7 +36,7 @@ if ($_POST) {
         }else{       
             // debugger($_POST);     
             //verifie si l'image est de bonne qualité
-            $image_finale = upload( $image, 200, 700);
+            $image_finale = upload( $image, 173, 750);
             if( !$image_finale ){
                 $error_statut = true;
                 $error_text = "Oups, Erreur !";

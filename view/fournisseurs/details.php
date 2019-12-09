@@ -69,7 +69,7 @@
 
                         <div class="row card">
                                 <div class="col-sm-12">
-                                    <h4 class="text-medium list-order-product-title">Liste des produits liés à la catégorie produit 
+                                    <h4 class="text-medium list-order-product-title">Liste des stocks liés au Fournisseur
                                         <span class="badge"><?php echo count($stocks['liste']); ?></span>
                                     </h4>
                                 </div>

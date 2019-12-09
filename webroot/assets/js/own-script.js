@@ -617,7 +617,7 @@
        return false;
     });
 
-    //validation du formulaire de suppression du client
+    //validation du formulaire de suppression des frais
     $('#form-delete-fee').on('submit',function(e){
         e.preventDefault();
         var url_process = $('#linkToWebroot').html()+$('#linkToDeleteElement').html()
@@ -659,8 +659,111 @@
 
     });
 
+    //form d'ajout de commune
+    $('.city_add_form').on('submit', function (e) {
+        e.preventDefault();
+        var self = $(this);
+        var url_process = $('#linkToAddCity').html();
+        // console.log( $(this).serialize() );
+        // console.log( url_process );
+        $(this).find("#confirm_btn").addClass('disabled');
+        $(this).find("#confirm_btn").addClass('running');
+
+        add_element_default( $(this).serialize(), self, url_process );
+
+        return false;
+    });
+
+    //Form de modification de commune
+    $('.city_update_form').on('submit', function (e) {
+        e.preventDefault();
+        var url_process = $('#linkToUpdateCity').html()
+        var self = $(this);
+        console.log( $(this).serialize() );
+        console.log( url_process );
+        $(this).find("#confirm_btn").addClass('disabled');
+        $(this).find("#confirm_btn").addClass('running');
+
+        update_element_default( $(this).serialize(), self, url_process );
+        return false;
+    });
+
+    //Action pour supprimer la commune
+    //Cliquer sur le bouton pour supprimer frais livr
+    $('#commune-list tbody').on('click', '.delete-btn', function(e){ // 
+        e.preventDefault();
+        var self = $(this);
+        var token = $(this).attr('commune-id');
+        var element_name = $('tbody .'+token+' .element_name').html();
+        var element_statut = $('tbody .'+token+' .element_statut').html();
+
+        $("#form-delete-commune :input[name='name_city']").val(element_name);
+        $("#form-delete-commune :input[name='status_city']").val(element_statut);
+        $("#form-delete-commune :input[name='password']").val('');
+        $("#form-delete-commune :input[name='token']").val(token);
+
+        $('#modal-delete-commune').modal('show');
+        
+      return false;
+    });
+
+    //validation du formulaire de suppression des frais
+    $('#form-delete-commune').on('submit',function(e){
+        e.preventDefault();
+        var url_process = $('#linkToDeleteCity').html()
+        var self = $(this);
+        $(this).find(".confirm_btn").addClass('disabled');
+        $(this).find(".confirm_btn").addClass('running');
+        var delete_data = $(this).serialize();
+        console.log(url_process);
+        delete_element_default( delete_data, self, url_process );
+    });
+
     /**END FEES PROCESS**/
 
+    /** MOT DE PASSE ADMIN */
+    /*MODIFICATION DE MOT DE PASSE*/
+    $('.admin_password_update_form').on('submit',function(e){
+      e.preventDefault();
+      var url_process = $('#linkToUpdateAdminPassword').html()
+      var self = $(this);
+      // console.log($(this).serialize());
+      Swal({
+        title: 'Êtes vous sure ?',
+        text: 'Vous êtes sur le point de modifier le mot de passe de l\'administrateur du Back Office.',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#2ecc71',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Annuler'
+      }).then((result) => {
+        if (result.value) {
+          //console.log( form_update_password );
+          self.find("#confirm_btn").addClass('disabled');
+          self.find("#confirm_btn").addClass('running');
+          update_element_default( $(this).serialize(), self, url_process );
+        }
+      });
+      return false;
+
+    });
+
+    /*AFFICHER MOT DE PASSE */
+    $('#show-password-checkbox').on('change',function(e){
+      var password_inputs = document.querySelectorAll('.password');
+      //console.log( document.getElementById('show-password-checbox-login').checked );
+      for(var i=0; i < password_inputs.length ; i++){
+        if( document.getElementById('show-password-checkbox').checked ){        
+          password_inputs[i].type="text";
+        }else{
+          password_inputs[i].type="password";
+        }
+      }
+      
+    });
+
+    /** END PROCESS MOT DE PASSE ADMIN **/
 
     //Cliquer sur le bouton pour supprimer une unité de mesure
     $('#units-list tbody').on('click', '.delete-btn', function(e){ // 

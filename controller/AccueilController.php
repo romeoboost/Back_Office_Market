@@ -6,6 +6,15 @@ class AccueilController extends Controller {
       $this->loadmodel('Accueil');
       $_SESSION['bo_menu'] = 'Accueil';
 
+    }
+
+    public function modifier_password(){
+      conf::redir();
+      $this->loadmodel('Accueil');
+      $_SESSION['bo_menu'] = 'Accueil';
+
+      // debug($_SESSION['bo_user']);
+
     }  
 
     public function deconnect(){

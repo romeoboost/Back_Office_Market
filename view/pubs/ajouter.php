@@ -64,7 +64,7 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <input type="file" name="image" class="form-control-file" id="image" required>
-                                            <label for="image">Image* (150 x 150)</label>
+                                            <label for="image">Image* (173 x 750)</label>
                                         </div>
                                     </div>
                                 </div>

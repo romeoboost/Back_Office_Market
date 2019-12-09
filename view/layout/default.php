@@ -96,6 +96,10 @@
     <span id="linkToAddFournisseur" class="hidden"><?php echo WEBROOT_URL.'ajax/AddFournisseur.php'; ?></span>
     <span id="linkToUpdateSupplier" class="hidden"><?php echo WEBROOT_URL.'ajax/UpdateSupplier.php'; ?></span>
     <span id="linkToDeleteSupplier" class="hidden"><?php echo WEBROOT_URL.'ajax/DeleteSupplier.php'; ?></span>
+    <span id="linkToAddCity" class="hidden"><?php echo WEBROOT_URL.'ajax/AddCity.php'; ?></span>
+    <span id="linkToUpdateCity" class="hidden"><?php echo WEBROOT_URL.'ajax/UpdateCity.php'; ?></span>
+    <span id="linkToDeleteCity" class="hidden"><?php echo WEBROOT_URL.'ajax/DeleteCity.php'; ?></span>
+    <span id="linkToUpdateAdminPassword" class="hidden"><?php echo WEBROOT_URL.'ajax/UpdateAdminPassword.php'; ?></span>
 
 
     <span id="linkToWebroot" class="hidden"><?php echo WEBROOT_URL; ?></span>
@@ -169,7 +173,7 @@
                 </a>
                 <ul class="dropdown-menu animation-dock">
                     <!-- <li class="dropdown-header">Configs</li> -->
-                    <li><a href="#">Mon profil</a></li>
+                    <li><a href="<?php echo BASE_URL.DS.'accueil/modifier_password'; ?>">Modifier Mot de passe</a></li>
                     <li class="divider"></li>
                     <!-- <li><a href="../pages/locked"><i class="fa fa-fw fa-lock"></i> Lock</a></li> -->
                     <li>

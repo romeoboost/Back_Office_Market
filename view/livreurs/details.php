@@ -69,7 +69,7 @@
 
                         <div class="row card">
                                 <div class="col-sm-12">
-                                    <h4 class="text-medium list-order-product-title">Liste des commandes liées au produit 
+                                    <h4 class="text-medium list-order-product-title">Liste des commandes liées au Livreur 
                                         <span class="badge"><?php echo count( $commandes['liste'] ); ?></span>
                                     </h4>
                                 </div>

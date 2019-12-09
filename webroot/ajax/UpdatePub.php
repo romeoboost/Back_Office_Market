@@ -42,7 +42,7 @@ if ($_POST) {
                 $image_good = true; // dire que c'est ok pour les images
                 $image_name = $old_image;
             }else{  // si oui
-               $image_finale = upload( $image, 200, 700);
+               $image_finale = upload( $image, 173, 750);
                // verifie que l'image est au bon format
                if( !$image_finale ){ //si non 
                     $error_statut = true; //renvoi erreur 

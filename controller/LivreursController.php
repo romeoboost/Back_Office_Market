@@ -129,7 +129,7 @@ class LivreursController extends Controller {
       }else{
         //recupere les informations de la categorie
 
-        $d['livreur'] = current( $this->Livreurs->find( array( 'condition' => 'livreurs.token = "'.$token.'"' ),'livreurs') );
+        $d['livreur'] = current( $this->Livreurs->find( array( 'condition' => 'token = "'.$token.'"' ),'livreurs') );
 
         if( empty($d['livreur']) ){ //verifie que la categorie existe
           header('Location: '.BASE_URL.DS.'livreurs/liste'); // renvoi vers liste de categorie si la categorie n'existe pas
@@ -159,7 +159,7 @@ class LivreursController extends Controller {
         header('Location: '.BASE_URL.DS.'livreurs/liste');
       }else{
         //recupere les informations du livreur
-        $d['livreur'] = current( $this->Livreurs->find( array( 'condition' => 'livreurs.token = "'.$token.'"' ),'livreurs') );
+        $d['livreur'] = current( $this->Livreurs->find( array( 'condition' => 'token = "'.$token.'"' ),'livreurs') );
 
         if( empty($d['livreur']) ){ //verifie que le livreur existe
           header('Location: '.BASE_URL.DS.'livreurs/liste'); // renvoi vers liste de categorie si la categorie n'existe pas

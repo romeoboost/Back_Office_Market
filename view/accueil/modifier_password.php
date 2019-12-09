@@ -1,26 +1,26 @@
 <div id="content">
     <!-- BEGIN TABLE HOVER -->
     <section class="">
-        <div class="section-header">
+        <div class="section-header"> 
             <ol class="breadcrumb">
-                <li><a href="<?php echo BASE_URL.DS.'communesLivraison/liste'; ?>">Communes de Livraison</a></li>
-                <li class="active">Ajouter/</li>
+                <li><a href="<?php echo BASE_URL.DS.'accueil/index'; ?>">Mot de passe administrateur</a></li>
+                <li class="active">Modifier/</li>
             </ol>
         </div>
         <div class="row align-items-center" >
-        <div class="section-body col-md-9 content-section-center offset-sm-2">
-            <form class="form city_add_form with_date" enctype="multipart/form-data">
+        <div class="section-body col-md-8 content-section-center ">
+            <form class="form admin_password_update_form with_date" enctype="multipart/form-data">
                 <em class="text-caption">(*) Champs obligatoires. </em>
                         <div class="card">
                             <div class="card-head card-head-xs style-primary">
                                 <header>
-                                    <h2 class="text-default-bright">Formulaire d'ajout de commune</h2>
+                                    <h2 class="text-default-bright">Formulaire de modification de mot de passe</h2>
                                 </header>
 
                                 <div class="tools">
                                     <a class="btn btn-icon-toggle" data-toggle="tooltip" data-placement="left" 
                                     data-original-title="Revenir à la liste des communes" 
-                                    href="<?php echo SITE_BASE_URL.'communesLivraison/liste'; ?>">
+                                    href="<?php echo SITE_BASE_URL.'accueil/index'; ?>">
                                         <i class="md md-settings-backup-restore"></i></a>
                                 </div>
                             </div>
@@ -30,36 +30,38 @@
                                 <div class="row">                                    
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <input type="text" name="name_city" class="form-control" id="name_city" required>
-                                            <label for="name_city">Nom*</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group ">
-                                            <select id="status_city" name="status_city" class="form-control dirty selectpicker" data-live-search="true">
-                                                <option value="" >&nbsp;</option>
-                                                <option value="0">NON ACTIF</option>
-                                                <option value="1">ACTIF</option>
-                                            </select>
-                                            <label for="status_city">Statut*</label>
+                                            <input type="password" name="old_password" class="form-control password" id="old_password" 
+                                            required>
+                                            <label for="old_password">Ancien Mot de Passe*</label>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-sm-6">
+									<div class="col-sm-6">
                                         <div class="form-group">
-                                            <input type="text" name="long_city" class="form-control" id="long_city" value="0">
-                                            <label for="long_city">Longitude</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <input type="text" name="lag_city" class="form-control" id="lag_city" value="0">
-                                            <label for="lag_city">Lagitude</label>
+                                            <input type="password" name="new_password" class="form-control password" id="new_password" 
+                                            required>
+                                            <label for="new_password">Nouveau Mot de Passe*</label>
                                         </div>
                                     </div>
                                 </div>
+
+								<div class="row">
+									<div class="col-sm-6 ">
+                                        <div class="form-group">
+                                            <input type="password" name="confirm_new_password" class="form-control password" id="confirm_new_password" 
+                                            required>
+                                            <label for="confirm_new_password">Nouveau Mot de Passe*</label>
+                                        </div>
+                                    </div>
+                                </div>
+								<div class="col-sm-12 text-right show-password">
+                                        <label>
+                                            <input id="show-password-checkbox" type="checkbox">  Afficher mot de passe 
+                                        </label>
+                                </div>
+                                <input type="hidden" name="token" value="<?php echo $_SESSION['bo_user']['token']; ?>">
 
                             </div><!--end .card-body -->
                             <div class="card-actionbar">

@@ -193,7 +193,7 @@ function getNeverOrderPlace($pdo, $request_params){
               'fieldstwo' => ['id_livraison_destination'],
               'count' => [  'champs' => 'commandes.id_livraison_destination',  'alias' => 'nbre'  ]
               ,'fields' => array(  array(  'main' => 'id',  'second' => 'id_livraison_destination'  )  )
-              ,'group' => 'id_livraison_destination'
+              ,'group' => 'livraison_destinations.id'
               ,'condition' => $request_params['condition']." AND id_livraison_destination is null"
               ,'array_filter' => $request_params['array_filter']
           ];    

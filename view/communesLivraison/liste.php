@@ -11,8 +11,6 @@
         </div>
 
         <div class="section-body">
-
-
             <div class="row">
                 <?php //debug($d); ?>
                 <!-- BEGIN ALERT - REVENUE -->
@@ -264,7 +262,7 @@
                                 <tr class="text-center <?php echo $commune->token; ?>">
                                     <td><?php echo $nbre_cmd_plus--; ?></td>
                                     <td class="element_name" ><?php echo ucfirst( $commune->commune ); ?></td>
-                                    <td><?php echo ($commune->statut == 1) ? 'ACTIF' : 'NON ACTIF'; ?></td>
+                                    <td class="element_statut"><?php echo ($commune->statut == 1) ? 'ACTIF' : 'NON ACTIF'; ?></td>
                                     <td><?php echo number_format($communes['liste_order'][$commune->id], 0, '', ' '); ?></td>
                                     <td><?php echo $commune->longitude; ?></td>
                                     <td><?php echo $commune->lagitude; ?></td>
@@ -339,14 +337,14 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title text-uppercase" id="exampleModalLongTitle"> SUPPRIMER LA CATEGORIE </h4>
+        <h4 class="modal-title text-uppercase" id="exampleModalLongTitle"> SUPPRIMER LA COMMUNE </h4>
       </div>
       <form id="form-delete-commune" class="form">
       <div class="modal-body order-confirmation-body">
         <div class="row">
             <div id="" class="col-md-12 text-center">
                 <em class="text-caption">
-                    (*) Champs obligatoires. On ne peut supprimer les catégories déjà liées à un produit.
+                    (*) Champs obligatoires.
                 </em><br>
             </div>    
             <div class="card-body ">
@@ -354,8 +352,14 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <input type="text" name="name_commune" class="form-control"  disabled>
-                            <label for="name_commune"> Nom de la Catégorie </label>
+                            <input type="text" name="name_city" class="form-control"  disabled>
+                            <label for="name_city"> Commune </label>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <input type="text" name="status_city" class="form-control"  disabled>
+                            <label for="status_city"> Statut </label>
                         </div>
                     </div> 
                 </div>
@@ -367,13 +371,13 @@
                         </div>
                     </div>
                 </div>
-                <input type="hidden" name="commune_id" value="">
+                <input type="hidden" name="token" value="">
             </div>
         </div>
       </div>
       <div class="modal-footer text-center">
             <div class="card-actionbar-row">
-                <button id="modal-delete-commune-confirm-btn" class="btn btn-primary btn-raised ld-ext-right " type="submit">
+                <button id="confirm_btn" class="btn btn-primary btn-raised ld-ext-right confirm_btn" type="submit">
                         CONFIRMER
                         <div class="ld ld-ring ld-spin"></div>
                 </button>

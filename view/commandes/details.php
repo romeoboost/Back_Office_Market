@@ -88,7 +88,15 @@
                                         <dt>Commune</dt>
                                         <dd><?php echo ucfirst( $shipping->dest_commune ); ?></dd>
                                         <dt>Quartier</dt>
-                                        <dd><?php echo ucfirst( $shipping->receiver_quartier ); ?></dd>                                        
+                                        <dd><?php echo ucfirst( $shipping->receiver_quartier ); ?></dd>
+
+                                        <dt>Longitude</dt>
+                                        <dd><?php echo ucfirst( $shipping->longitude ); ?></dd>
+
+                                        <dt>Latitude</dt>
+                                        <dd><?php echo ucfirst( $shipping->lagitude ); ?></dd>
+
+
                                         <dt>Description du lieu</dt>
                                         <dd><?php echo $shipping->receiver_description; ?></dd>
                                         <?php if( isset($livreur) && !empty( $livreur ) ): ?>

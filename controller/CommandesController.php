@@ -113,8 +113,8 @@ class CommandesController extends Controller {
           //recuperation des information de la livraison
           $d['shipping'] = current( $this->Commandes->findJoin(array(
             'fieldsmain' => array(' id AS receiver_id','nom AS receiver_name','prenoms AS receiver_lastname',
-              'tel AS receiver_tel','email AS receiver_email',' quartier AS receiver_quartier',
-              'description AS receiver_description'),
+              'tel AS receiver_tel','email AS receiver_email',' quartier AS receiver_quartier','lagitude as lagitude',
+              'longitude as longitude','description AS receiver_description'),
             'fieldstwo' => array('token AS dest_token','commune AS dest_commune','frais AS frais_commune'),
             'fields' => array( array('main' => 'id_destination','second' => 'id') ),
             'order' => array('champs' => 'shipping_infos.id' , 'param' => 'desc'),

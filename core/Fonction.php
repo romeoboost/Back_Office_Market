@@ -101,11 +101,11 @@ function debug($var){
               <strong>'.$debug[0]['file'].
            '  </strong></a>à la ligne : '.$debug[0]['line'].'</p>';
    echo '<ol> ';
-   foreach ($debug as $k => $v) {
-      if( isset( $v['file'] ) || isset( $v['line'] ) ){
-        echo '<li><strong>'.$v['file'].' '.$v['line'].'</li></strong>';
-      }
-   }
+    foreach ($debug as $k => $v) {
+        if( isset( $v['file'] ) || isset( $v['line'] ) ){
+          echo '<li><strong>'.$v['file'].' '.$v['line'].'</li></strong>';
+        }
+    }
    echo '</ol>';
    echo '<pre>';
    print_r($var);

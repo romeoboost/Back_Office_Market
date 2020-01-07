@@ -19,7 +19,7 @@ if( !isset($_POST) || empty($_POST) || !isset($_POST['cmd_id']) || !isset($_POST
   $error_text = "Oups, Erreur !";
   $error_text_second = 'Veuillez ne pas modifier la page.';
 }else{
-  //debugger($_POST);
+  // debugger($_POST);
   extract($_POST);
 
   //verifier si tous les parametres obligatoires ne sont pas vides
@@ -31,7 +31,7 @@ if( !isset($_POST) || empty($_POST) || !isset($_POST['cmd_id']) || !isset($_POST
 
     //recuperation de la commande en base
     $cmd_id = trim($cmd_id);
-    $req_recup = $pdo->prepare('SELECT * FROM commandes WHERE token = :token ORDER BY id DESC'); 
+    $req_recup = $pdo->prepare('SELECT * FROM rapide_commandes WHERE token = :token ORDER BY id DESC'); 
     $req_recup->execute( array( ':token' => $cmd_id ) );
     $commande = current( $req_recup->fetchAll(PDO::FETCH_OBJ) );
 
@@ -54,7 +54,7 @@ if( !isset($_POST) || empty($_POST) || !isset($_POST['cmd_id']) || !isset($_POST
         $id_bo_user = ( isset( $_SESSION['bo_user']['id'] ) && !empty( $_SESSION['bo_user']['id'] ) ) ? intval( $_SESSION['bo_user']['id'] ) : 0;
 
         //Modifie le statut de la commande
-        $update_req = $pdo->prepare("UPDATE commandes SET statut = :statut, motif_rejet = :motif_rejet, id_utilisateur = :id_utilisateur, date_modification = :date_modification
+        $update_req = $pdo->prepare("UPDATE rapide_commandes SET statut = :statut, motif_rejet = :motif_rejet, id_utilisateur = :id_utilisateur, date_modification = :date_modification
                                                WHERE token = :token "); 
         $update_req->execute( array( 
                                 ':statut' => $statut,
@@ -64,25 +64,6 @@ if( !isset($_POST) || empty($_POST) || !isset($_POST['cmd_id']) || !isset($_POST
                                 ':token' => $cmd_id
                                 ) 
                               );  
-
-        //recuperer la liste de produits contenu dans la commande et leur nombre
-        $req_recup = $pdo->prepare('SELECT * FROM commandes_produits WHERE id_commande = :id_commande ORDER BY id DESC'); 
-        $req_recup->execute( array( ':id_commande' => $commande->id ) );
-        $produits = $req_recup->fetchAll(PDO::FETCH_OBJ) ;
-
-        //Mise à jour le nombre de produits en stock avec ceux contenu dans la commande
-        foreach ($produits as $produit) {
-          # code...
-          $qtte_commande = $produit->quantite*$produit->qtte_unitaire;
-          $date = date("Y-m-d H:i:s");
-          $req_update = $pdo->prepare("UPDATE produits SET stock = stock + $qtte_commande, date_modification = :date_modification 
-                                       WHERE id = :id ");
-          $req_update->execute( array( ':date_modification' => $date, ':id' => $produit->id_produit ) );
-        }
-
-        //renvoi le bon html pour le nouveau statut du produit
-        // $retour['error_html'] = '<span class="badge badge-danger"> annulée </span>';
-
         $retour['cmd_id'] = $cmd_id;
 
         $enregistrement = 'oui';
@@ -92,8 +73,6 @@ if( !isset($_POST) || empty($_POST) || !isset($_POST['cmd_id']) || !isset($_POST
         $error_text_second = "La commande $cmd_id a été rejetée. ";
 
       }
-      
-
             
     }
   }

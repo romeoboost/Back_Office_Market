@@ -19,12 +19,20 @@
     var linkToStatCustomer = $("#linkToStatCustomer").html();
     var linkToStatProducts = $("#linkToStatProducts").html();
     var linkToSearchOrders = $("#linkToSearchOrders").html();
+    var linkToSearchQuickOrders = $("#linkToSearchQuickOrders").html();
+    
     var linkToSetOrderDelivrery = $("#linkToSetOrderDelivrery").html();
+    var linkToSetQuickOrderDelivrery = $("#linkToSetQuickOrderDelivrery").html();
     var linkToGetLivreur = $("#linkToGetLivreur").html();
+    var linkToGetQuickLivreur = $("#linkToGetQuickLivreur").html();
     var linkToSetStopOrderDelivrery = $("#linkToSetStopOrderDelivrery").html();
+    var linkToSetStopQuickOrderDelivrery = $("#linkToSetStopQuickOrderDelivrery").html();
     var linkToRejectOrder = $("#linkToRejectOrder").html();
+    var linkToRejectQuickOrder = $("#linkToRejectQuickOrder").html();
     var linkToRestoreOrder = $("#linkToRestoreOrder").html();
+    var linkToRestoreQuickOrder = $("#linkToRestoreQuickOrder").html();
     var linkToDeleteOrder = $("#linkToDeleteOrder").html();
+    var linkToDeleteQuickOrder = $("#linkToDeleteQuickOrder").html();
     var linkToSearchProducts = $("#linkToSearchProducts").html();
     var linkToAddProduct = $("#linkToAddProduct").html();
     var linkToUpdateProduct = $("#linkToUpdateProduct").html();
@@ -2731,7 +2739,97 @@
 
     
     // /*** FINISH PRODUCT HANDLING ***/ //
+    /** START QUICK COMMANDE HANDLE*/
+    //form recherche commandes
+    $('.quick_cmd_search_form').on('submit', function (e) {
+      e.preventDefault();
+      console.log( $(this).serialize() );
+      $("#cmd_search_form_btn").addClass('disabled');
+      $("#cmd_search_form_btn").addClass('running');
+              
+      search_quick_orders( $(this).serialize() );
 
+      // $('#list_produits').attr('product-data-display','true');
+      var start_date = $(".cmd_search_form :input[name='start_date']").val();
+      var start_hour = $(".cmd_search_form :input[name='start_hour']").val();
+      var end_date = $(".cmd_search_form :input[name='end_date']").val();
+      var end_hour = $(".cmd_search_form :input[name='end_hour']").val();
+      var tel_user = $(".cmd_search_form :input[name='tel_user']").val();
+      var cmd_amount = $(".cmd_search_form :input[name='cmd_amount']").val();
+      var cmd_id = $(".cmd_search_form :input[name='cmd_id']").val();
+      var status = $(".cmd_search_form :input[name='status']").val();
+      var number_page_running = $(".cmd_search_form :input[name='number_page_running']").val();
+
+      $('#order-list').attr('filter-data-startDate', start_date);
+      $('#order-list').attr('filter-data-startHour', start_hour);
+      $('#order-list').attr('filter-data-endDate', end_date);
+      $('#order-list').attr('filter-data-endHour', end_hour);
+      $('#order-list').attr('filter-data-telUser', tel_user);
+      $('#order-list').attr('filter-data-cmdAmount', cmd_amount);
+      $('#order-list').attr('filter-data-cmdId', cmd_id);
+      $('#order-list').attr('filter-data-status', status);
+      $('#order-list').attr('filter-data-pageRunning', number_page_running);
+      console.log( start_date );
+
+      return false;
+
+  });
+
+  /* Function pour rechercher les */
+  function search_quick_orders(filter_data){
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: linkToSearchQuickOrders,
+        data: filter_data,
+        success: function (data, textStatus, jqXHR) {
+           
+           $(' #order-list tbody ').hide().html( data.result.html_list_cmd ).fadeIn(1000);
+           $(' #list-cmd-pagination ').html( data.result.html_pagination ); 
+           console.log(data);
+           if(!filter_data.pagination){
+                
+                if( $("#cmd_search_form_btn").hasClass('disabled') ){
+                    $("#cmd_search_form_btn").removeClass('disabled');
+                    $("#cmd_search_form_btn").removeClass('running');
+                }
+                // $('.total_cmd_montant').hide().html( data.result.total_cmd.montant ).fadeIn(1000);
+                $('.total_cmd_nbre').hide().html( data.result.total_cmd.nbre ).fadeIn(1000);
+
+                $('.total_cmd_livrees_montant').hide().html( data.result.total_cmd_livrees.montant ).fadeIn(1000);
+                $('.total_cmd_livrees_nbre').hide().html( data.result.total_cmd_livrees.nbre ).fadeIn(1000);
+
+                // $('.total_cmd_pending_montant').hide().html( data.result.total_cmd_pending.montant ).fadeIn(1000);
+                $('.total_cmd_pending_nbre').hide().html( data.result.total_cmd_pending.nbre ).fadeIn(1000);
+
+                $('.total_cmd_on_road_montant').hide().html( data.result.total_cmd_on_road.montant ).fadeIn(1000);
+                $('.total_cmd_on_road_nbre').hide().html( data.result.total_cmd_on_road.nbre ).fadeIn(1000);
+
+                // $('.total_cmd_rejected_montant').hide().html( data.result.total_cmd_rejected.montant ).fadeIn(1000);
+                $('.total_cmd_rejected_nbre').hide().html( data.result.total_cmd_rejected.nbre ).fadeIn(1000);
+
+
+                // $('.total_produit_stock_off').hide().html( data.result.stat.produits_stock_off ).fadeIn(1000);
+                // $('.total_never_cmd').hide().html( data.result.stat.produits_non_cmd ).fadeIn(1000);
+                // $('.total_non_actif').hide().html( data.result.stat.produits_non_actif ).fadeIn(1000);
+           }
+           $('[data-toggle="tooltip"]').tooltip();
+           
+           $('#extract-excel-btn').attr('href', data.result.link_for_extract);
+
+        },
+        error: function(jqXHR) {
+          console.log(jqXHR.responseText);
+          if( $("#cmd_search_form_btn").hasClass('disabled') ){
+                $("#cmd_search_form_btn").removeClass('disabled');
+                $("#cmd_search_form_btn").removeClass('running');
+           }  
+          
+          $('#errorForm').prepend(jqXHR.responseJSON['error_html']);
+        }
+    });
+} 
+    /** END QUICK COMMANDE HANDLE*/
 
 
     //form recherche commandes
@@ -2842,9 +2940,40 @@
         return false;
     });
 
+
+    //AFFICHER MODAL POUR ARRETER LIVRAISON RAPIDE
+    $('.quick-order-list tbody ').on('click','.set-stop-shipping-btn',function(){
+      var cmd_id = $(this).attr('cmd-id');
+      // console.log( cmd_id );
+      var montant_ht = $('#order-list tbody .'+cmd_id+' .montant_ht').html();
+      var frais_livraison = $('#order-list tbody .'+cmd_id+' .frais_livraison').html();
+      var montant_ttc = $('#order-list tbody .'+cmd_id+' .montant_ttc').html();
+      // console.log( montant_ttc );
+      $("#form-set-stop-shipping :input[name='cmd_montant_ht']").val(montant_ht);
+      $("#form-set-stop-shipping :input[name='cmd_frais_livraison']").val(frais_livraison);
+      $("#form-set-stop-shipping :input[name='cmd_montant_ttc']").val(montant_ttc);
+      $("#form-set-stop-shipping :input[name='cmd_id']").val(cmd_id);
+      $.ajax({
+          type: "POST",
+          dataType: "json",
+          url: linkToGetQuickLivreur,
+          data: {cmd_id:cmd_id},
+          success: function (data, textStatus, jqXHR) {
+             // console.log(data);
+             $("#form-set-stop-shipping :input[name='livreur_displayed']").val(data.nom_livreur);
+             $("#form-set-stop-shipping :input[name='livreur']").val(data.id_livreur);
+             $('#modal-set-stop-shipping').modal('show');
+          },
+          error: function(jqXHR) {
+            console.log(jqXHR.responseText);
+            //$('.contact-form .error-text').html(jqXHR.responseJSON.error_html);
+          }
+      });        
+  });
+
+
     //AFFICHER MODAL POUR ARRETER LIVRAISON
     $('#order-list tbody ').on('click','.set-stop-shipping-btn',function(){
-        
         var cmd_id = $(this).attr('cmd-id');
         // console.log( cmd_id );
         var montant_ht = $('#order-list tbody .'+cmd_id+' .montant_ht').html();
@@ -2855,7 +2984,6 @@
         $("#form-set-stop-shipping :input[name='cmd_frais_livraison']").val(frais_livraison);
         $("#form-set-stop-shipping :input[name='cmd_montant_ttc']").val(montant_ttc);
         $("#form-set-stop-shipping :input[name='cmd_id']").val(cmd_id);
-
         $.ajax({
             type: "POST",
             dataType: "json",
@@ -2880,8 +3008,14 @@
         $("#modal-set-stop-shipping-confirm-btn").addClass('disabled');
         $("#modal-set-stop-shipping-confirm-btn").addClass('running');
         var set_stop_shipping_data = $(this).serialize();
-        console.log( set_stop_shipping_data );
-        set_stop_order_delivrery(set_stop_shipping_data);
+        // console.log( set_stop_shipping_data );
+        var type = 'normal';
+        // set_stop_order_delivrery(set_stop_shipping_data);
+        if( $('#form-set-shipping').hasClass('quick-order') ){
+          type = 'quick';
+        }
+        // console.log( type );
+        set_stop_order_delivrery(set_stop_shipping_data, type);
     });
 
     //AFFICHER MODAL POUR METTRE LA COMMANDE AU STATUT "LIVREE"
@@ -2908,7 +3042,12 @@
         $("#modal-set-shipping-confirm-btn").addClass('running');
         var set_shipping_data = $(this).serialize();
         console.log( set_shipping_data );
-        set_order_delivrery(set_shipping_data);
+        var type = 'normal';
+        if( $('#form-set-shipping').hasClass('quick-order') ){
+          type = 'quick';
+        }
+        console.log( type );
+        set_order_delivrery(set_shipping_data, type);
     });
 
     //
@@ -2939,8 +3078,12 @@
         $("#modal-reject-order-confirm-btn").addClass('disabled');
         $("#modal-reject-order-confirm-btn").addClass('running');
         var reject_order_data = $(this).serialize();
-        // console.log( reject_order_data );
-        reject_order(reject_order_data);
+        var type = 'normal';
+        if( $('#form-reject-order').hasClass('quick-order') ){
+          type = 'quick';
+        }
+        console.log( type );
+        reject_order(reject_order_data, type);
     });
 
     /*********** METTRE UN FORMULAIRE POUR LE REJET AFIN D'ECRIRE LE MOTIF DU REJET ***********/
@@ -2948,9 +3091,12 @@
     //Cliquer sur le bouton pour restaurer une commande
     $('#order-list tbody').on('click', '.set-restore-btn', function(e){ // 
         e.preventDefault();
-        var self = $(this);
-        //console.log(self);
+        var self = $(this);        
         var cmd_id = $(this).attr('cmd-id');
+        var type = 'normal';
+        if( $(this).hasClass('quick-order') ){
+          type = 'quick';
+        }
 
          Swal({
           title: 'Êtes vous sure ?',
@@ -2964,7 +3110,7 @@
         }).then((result) => {
           if (result.value) {
             //console.log(self);
-            restore_order(cmd_id, self);            
+            restore_order(cmd_id, self, type);            
           }
         });        
         return false;
@@ -2996,8 +3142,12 @@
         $("#modal-delete-order-confirm-btn").addClass('disabled');
         $("#modal-delete-order-confirm-btn").addClass('running');
         var delete_order_data = $(this).serialize();
+        var type = 'normal';
+        if($('#form-delete-order').hasClass('quick-order')){
+          type = 'quick';
+        }
         //console.log( delete_order_data );
-        delete_order(delete_order_data);
+        delete_order(delete_order_data, type);
     });
 
 
@@ -3059,13 +3209,19 @@
     }
 
     /*Function rejet de commande*/
-    function delete_order(delete_order_data){
-        console.log(delete_order_data);       
-        
+    function delete_order(delete_order_data, type){
+        // console.log(delete_order_data);
+        var UrlToSend = '';       
+        if( type === 'normal' ){
+          UrlToSend=linkToDeleteOrder;
+        }else{
+          UrlToSend=linkToDeleteQuickOrder;
+        }
+
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: linkToDeleteOrder,
+            url: UrlToSend,
             data: delete_order_data,
             success: function (data, textStatus, jqXHR) {
                console.log(data);
@@ -3101,7 +3257,8 @@
               $("#modal-delete-order-confirm-btn").removeClass('running');
               //$('.contact-form .error-text').html(jqXHR.responseJSON.error_html);
               if(jqXHR.responseJSON.error === 'oui'){
-                    //$('#confirm-order-modal').hide();
+                    // $('#confirm-order-modal').hide();
+                    // $('#modal-delete-order').modal('hide');
                     Swal({
                       type: 'error',
                       title: jqXHR.responseJSON.error_text,
@@ -3117,13 +3274,18 @@
 
 
     /*Function rejet de commande*/
-    function restore_order(cmd_id, self){
-        // console.log(cmd_id);       
-        
+    function restore_order(cmd_id, self, type){
+        // console.log(cmd_id);
+        var UrlToSend = '';
+        if (type === 'normal'){
+          UrlToSend = linkToRestoreOrder;
+        }else{
+          UrlToSend = linkToRestoreQuickOrder;
+        } 
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: linkToRestoreOrder,
+            url: UrlToSend,
             data: {cmd_id:cmd_id},
             success: function (data, textStatus, jqXHR) {
                // console.log(data);
@@ -3182,12 +3344,18 @@
     }
 
     /*Function rejet de commande*/
-    function reject_order( reject_order_data ){
-        // console.log(reject_order_data);        
+    function reject_order( reject_order_data, type ){
+        // console.log(reject_order_data);
+        var UrlToSend = '';
+        if (type === 'normal'){
+          UrlToSend = linkToRejectOrder;
+        }else{
+          UrlToSend = linkToRejectQuickOrder;
+        }        
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: linkToRejectOrder,
+            url: UrlToSend,
             data: reject_order_data,
             success: function (data, textStatus, jqXHR) {
                // console.log(data);
@@ -3263,15 +3431,21 @@
     }
 
     //Function ajax pour paramétrage de la commande à "livrer" et attribution de livreur
-    function set_order_delivrery(set_shipping_data){
+    function set_order_delivrery(set_shipping_data, type){
+        var UrlToSend = '';
+        if (type === 'normal'){
+          UrlToSend = linkToSetOrderDelivrery;
+        }else{
+          UrlToSend = linkToSetQuickOrderDelivrery;
+        }
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: linkToSetOrderDelivrery,
+            url: UrlToSend,
             data: set_shipping_data,
             success: function (data, textStatus, jqXHR) {
                $('#modal-set-shipping').modal('hide'); 
-               // console.log(data);
+               console.log(data);
 
                //mettre a jour l'intitulé du statut de la commande
                $('#order-list tbody .'+data.cmd_id+' .cmd-status').html('EN LIVRAISON');           
@@ -3310,6 +3484,12 @@
                   confirmButtonText: 'OK'
                 }).then((result) => {
                   if (result.value) {
+                    if (type === 'quick'){
+                      $('#order-list tbody .'+data.cmd_id+' .montant_ht').html(data.montant_ht);
+                      $('#order-list tbody .'+data.cmd_id+' .frais_livraison').html(data.frais_livraison);
+                      $('#order-list tbody .'+data.cmd_id+' .montant_ttc').html(data.montant_total);
+                    }
+                    
                     $("#order-list tbody ."+data.cmd_id).fadeOut(250).fadeIn(150).fadeOut(250).fadeIn(150).fadeOut(250).fadeIn(150);                
                   }
                 });
@@ -3318,7 +3498,7 @@
             error: function(jqXHR) {
                 $("#modal-set-shipping-confirm-btn").removeClass('disabled');
                 $("#modal-set-shipping-confirm-btn").removeClass('running');  
-                console.log(jqXHR.responseText);
+                // console.log(jqXHR.responseText);
                 Swal({
                       type: 'error',
                       title: jqXHR.responseJSON.error_text,
@@ -3329,15 +3509,21 @@
     }
 
     //Function ajax pour paramétrage de la commande à "livrer" et attribution de livreur
-    function set_stop_order_delivrery(set_stop_shipping_data){
+    function set_stop_order_delivrery(set_stop_shipping_data, type){
+        var UrlToSend = '';
+        if (type === 'normal'){
+          UrlToSend = linkToSetStopOrderDelivrery;
+        }else{
+          UrlToSend = linkToSetStopQuickOrderDelivrery;
+        }
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: linkToSetStopOrderDelivrery,
+            url: UrlToSend,
             data: set_stop_shipping_data,
             success: function (data, textStatus, jqXHR) {
                $('#modal-set-stop-shipping').modal('hide'); 
-               console.log(data);
+              //  console.log(data);
 
                //mettre a jour l'intitulé du statut de la commande
                $('#order-list tbody .'+data.cmd_id+' .cmd-status').html('EN ATTENTE');           
@@ -3385,7 +3571,7 @@
             error: function(jqXHR) {
                 $("#modal-set-stop-shipping-confirm-btn").removeClass('disabled');
                 $("#modal-set-stop-shipping-confirm-btn").removeClass('running');  
-                console.log(jqXHR.responseText);
+                // console.log(jqXHR.responseText);
                 Swal({
                       type: 'error',
                       title: jqXHR.responseJSON.error_text,

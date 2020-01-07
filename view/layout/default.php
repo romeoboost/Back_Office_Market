@@ -70,12 +70,19 @@
     <span id="linkToStatCustomer" class="hidden"><?php echo WEBROOT_URL.'ajax/statCustomer.php'; ?></span>
     <span id="linkToStatProducts" class="hidden"><?php echo WEBROOT_URL.'ajax/statProducts.php'; ?></span>
     <span id="linkToSearchOrders" class="hidden"><?php echo WEBROOT_URL.'ajax/searchOrders.php'; ?></span>
+    <span id="linkToSearchQuickOrders" class="hidden"><?php echo WEBROOT_URL.'ajax/searchQuickOrders.php'; ?></span>
     <span id="linkToSetOrderDelivrery" class="hidden"><?php echo WEBROOT_URL.'ajax/setOrderDelivrery.php'; ?></span>
+    <span id="linkToSetQuickOrderDelivrery" class="hidden"><?php echo WEBROOT_URL.'ajax/setQuickOrderDelivrery.php'; ?></span>
+    <span id="linkToSetStopQuickOrderDelivrery" class="hidden"><?php echo WEBROOT_URL.'ajax/setStopQuickOrderDelivrery.php'; ?></span>
     <span id="linkToGetLivreur" class="hidden"><?php echo WEBROOT_URL.'ajax/getLivreur.php'; ?></span>
+    <span id="linkToGetQuickLivreur" class="hidden"><?php echo WEBROOT_URL.'ajax/getQuickLivreur.php'; ?></span>
     <span id="linkToSetStopOrderDelivrery" class="hidden"><?php echo WEBROOT_URL.'ajax/setStopOrderDelivrery.php'; ?></span>
     <span id="linkToRejectOrder" class="hidden"><?php echo WEBROOT_URL.'ajax/rejectOrder.php'; ?></span>
+    <span id="linkToRejectQuickOrder" class="hidden"><?php echo WEBROOT_URL.'ajax/rejectQuickOrder.php'; ?></span>
     <span id="linkToRestoreOrder" class="hidden"><?php echo WEBROOT_URL.'ajax/restoreOrder.php'; ?></span>
+    <span id="linkToRestoreQuickOrder" class="hidden"><?php echo WEBROOT_URL.'ajax/restoreQuickOrder.php'; ?></span>
     <span id="linkToDeleteOrder" class="hidden"><?php echo WEBROOT_URL.'ajax/deleteOrder.php'; ?></span>
+    <span id="linkToDeleteQuickOrder" class="hidden"><?php echo WEBROOT_URL.'ajax/deleteQuickOrder.php'; ?></span>
     <span id="linkToSearchProducts" class="hidden"><?php echo WEBROOT_URL.'ajax/searchProducts.php'; ?></span>
     <span id="linkToSearchCategory" class="hidden"><?php echo WEBROOT_URL.'ajax/searchCategory.php'; ?></span>
     <span id="linkToAddProduct" class="hidden"><?php echo WEBROOT_URL.'ajax/AddProduct.php'; ?></span>
@@ -238,6 +245,14 @@
             <!-- <div class="gui-icon"><i class="md md-email"></i></div> -->
             <div class="gui-icon"><i class="fa fa-shopping-cart"></i></div>
             <span class="title">Commandes</span>
+        </a>
+    </li>
+
+    <li class="">
+        <a href="<?php echo BASE_URL.DS.'commandesRapide/liste'; ?>" class=" <?php echo active_menu('CommandesRapide'); ?> ">
+            <!-- <div class="gui-icon"><i class="md md-email"></i></div> -->
+            <div class="gui-icon"><i class="fa fa-cart-plus"></i></div>
+            <span class="title">Commandes Rapides</span>
         </a>
     </li>
     

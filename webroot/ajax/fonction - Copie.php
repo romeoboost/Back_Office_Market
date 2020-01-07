@@ -1,30 +1,5 @@
 <?php
 
-function getFees($pdo, $total_amount_cart){
-
-  $shippingFees = 0; // initie les frais à 0
-
-  //recuperer les frais
-  if($total_amount_cart <= 0 ){ //si le montant du panier est 0
-    $shippingFees = 0; // retourne 0 comme frais
-  }else{
-    $req['condition'] = " min <= $total_amount_cart AND max >= $total_amount_cart "; // recupere les frais dans le pallier adequat
-    $feeRow = current( sql_select($pdo, $req, 'frais_livraison') );
-    // debugger($total_amount_cart);
-    if( !empty( $feeRow ) ){
-      $shippingFees = $feeRow->frais;
-    }else{
-      unset($req['condition']);
-      $req['order']['champs'] = ' max '; $req['order']['param'] = ' DESC ';
-      $TopFeeRow = current( sql_select($pdo, $req, 'frais_livraison') );
-      $shippingFees = $TopFeeRow->frais;
-    }
-  }
-
-  return $shippingFees;
-}
-
-
 function send_mail($to, $Subject, $message){
   require_once('../phpmailer/class.phpmailer.php');
   //include("class.smtp.php"); // optional, gets called from within class.phpmailer.php if not already loaded
@@ -847,46 +822,6 @@ function sql_inner_join($pdo, $req, $maintable, $secondtable, $thirdtable=NULL){
 }
 
 
-//Renvoi HTML pour la liste des commandes Rapides
-function html_list_quick_cmd( $commandes, $nombre_total_cmd, $offset){
-  $html = '';
-  $nbre_cmd_plus = $nombre_total_cmd + 1;
-  $nbre_cmd_plus_offset = $nombre_total_cmd - $offset;
-  foreach ($commandes as $commande) {
-    $html .= '<tr class="'.$commande->cmd_id.'">';
-    $html .=    '<td>'.$nbre_cmd_plus_offset--.'</td>';
-    $html .=    '<td> '.ucfirst( $commande->client_nom ).' '.ucfirst( explode( ' ',$commande->client_prenoms )[0] ).' </td>';
-    $html .=    '<td class="cmd_id"> '.$commande->client_tel.' </td>';
-    $html .=    '<td data-list-montant-ht="'.$commande->montant_ht.'" class="montant_ht"> '.number_format($commande->montant_ht, 0, '', ' ').' </td>';
-    $html .=    '<td data-list-frais-livraison="'.$commande->frais_livraison.'" class="frais_livraison"> '.number_format($commande->frais_livraison, 0, '', ' ').' </td>';
-    $html .=    '<td data-list-montant-ttc="'.$commande->montant_total.'" class="montant_ttc"> '.number_format($commande->montant_total, 0, '', ' ').' </td>';
-    $html .=    '<td class="cmd_id"> '.$commande->cmd_id.' </td>';
-    $html .=    '<td>';
-    $html .=      '<span class="cmd-status badge style-'.status_displayed($commande->cmd_statut)['color'].' ">';
-    $html .=        status_displayed($commande->cmd_statut)['libele'];
-    $html .=      '</span>';
-    $html .=    '</td>';
-    $html .=    '<td>'.dateFormat($commande->cmd_date_creation).'</td>';
-    $html .=    '<td class="text-right">';
-    if( $commande->cmd_statut == 0 ){
-      $html .=      '<button type="button" cmd-id="'.$commande->cmd_id.'" class="btn btn-icon-toggle set-shipping-btn" data-toggle="tooltip"  data-placement="top" data-original-title="Livrer"> <i class="md md-local-shipping"></i> </button><button type="button" class="btn btn-icon-toggle set-rejected-btn" data-toggle="tooltip" data-placement="top" data-original-title="Rejetter la commande" cmd-id="'.$commande->cmd_id.'"><i class="fa fa-times-circle-o"></i></button>';  
-    }
-    if( $commande->cmd_statut == 3 ){
-      $html .=      '<button type="button" class="btn btn-icon-toggle set-stop-shipping-btn" data-toggle="tooltip" data-placement="top" data-original-title="Arrêter la livraison" cmd-id="'.$commande->cmd_id.'"> <i class="fa fa-pause"></i> </button>';  
-    }
-    if( $commande->cmd_statut == 4 ){
-      $html .=      '<button type="button" class="btn btn-icon-toggle set-restore-btn" data-toggle="tooltip" data-placement="top" data-original-title="Restaurer la commande" cmd-id="'.$commande->cmd_id.'"> <i class="md md-settings-backup-restore"></i> </button>';  
-    }
-    
-      $html .=      '<button type="button" class="btn btn-icon-toggle check-details-btn" data-toggle="tooltip" data-placement="top" data-original-title="Détails de la commandes" cmd-id="'.$commande->cmd_id.'"> <a href="'.SITE_BASE_URL.'commandes/details/'.$commande->cmd_id.'"><i class="md md-description"></i></a></button>';
-      $html .=      '<button type="button" class="btn btn-icon-toggle delete-order-btn" data-toggle="tooltip" data-placement="left" data-original-title="Supprimer la commandes" cmd-id="'.$commande->cmd_id.'"> <i class="fa fa-trash-o"></i></button>';
-    $html .=    '</td>';
-
-    $html .= '</tr>';
-  }
-  return $html;
-}
-
 //renvoi html pour la liste des commandes
 function html_list_cmd( $commandes, $nombre_total_cmd, $offset){
   $html = '';
@@ -896,7 +831,7 @@ function html_list_cmd( $commandes, $nombre_total_cmd, $offset){
     $html .= '<tr class="'.$commande->cmd_id.'">';
     $html .=    '<td>'.$nbre_cmd_plus_offset--.'</td>';
     $html .=    '<td> '.ucfirst( $commande->client_nom ).' '.ucfirst( explode( ' ',$commande->client_prenoms )[0] ).' </td>';
-    $html .=    '<td> '.$commande->client_id.' </td>';
+    $html .=    '<td> '.$commande->client_tel.' </td>';
     $html .=    '<td data-list-montant-ht="'.$commande->montant_ht.'" class="montant_ht"> '.number_format($commande->montant_ht, 0, '', ' ').' </td>';
     $html .=    '<td data-list-frais-livraison="'.$commande->frais_livraison.'" class="frais_livraison"> '.number_format($commande->frais_livraison, 0, '', ' ').' </td>';
     $html .=    '<td data-list-montant-ttc="'.$commande->montant_total.'" class="montant_ttc"> '.number_format($commande->montant_total, 0, '', ' ').' </td>';
@@ -923,7 +858,11 @@ function html_list_cmd( $commandes, $nombre_total_cmd, $offset){
     $html .=    '</td>';
 
     $html .= '</tr>';
+
+
+
   }
+
   return $html;
 }
 

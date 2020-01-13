@@ -50,7 +50,7 @@ if(!isset($_POST) || empty($_POST) ){
         $retour['linkToList'] = SITE_BASE_URL.'mails/liste';
       }else{
         $error_statut = true;
-        $error_text = 'Veuillez remplir correctement le formulaire. Aucun champs obligatoire ne doit être vide.';
+        $error_text = "Désolé Une erreur s'est produite à l'envoi du mail, veuillez reéssayer plus tard.";
         // debugger($isSent);
       }
 

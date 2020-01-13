@@ -3,7 +3,7 @@
     <section>
         <div class="section-header">
             <ol class="breadcrumb">
-                <li><a href="<?php echo BASE_URL.DS.'commandes/liste'; ?>">Commandes</a></li>
+                <li><a href="<?php echo BASE_URL.DS.'commandesRapide/liste'; ?>">Commandes Rapides</a></li>
                 <li class="active">Détails/</li>
             </ol>
         </div>
@@ -61,13 +61,13 @@
                                     <dl class="dl-horizontal detail-cmd-info">
                                         <dt class="text-left">Nom & Prénoms</dt>
                                         <?php
-                                            $client_prenom = ( isset( explode( ' ',$client->prenoms )[1] ) ) ? ucfirst( explode( ' ',$client->prenoms )[1] ) : '';
+                                            $client_prenom = ( isset( explode( ' ',$commande->prenoms )[1] ) ) ? ucfirst( explode( ' ',$commande->prenoms )[1] ) : '';
                                         ?>
-                                        <dd><?php echo ucfirst( $client->nom ).' '.ucfirst( explode( ' ',$client->prenoms )[0] ).' '.$client_prenom; ?></dd>
+                                        <dd><?php echo ucfirst( $commande->nom ).' '.ucfirst( explode( ' ',$commande->prenoms )[0] ).' '.$client_prenom; ?></dd>
                                         <dt>Téléphone</dt>
-                                        <dd><?php echo $client->tel; ?></dd>
+                                        <dd><?php echo $commande->tel; ?></dd>
                                         <dt>E-Mail</dt>
-                                        <dd><?php echo $client->email; ?></dd>
+                                        <dd><?php echo $commande->email; ?></dd>
 
                                     </dl>
                                 </div><!--end .col -->
@@ -75,30 +75,21 @@
                                 <div class="col-xs-5">
                                     <h4 class="text-light">Informations sur Livraison</h4>
                                     <dl class="dl-horizontal detail-cmd-info-shipping">
-                                        <dt class="text-left">Nom Réceptionnaire</dt>
-                                        <?php
-                                            $recept_prenom = ( isset( explode( ' ',$shipping->receiver_lastname )[1] ) ) ? ucfirst( explode( ' ',$shipping->receiver_lastname )[1] ) : '';
-                                        ?>
-                                        <dd><?php echo ucfirst( $shipping->receiver_name ).' '.ucfirst( explode( ' ',$shipping->receiver_lastname )[0] ).' '.$recept_prenom; ?></dd>
-                                        <dt>Téléphone Réceptionnaire</dt>
-                                        <dd><?php echo $shipping->receiver_tel; ?></dd>
-                                        <dt>E-Mail Réceptionnaire</dt>
-                                        <dd><?php echo $shipping->receiver_email; ?></dd>
 
                                         <dt>Commune</dt>
-                                        <dd><?php echo ucfirst( $shipping->dest_commune ); ?></dd>
+                                        <dd><?php echo ucfirst( $commune->commune ); ?></dd>
                                         <dt>Quartier</dt>
-                                        <dd><?php echo ucfirst( $shipping->receiver_quartier ); ?></dd>
+                                        <dd><?php echo ucfirst( $commande->receiver_quartier ); ?></dd>
 
                                         <dt>Longitude</dt>
-                                        <dd><?php echo ucfirst( $shipping->longitude ); ?></dd>
+                                        <dd><?php echo ucfirst( $commande->longitude ); ?></dd>
 
                                         <dt>Latitude</dt>
-                                        <dd><?php echo ucfirst( $shipping->lagitude ); ?></dd>
+                                        <dd><?php echo ucfirst( $commande->lagitude ); ?></dd>
 
 
                                         <dt>Description du lieu</dt>
-                                        <dd><?php echo $shipping->receiver_description; ?></dd>
+                                        <dd><?php echo $commande->receiver_description; ?></dd>
                                         <?php if( isset($livreur) && !empty( $livreur ) ): ?>
                                             <dt>Livreur</dt>
                                             <dd><?php echo strtoupper( $livreur->nom ).' ('.ucfirst( explode( ' ',$livreur->prenoms )[0] ).')'; ?></dd>
@@ -137,45 +128,20 @@
                             <!-- BEGIN INVOICE PRODUCTS -->
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <h4 class="text-light">Liste des produits contenus dans la commande</h4>
+                                    <h4 class="text-light">Détail de la commande</h4>
                                 </div>
                                 
-                                <div class="col-md-12 table-responsive">
-                                    <table class=" table table-hover shipping-details-table">
-                                        <thead>
-                                            <tr>
-                                                
-                                                <th  class="text-center text-bold">Nom</th>
-                                                <th class="text-center">Nombre</th>
-                                                <th class="text-center">Quantité unitaire vendue</th>
-                                                <th class="text-center">Unité de mésure</th>
-                                                <th class="text-center">Prix quantitié unitaire</th>
-                                                <th class="text-center">Quantité totale</th>
-                                                <th class="text-center">Prix total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-
-                                            <?php foreach ($produits as $produit) : ?>
-                                                <tr>
-                                                    <td class="text-center" data-label="Nom"><?php echo ucfirst( $produit->nom_produit ); ?></td>
-                                                    <td class="text-center" data-label="Nombre"><?php echo $produit->nbre_cmd; ?></td>
-                                                    <td class="text-center" data-label="Quantité unitaire vendue"><?php echo $produit->qtte_unitaire_cmd; ?></td>
-                                                    <td class="text-center" data-label="Unité de mésure"><?php echo $unites[$produit->id_unite]; ?></td>
-                                                    <td class="text-center" data-label="Prix quantitié unitaire"><?php echo number_format( $produit->prix_qtte_unitaire_cmd, 0, '', ' ') ; ?></td>
-                                                    <td class="text-center" data-label="Quantité totale">
-                                                        <?php echo number_format( $produit->nbre_cmd*$produit->qtte_unitaire_cmd, 0, '', ' ') ; ?>
-                                                    </td>
-                                                    <td class="text-center" data-label="Prix total">
-                                                        <?php 
-                                                            echo number_format( $produit->nbre_cmd*$produit->prix_qtte_unitaire_cmd, 0, '', ' ');
-                                                        ?>
-                                                    </td>
-                                                    
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
+                                <div class="col-md-12 style-default-light">
+                                   <div class="col-sm-5">
+                                    <div class="detail-product-img-content">
+                                        <img class="img-responsive quick-cmd" 
+                                        src="<?php echo WEBROOT_URL_FRONT.'images/quick_order/large/'.$commande->image; ?>.jpg?1422538624" alt="">
+                                    </div>
+                                   </div>
+                                   <div class="col-sm-7 info-product-container">
+                                            <h5>Description de la commande : </h5>
+                                            <p class="quick-cmd-detail-descript"><?php echo $commande->description_commande; ?></p>
+                                   </div>
                                 </div><!--end .col -->
                             </div><!--end .row -->
                             <!-- END INVOICE PRODUCTS -->

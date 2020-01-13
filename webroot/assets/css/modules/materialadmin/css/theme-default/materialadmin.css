@@ -8166,6 +8166,12 @@ option.toUpCase{
   border-radius: 10px;
 }
 
+.detail-product-img-content img.quick-cmd {
+  height: auto;
+  padding: 5px;
+  border-radius: 10px;
+}
+
 .detail-category-img-content img{
   height: 150px;
     padding: 5px;

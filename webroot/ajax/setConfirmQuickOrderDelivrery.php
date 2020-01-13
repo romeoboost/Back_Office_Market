@@ -6,7 +6,7 @@ if (empty(session_id())) {
     session_start();
     //$_SESSION['menu'] = 'Nous_Rejoindre';
 }
-//debugger($_POST);
+// debugger($_POST);
 $error_statut = false;
 $error_text = '';
 $error_text_second = '';
@@ -14,7 +14,7 @@ $field_error ='none';
 $retour = array();
 
 //verifier si tous les parametres existent
-if( !isset($_POST) || empty($_POST) || !isset($_POST['cmd_id']) || !isset($_POST['rejected_message']) ){
+if( !isset($_POST) || empty($_POST) || !isset($_POST['cmd_id']) ){
   $error_statut = true;
   $error_text = "Oups, Erreur !";
   $error_text_second = 'Veuillez ne pas modifier la page.';
@@ -26,7 +26,7 @@ if( !isset($_POST) || empty($_POST) || !isset($_POST['cmd_id']) || !isset($_POST
   if( empty($cmd_id) ){ //verifie si le produit existe dans le panier
       $error_statut = true;
       $error_text = "Oups, Erreur !";
-      $error_text_second = "Echec du rejet de la commande.";
+      $error_text_second = "Echec de la confirmation de livraison de la commande.";
   }else{
 
     //recuperation de la commande en base
@@ -39,45 +39,43 @@ if( !isset($_POST) || empty($_POST) || !isset($_POST['cmd_id']) || !isset($_POST
     if( empty($commande) ){ 
       $error_statut = true;
       $error_text = "Oups, Erreur !";
-      $error_text_second = "Echec de rejet de la commande.";
+      $error_text_second = "Echec de la confirmation de livraison de la commande. Commande inexistante.";
     }else{
 
       //Verifie que le statut de la commande est bien à en attente (0 )
-      if( $commande->statut != 0 ){
+      if( $commande->statut != 3 ){
         $error_statut = true;
         $error_text = "Oups, Erreur !";
-        $error_text_second = "Cette commande ne peut être annulée.";
+        $error_text_second = "Cette commande ne peut être modifiée. Statut incorrect.";
       }else{
-        //debugger($commande);
-        $date = date("Y-m-d H:i:s");
-        $statut = 4;
-        $id_bo_user = ( isset( $_SESSION['bo_user']['id'] ) && !empty( $_SESSION['bo_user']['id'] ) ) ? intval( $_SESSION['bo_user']['id'] ) : 0;
 
-        //Modifie le statut de la commande
-        $update_req = $pdo->prepare("UPDATE rapide_commandes SET statut = :statut, motif_rejet = :motif_rejet, id_utilisateur = :id_utilisateur, date_modification = :date_modification
-                                               WHERE token = :token "); 
-        $update_req->execute( array( 
-                                ':statut' => $statut,
-                                ':motif_rejet' => $rejected_message,
-                                ':id_utilisateur' => $id_bo_user,
-                                ':date_modification' => $date,
-                                ':token' => $cmd_id
-                                ) 
-                              );  
-        $retour['cmd_id'] = $cmd_id;
-		$btn_restore_html = '<button type="button" class="btn btn-icon-toggle set-restore-btn quick-order" data-toggle="tooltip" 
-                                data-placement="top" data-original-title="Restaurer la commande" cmd-id="'.$cmd_id.'">
-                                                              <i class="md md-local-shipping"></i>
-                                                          </button>';
-        $retour['btn_rejected_html'] = $btn_restore_html;
+          $date = date("Y-m-d H:i:s");
+          $statut = 1;
+          $id_bo_user = ( isset( $_SESSION['bo_user']['id'] ) && !empty( $_SESSION['bo_user']['id'] ) ) ? intval( $_SESSION['bo_user']['id'] ) : 0;
 
-        $enregistrement = 'oui';
-        $retour['enregistrement'] = $enregistrement;
+          //Modifie le statut de la commande
+          $update_req = $pdo->prepare("UPDATE rapide_commandes SET statut = :statut, id_utilisateur = :id_utilisateur, date_modification = :date_modification, date_livraison = :date_livraison
+                                                 WHERE token = :token "); 
+          $update_req->execute( array( 
+                                  ':statut' => $statut,
+                                  ':id_utilisateur' => $id_bo_user,
+                                  ':date_modification' => $date,
+                                  ':date_livraison' => $date,
+                                  ':token' => $cmd_id
+                                  ) 
+                                );
 
-        $error_text = ' Succes ! ';
-        $error_text_second = "La commande $cmd_id a été rejetée. ";
+          $retour['cmd_id'] = $cmd_id;
+
+          $enregistrement = 'oui';
+          $retour['enregistrement'] = $enregistrement;
+
+          $error_text = ' Succes ! ';
+          $error_text_second = "La commande $cmd_id a été livrée.";
 
       }
+      
+
             
     }
   }

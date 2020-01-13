@@ -225,3 +225,10 @@ data-toggle="tooltip" data-placement="top" category-id="'.$element->token .'"
                                 </div>
                                 <?php } ?>
 
+afromart225@gmail.com /02378124BB(envoie de mail et contact)
+manager.afromart@gmail.com(contact manger)
+ 
+ 
+
+ https://www.webnode.fr/support/index.php?/Knowledgebase/Article/View/5248/ : creation compte paypal
+

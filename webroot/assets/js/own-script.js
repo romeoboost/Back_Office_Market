@@ -22,6 +22,8 @@
     var linkToSearchQuickOrders = $("#linkToSearchQuickOrders").html();
     
     var linkToSetOrderDelivrery = $("#linkToSetOrderDelivrery").html();
+    var linkToSetConfirmOrderDelivrery = $("#linkToSetConfirmOrderDelivrery").html();
+    var linkToSetConfirmQuickOrderDelivrery = $("#linkToSetConfirmQuickOrderDelivrery").html();
     var linkToSetQuickOrderDelivrery = $("#linkToSetQuickOrderDelivrery").html();
     var linkToGetLivreur = $("#linkToGetLivreur").html();
     var linkToGetQuickLivreur = $("#linkToGetQuickLivreur").html();
@@ -3116,6 +3118,32 @@
         return false;
     });
 
+    //Cliquer sur le bouton pour Confirmer une commande
+    $('#order-list tbody').on('click', '.set-confirm-shipping-btn', function(e){ // 
+        e.preventDefault();
+        var self = $(this);        
+        var cmd_id = $(this).attr('cmd-id');
+        var type = 'normal';
+        if( $(this).hasClass('quick-order') ){
+          type = 'quick';
+        }
+      Swal({
+        title: 'Êtes vous sure ?',
+        text: 'Vous vous apprêter à confirmer la livraison de la commande '+cmd_id,
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#0aa89e',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Annuler'
+      }).then((result) => {
+        if (result.value) {
+          //console.log(self);
+          confirm_shipping_order(cmd_id, self, type);            
+        }
+      });        
+      return false;
+  });
 
     //AFFICHER MODAL POUR SUPPRIMER COMMANDES
     $('#order-list tbody ').on('click','.delete-order-btn',function(){
@@ -3343,6 +3371,77 @@
 
     }
 
+    /*Function confirmation de livraison de commande*/
+    function confirm_shipping_order(cmd_id, self, type){
+      // console.log(cmd_id);
+      var UrlToSend = '';
+      if (type === 'normal'){
+        UrlToSend = linkToSetConfirmOrderDelivrery;
+      }else{
+        UrlToSend = linkToSetConfirmQuickOrderDelivrery;
+      } 
+      $.ajax({
+          type: "POST",
+          dataType: "json",
+          url: UrlToSend,
+          data: {cmd_id:cmd_id},
+          success: function (data, textStatus, jqXHR) {
+             // console.log(data);
+              //mettre a jour l'intitulé du statut de la commande
+             $('#order-list tbody .'+data.cmd_id+' .cmd-status').html('LIVRÉE');           
+
+             // mettre a jour la couleur du statut (style)
+             if( $("#order-list tbody ."+data.cmd_id+" .cmd-status").hasClass('style-warning') ){
+                  $("#order-list tbody ."+data.cmd_id+" .cmd-status").removeClass('style-warning');
+                  $("#order-list tbody ."+data.cmd_id+" .cmd-status").addClass('style-success');
+              }
+
+             //  //mettre a jour les bouton d'actions
+                  
+              //remplacer bouton "confirmer livraison" par "Reprendre la livraison"
+              $("#order-list tbody ."+data.cmd_id+" .set-confirm-shipping-btn").attr('data-original-title', 'Reprendre la livraion');
+              $("#order-list tbody ."+data.cmd_id+" .set-confirm-shipping-btn").html('<i class="md md-local-shipping"></i>');
+              //Ajouter class pour laction du bouton
+              $("#order-list tbody ."+data.cmd_id+" .set-confirm-shipping-btn").addClass('set-shipping-btn');
+              $("#order-list tbody ."+data.cmd_id+" .set-confirm-shipping-btn").removeClass('set-confirm-shipping-btn');
+
+              //Suppression bouton "ARRET LIVRAISON"
+              // $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").before( data.btn_rejected_html );
+              $("#order-list tbody ."+data.cmd_id+" .set-stop-shipping-btn").remove();
+              $('[data-toggle="tooltip"]').tooltip();
+
+             Swal({
+                title: data.error_text,
+                text: data.error_text_second,
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#0aa89e',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'OK'
+              }).then((result) => {
+                if (result.value) {
+                  $("#order-list tbody ."+data.cmd_id).fadeOut(250).fadeIn(250).fadeOut(250).fadeIn(250);
+                }
+              });
+          },
+          error: function(jqXHR) {
+            console.log(jqXHR.responseText);
+            //$('.contact-form .error-text').html(jqXHR.responseJSON.error_html);
+            if(jqXHR.responseJSON.error === 'oui'){
+                  //$('#confirm-order-modal').hide();
+                  Swal({
+                    type: 'error',
+                    title: jqXHR.responseJSON.error_text,
+                    text: jqXHR.responseJSON.error_text_second
+                  });
+                  //return html_status_initial;
+            }
+
+          }
+      });
+
+  }
+
     /*Function rejet de commande*/
     function reject_order( reject_order_data, type ){
         // console.log(reject_order_data);
@@ -3377,7 +3476,11 @@
                     $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").html('<i class="md md-settings-backup-restore"></i>');
                     //palce la classe permetant de selectionner l'action d'arreter une livraison
                     $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").addClass('set-restore-btn');
+					if (type === 'quick'){
+						$("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").addClass('quick-order');
+					}
                     $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").removeClass('set-rejected-btn');
+					
                     $('[data-toggle="tooltip"]').tooltip();
 
                     var rejected_message = '';
@@ -3456,22 +3559,41 @@
                     $("#order-list tbody ."+data.cmd_id+" .cmd-status").addClass('style-warning')
                 }
 
+                if( $("#order-list tbody ."+data.cmd_id+" .cmd-status").hasClass('style-success') ){
+                    $("#order-list tbody ."+data.cmd_id+" .cmd-status").removeClass('style-success') 
+                    $("#order-list tbody ."+data.cmd_id+" .cmd-status").addClass('style-warning')
+                }
+
                 //mettre a jour les bouton d'actions
-                    //supprimer bouton liver
-                    $("#order-list tbody ."+data.cmd_id+" .set-shipping-btn").remove();
+                //remplacer bouton "liver" par "confirmation de livraison"
+                // $("#order-list tbody ."+data.cmd_id+" .set-shipping-btn").remove();
+                $("#order-list tbody ."+data.cmd_id+" .set-shipping-btn").attr('data-original-title', 'Confirmer la livraison');
+                $("#order-list tbody ."+data.cmd_id+" .set-shipping-btn").html('<i class="md md-check-box"></i>');
+                // $('[data-toggle="tooltip"]').tooltip();
+                //palce la classe permetant de selectionner l'action d'arreter une livraison
+                $("#order-list tbody ."+data.cmd_id+" .set-shipping-btn").addClass('set-confirm-shipping-btn');
+                if (type === 'quick'){
+                  $("#order-list tbody ."+data.cmd_id+" .set-shipping-btn").addClass('quick-order');
+                }
+                $("#order-list tbody ."+data.cmd_id+" .set-shipping-btn").removeClass('set-shipping-btn');
 
-                    //remplacer bouton "rejeter" par "arreter livraison"
-                    $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").attr('data-original-title', 'Arrêter la livraison');
-                    $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").html('<i class="fa fa-pause"></i>');
-                    $('[data-toggle="tooltip"]').tooltip();
-                    //palce la classe permetant de selectionner l'action d'arreter une livraison
-                    $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").addClass('set-stop-shipping-btn');
-                    $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").removeClass('set-rejected-btn');
-                    // $('#order-list ').attr('filter-data-status', status);
+                //Ajouter le bouton restauration au cas ou la demande était au statut "LIVREE"
+                if ( parseInt( data.cmd_statut ) === 1){
+                  $("#order-list tbody ."+data.cmd_id+" .check-details-btn").before( data.btn_confirm_shipping_html );
+                }
 
-                    //Arrete le spinner du boutnon de validation du formulaire
-                    $("#modal-set-shipping-confirm-btn").removeClass('disabled');
-                    $("#modal-set-shipping-confirm-btn").removeClass('running');
+                //remplacer bouton "rejeter" par "arreter livraison"
+                $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").attr('data-original-title', 'Arrêter la livraison');
+                $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").html('<i class="fa fa-pause"></i>');
+                $('[data-toggle="tooltip"]').tooltip();
+                //palce la classe permetant de selectionner l'action d'arreter une livraison
+                $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").addClass('set-stop-shipping-btn');
+                $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").removeClass('set-rejected-btn');
+                // $('#order-list ').attr('filter-data-status', status);
+
+                //Arrete le spinner du boutnon de validation du formulaire
+                $("#modal-set-shipping-confirm-btn").removeClass('disabled');
+                $("#modal-set-shipping-confirm-btn").removeClass('running');
 
                //afficher la notification de succès
                Swal({
@@ -3529,28 +3651,29 @@
                $('#order-list tbody .'+data.cmd_id+' .cmd-status').html('EN ATTENTE');           
 
                // // mettre a jour la couleur du statut (style)
-               if( $("#order-list tbody ."+data.cmd_id+" .cmd-status").hasClass('style-warning') ){
-                    $("#order-list tbody ."+data.cmd_id+" .cmd-status").removeClass('style-warning') 
-                    $("#order-list tbody ."+data.cmd_id+" .cmd-status").addClass('style-info')
+                if( $("#order-list tbody ."+data.cmd_id+" .cmd-status").hasClass('style-warning') ){
+                  $("#order-list tbody ."+data.cmd_id+" .cmd-status").removeClass('style-warning') 
+                  $("#order-list tbody ."+data.cmd_id+" .cmd-status").addClass('style-info')
                 }
 
+                $("#order-list tbody ."+data.cmd_id+" .set-confirm-shipping-btn").remove();
                //  //mettre a jour les bouton d'actions
                     
-                    //remplacer bouton "arreter livraison" par "rejeter"
-                    $("#order-list tbody ."+data.cmd_id+" .set-stop-shipping-btn").attr('data-original-title', 'Rejetter la commande');
-                    $("#order-list tbody ."+data.cmd_id+" .set-stop-shipping-btn").html('<i class="fa fa-times-circle-o"></i>');
-                    $('[data-toggle="tooltip"]').tooltip();
+                //remplacer bouton "arreter livraison" par "rejeter"
+                $("#order-list tbody ."+data.cmd_id+" .set-stop-shipping-btn").attr('data-original-title', 'Rejetter la commande');
+                $("#order-list tbody ."+data.cmd_id+" .set-stop-shipping-btn").html('<i class="fa fa-times-circle-o"></i>');
+                $('[data-toggle="tooltip"]').tooltip();
 
-                    //Ajouter class pour laction du bouton
-                    $("#order-list tbody ."+data.cmd_id+" .set-stop-shipping-btn").addClass('set-rejected-btn');
-                    $("#order-list tbody ."+data.cmd_id+" .set-stop-shipping-btn").removeClass('set-stop-shipping-btn');
+                //Ajouter class pour laction du bouton
+                $("#order-list tbody ."+data.cmd_id+" .set-stop-shipping-btn").addClass('set-rejected-btn');
+                $("#order-list tbody ."+data.cmd_id+" .set-stop-shipping-btn").removeClass('set-stop-shipping-btn');
 
                //Ajouter bouton liver
-                    $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").before( data.btn_rejected_html );
+                $("#order-list tbody ."+data.cmd_id+" .set-rejected-btn").before( data.btn_rejected_html );
 
                //      // $('#order-list ').attr('filter-data-status', status);
-                    $("#modal-set-stop-shipping-confirm-btn").removeClass('disabled');
-                    $("#modal-set-stop-shipping-confirm-btn").removeClass('running');
+                $("#modal-set-stop-shipping-confirm-btn").removeClass('disabled');
+                $("#modal-set-stop-shipping-confirm-btn").removeClass('running');
 
                //afficher la notification de succès
                Swal({

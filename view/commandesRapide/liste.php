@@ -344,11 +344,22 @@
                                                     <i class="fa fa-times-circle-o"></i>
                                                 </button>
                                             <?php endif; ?>
+                                            <?php if( $commande->cmd_statut == 1 ): ?>
+                                                <button type="button" class="btn btn-icon-toggle set-shipping-btn" data-toggle="tooltip" 
+                                                    data-placement="top" data-original-title="Reprendre la livraison" cmd-id="<?php echo $commande->cmd_id; ?>">
+                                                    <i class="md md-local-shipping"></i>
+                                                </button>
+                                            <?php endif; ?>
+
                                             <?php if( $commande->cmd_statut == 3 ): ?>
+                                                <button type="button" class="btn btn-icon-toggle set-confirm-shipping-btn quick-order" data-toggle="tooltip" cmd-id="<?php echo $commande->cmd_id; ?>"
+                                                    data-placement="top" data-original-title="Confirmer la livraison">
+                                                    <i class="md md-check-box"></i>
+                                                </button>
                                                 <button type="button" class="btn btn-icon-toggle set-stop-shipping-btn" data-toggle="tooltip" cmd-id="<?php echo $commande->cmd_id; ?>"
                                                     data-placement="top" data-original-title="Arrêter la livraison">
                                                     <i class="fa fa-pause"></i>
-                                                </button>
+                                                </button>                                                
                                             <?php endif; ?>
                                             <?php if( $commande->cmd_statut == 4 ): ?>
                                                 <button type="button" class="btn btn-icon-toggle set-restore-btn quick-order" data-toggle="tooltip" cmd-id="<?php echo $commande->cmd_id; ?>"
@@ -359,7 +370,7 @@
 
                                             <button type="button" class="btn btn-icon-toggle check-details-btn" data-toggle="tooltip" cmd-id="<?php echo $commande->cmd_id; ?>"
                                                 data-placement="top" data-original-title="Détails de la commandes">
-                                                <a href="<?php echo BASE_URL.DS.'commandes/details/'.$commande->cmd_id; ?>">
+                                                <a href="<?php echo BASE_URL.DS.'commandesRapide/details/'.$commande->cmd_id; ?>">
                                                     <i class="md md-description"></i>
                                                 </a>
                                             </button>

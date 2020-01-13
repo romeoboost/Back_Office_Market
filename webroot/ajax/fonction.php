@@ -45,8 +45,8 @@ function send_mail($to, $Subject, $message){
   $mail->Host       = "smtp.gmail.com";      // sets GMAIL as the SMTP server
   $mail->Port       = 25;                   // set the SMTP port for the GMAIL server
   //$mail->Username   = "test.ngser@gmail.com";  // GMAIL username
-  $mail->Username   = "romkesso92@gmail.com"; //"test.application.ngser@gmail.com";
-  $mail->Password   = "romeokesso123";//"password2018#"; //"@dtngser";            // GMAIL password
+  $mail->Username   = "afromart225@gmail.com"; //"test.application.ngser@gmail.com";
+  $mail->Password   = "02378124BB";//"password2018#"; //"@dtngser";            // GMAIL password
 
   $mail->SetFrom('service.clients@afromart.com', 'SERVICE CLIENT AFROMART');
 
@@ -869,17 +869,21 @@ function html_list_quick_cmd( $commandes, $nombre_total_cmd, $offset){
     $html .=    '<td>'.dateFormat($commande->cmd_date_creation).'</td>';
     $html .=    '<td class="text-right">';
     if( $commande->cmd_statut == 0 ){
-      $html .=      '<button type="button" cmd-id="'.$commande->cmd_id.'" class="btn btn-icon-toggle set-shipping-btn" data-toggle="tooltip"  data-placement="top" data-original-title="Livrer"> <i class="md md-local-shipping"></i> </button><button type="button" class="btn btn-icon-toggle set-rejected-btn" data-toggle="tooltip" data-placement="top" data-original-title="Rejetter la commande" cmd-id="'.$commande->cmd_id.'"><i class="fa fa-times-circle-o"></i></button>';  
+      $html .=      '<button type="button" cmd-id="'.$commande->cmd_id.'" class="btn btn-icon-toggle set-shipping-btn quick-order" data-toggle="tooltip"  data-placement="top" data-original-title="Livrer"> <i class="md md-local-shipping"></i> </button><button type="button" class="btn btn-icon-toggle set-rejected-btn quick-order" data-toggle="tooltip" data-placement="top" data-original-title="Rejetter la commande" cmd-id="'.$commande->cmd_id.'"><i class="fa fa-times-circle-o"></i></button>';  
+    }
+    if( $commande->cmd_statut == 1 ){
+      $html .=      '<button type="button" class="btn btn-icon-toggle set-shipping-btn" data-toggle="tooltip" data-placement="top" data-original-title="Reprendre la livraison" cmd-id="'.$commande->cmd_id.'"><i class="md md-local-shipping"></i></button>';  
     }
     if( $commande->cmd_statut == 3 ){
-      $html .=      '<button type="button" class="btn btn-icon-toggle set-stop-shipping-btn" data-toggle="tooltip" data-placement="top" data-original-title="Arrêter la livraison" cmd-id="'.$commande->cmd_id.'"> <i class="fa fa-pause"></i> </button>';  
+      $html .=      '<button type="button" class="btn btn-icon-toggle set-stop-shipping-btn quick-order" data-toggle="tooltip" data-placement="top" data-original-title="Arrêter la livraison" cmd-id="'.$commande->cmd_id.'"> <i class="fa fa-pause"></i> </button>';  
+      $html .=      '<button type="button" class="btn btn-icon-toggle set-confirm-shipping-btn quick-order" data-toggle="tooltip" cmd-id="'.$commande->cmd_id.'"data-placement="top" data-original-title="Confirmer la livraison"><i class="md md-check-box"></i></button>';  
     }
     if( $commande->cmd_statut == 4 ){
-      $html .=      '<button type="button" class="btn btn-icon-toggle set-restore-btn" data-toggle="tooltip" data-placement="top" data-original-title="Restaurer la commande" cmd-id="'.$commande->cmd_id.'"> <i class="md md-settings-backup-restore"></i> </button>';  
+      $html .=      '<button type="button" class="btn btn-icon-toggle set-restore-btn quick-order" data-toggle="tooltip" data-placement="top" data-original-title="Restaurer la commande" cmd-id="'.$commande->cmd_id.'"> <i class="md md-settings-backup-restore"></i> </button>';  
     }
     
-      $html .=      '<button type="button" class="btn btn-icon-toggle check-details-btn" data-toggle="tooltip" data-placement="top" data-original-title="Détails de la commandes" cmd-id="'.$commande->cmd_id.'"> <a href="'.SITE_BASE_URL.'commandes/details/'.$commande->cmd_id.'"><i class="md md-description"></i></a></button>';
-      $html .=      '<button type="button" class="btn btn-icon-toggle delete-order-btn" data-toggle="tooltip" data-placement="left" data-original-title="Supprimer la commandes" cmd-id="'.$commande->cmd_id.'"> <i class="fa fa-trash-o"></i></button>';
+      $html .=      '<button type="button" class="btn btn-icon-toggle check-details-btn" data-toggle="tooltip" data-placement="top" data-original-title="Détails de la commandes" cmd-id="'.$commande->cmd_id.'"> <a href="'.SITE_BASE_URL.'commandesRapide/details/'.$commande->cmd_id.'"><i class="md md-description"></i></a></button>';
+      $html .=      '<button type="button" class="btn btn-icon-toggle delete-order-btn quick-order" data-toggle="tooltip" data-placement="left" data-original-title="Supprimer la commandes" cmd-id="'.$commande->cmd_id.'"> <i class="fa fa-trash-o"></i></button>';
     $html .=    '</td>';
 
     $html .= '</tr>';
@@ -911,8 +915,12 @@ function html_list_cmd( $commandes, $nombre_total_cmd, $offset){
     if( $commande->cmd_statut == 0 ){
       $html .=      '<button type="button" cmd-id="'.$commande->cmd_id.'" class="btn btn-icon-toggle set-shipping-btn" data-toggle="tooltip"  data-placement="top" data-original-title="Livrer"> <i class="md md-local-shipping"></i> </button><button type="button" class="btn btn-icon-toggle set-rejected-btn" data-toggle="tooltip" data-placement="top" data-original-title="Rejetter la commande" cmd-id="'.$commande->cmd_id.'"><i class="fa fa-times-circle-o"></i></button>';  
     }
+    if( $commande->cmd_statut == 1 ){
+      $html .=      '<button type="button" class="btn btn-icon-toggle set-shipping-btn" data-toggle="tooltip" data-placement="top" data-original-title="Reprendre la livraison" cmd-id="'.$commande->cmd_id.'"><i class="md md-local-shipping"></i></button>';  
+    }
     if( $commande->cmd_statut == 3 ){
-      $html .=      '<button type="button" class="btn btn-icon-toggle set-stop-shipping-btn" data-toggle="tooltip" data-placement="top" data-original-title="Arrêter la livraison" cmd-id="'.$commande->cmd_id.'"> <i class="fa fa-pause"></i> </button>';  
+      $html .=      '<button type="button" class="btn btn-icon-toggle set-stop-shipping-btn" data-toggle="tooltip" data-placement="top" data-original-title="Arrêter la livraison" cmd-id="'.$commande->cmd_id.'"> <i class="fa fa-pause"></i> </button>';
+      $html .=      '<button type="button" class="btn btn-icon-toggle set-confirm-shipping-btn" data-toggle="tooltip" cmd-id="'.$commande->cmd_id.'"data-placement="top" data-original-title="Confirmer la livraison"><i class="md md-check-box"></i></button>';   
     }
     if( $commande->cmd_statut == 4 ){
       $html .=      '<button type="button" class="btn btn-icon-toggle set-restore-btn" data-toggle="tooltip" data-placement="top" data-original-title="Restaurer la commande" cmd-id="'.$commande->cmd_id.'"> <i class="md md-settings-backup-restore"></i> </button>';  

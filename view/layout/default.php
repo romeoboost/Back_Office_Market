@@ -71,6 +71,8 @@
     <span id="linkToStatProducts" class="hidden"><?php echo WEBROOT_URL.'ajax/statProducts.php'; ?></span>
     <span id="linkToSearchOrders" class="hidden"><?php echo WEBROOT_URL.'ajax/searchOrders.php'; ?></span>
     <span id="linkToSearchQuickOrders" class="hidden"><?php echo WEBROOT_URL.'ajax/searchQuickOrders.php'; ?></span>
+    <span id="linkToSetConfirmOrderDelivrery" class="hidden"><?php echo WEBROOT_URL.'ajax/setConfirmOrderDelivrery.php'; ?></span>
+    <span id="linkToSetConfirmQuickOrderDelivrery" class="hidden"><?php echo WEBROOT_URL.'ajax/setConfirmQuickOrderDelivrery.php'; ?></span>
     <span id="linkToSetOrderDelivrery" class="hidden"><?php echo WEBROOT_URL.'ajax/setOrderDelivrery.php'; ?></span>
     <span id="linkToSetQuickOrderDelivrery" class="hidden"><?php echo WEBROOT_URL.'ajax/setQuickOrderDelivrery.php'; ?></span>
     <span id="linkToSetStopQuickOrderDelivrery" class="hidden"><?php echo WEBROOT_URL.'ajax/setStopQuickOrderDelivrery.php'; ?></span>

@@ -47,7 +47,6 @@ class CommandesRapideController extends Controller {
             ),$this->self_table,'shipping_infos');
       // debug($d['commandes']);
 
-
       $d['nombre_pages']=ceil($d['total_cmd']['nbre'] / 10);
       $d['numero_page_encours']=1;
 
@@ -66,40 +65,40 @@ class CommandesRapideController extends Controller {
 
     public function details($token_commande){
       conf::redir();
-      $this->loadmodel($this->self_table);
+      $this->loadmodel('CommandesRapide');
       $d= array();
-      $_SESSION['bo_menu'] = $this->self_table;
+      $_SESSION['bo_menu'] = "CommandesRapide";
 
       //verifie que le token de la commande a bien été envoyé
       if( !isset($token_commande) || empty($token_commande) ){
-        header('Location: '.BASE_URL.DS.'commandes/liste');
+        header('Location: '.BASE_URL.DS.'commandesRapide/liste');
       }else{
         $token_commande = trim($token_commande);
 
         // recuperation de la commande
-        $d['commande'] = current( $this->Commandes->find( array( 
-            'condition' => array( 'token' => $token_commande ),
-            'order' => array( 'champs' => 'id', 'param' => 'DESC')
-          ),$this->self_table) );
+          $d['commande'] = current( $this->CommandesRapide->findJoin( array(
+            'fieldsmain' => array('montant_ht AS montant_ht','frais_livraison AS frais_livraison','montant_total AS montant_total',
+                  'token as token', 'statut as statut', 'date_creation AS date_creation', 'date_modification AS date_modification',
+                  'image_link as image','description_commande as description_commande','motif_rejet as motif_rejet',
+                  'id_livreur as id_livreur','id_utilisateur as id_utilisateur','date_livraison as date_livraison'),
+
+            'fieldstwo' => array('nom as nom ',' prenoms as prenoms ','tel as tel',
+            'email as email','id_destination as id_commune','quartier as receiver_quartier', 'longitude as longitude',
+            'lagitude as lagitude', 'description as receiver_description'),
+
+            'fields' => array(  array( 'main' => 'id', 'second' => 'id_commande_rapide' ) ),
+              'order' => array('champs' => 'rapide_commandes.id','param' => 'DESC'),
+              'condition' => "token ='".$token_commande."'"
+            ),$this->self_table,'shipping_infos') );
+            // debug($d);            
 
         //verifie si la comande existe bien en base
         if( empty($d['commande']) ){
-          header('Location: '.BASE_URL.DS.'commandes/liste');
+          header('Location: '.BASE_URL.DS.'commandesRapide/liste');
         }else{
-          //recuperation du statut
-          // $d['command_status'] = $this->getStatusCommand($d['command']->statut);
-
-          //Recuperation des infos du shipping_infos
-          $d['client'] = current ( $this->Commandes->find( 
-              array( 
-                'fields' => 'id,nom,prenoms,token,tel,email',
-                'condition' => 'id = '.$d['commande']->id_client
-              )
-            ,'shipping_infos' ) );
-
-          //recuperation des infos sur le livreur, si cmde en cours de livraison
+          //recuperation des infos sur le livreur, si cmde en cours de livraison ou livré
           if( $d['commande']->statut == 3 || $d['commande']->statut == 1 ){
-            $d['livreur'] = current ( $this->Commandes->find( 
+            $d['livreur'] = current ( $this->CommandesRapide->find( 
               array( 
                 'fields' => 'id,nom,prenoms',
                 'condition' => 'id = '.$d['commande']->id_livreur 
@@ -107,48 +106,22 @@ class CommandesRapideController extends Controller {
             ,'livreurs' ) );
           }
 
+          $d['commune'] = current ( $this->CommandesRapide->find( 
+            array( 
+              'fields' => 'id,commune',
+              'condition' => 'id = '.$d['commande']->id_commune 
+            )
+          ,'livraison_destinations' ) );
+
           //recuperation des infos sur le user back office ayant traité la transaction
           if( intval( $d['commande']->id_utilisateur ) > 0 ){
-            $d['user_bo'] = current ( $this->Commandes->find( 
+            $d['user_bo'] = current ( $this->CommandesRapide->find( 
               array( 
                 'fields' => 'id,nom,prenoms',
                 'condition' => 'id = '.$d['commande']->id_utilisateur 
               )
             ,'utilisateurs' ) );
           }          
-
-          //recuperation des information de la livraison
-          $d['shipping'] = current( $this->Commandes->findJoin(array(
-            'fieldsmain' => array(' id AS receiver_id','nom AS receiver_name','prenoms AS receiver_lastname',
-              'tel AS receiver_tel','email AS receiver_email',' quartier AS receiver_quartier','lagitude as lagitude',
-              'longitude as longitude','description AS receiver_description'),
-            'fieldstwo' => array('token AS dest_token','commune AS dest_commune','frais AS frais_commune'),
-            'fields' => array( array('main' => 'id_destination','second' => 'id') ),
-            'order' => array('champs' => 'shipping_infos.id' , 'param' => 'desc'),
-            'condition' => 'shipping_infos.id_commande='.$d['commande']->id,
-            'limit' => '0,1'
-          ),'shipping_infos','livraison_destinations') );
-
-          //recupération list de produits
-          $d['produits'] = $this->Commandes->findJoin(array(
-            'fieldsmain' => array('id_commande AS id_cmd','quantite AS nbre_cmd','qtte_unitaire AS qtte_unitaire_cmd',
-              'prix_qtte_unitaire AS prix_qtte_unitaire_cmd'),
-            'fieldstwo' => array( 'id AS id_produit','nom AS nom_produit','token AS token','id_unite as id_unite',
-              'quantite_unitaire AS quantite_unitaire_produit','prix_quantite_unitaire AS prix_quantite_unitaire',
-              'image AS image','promo AS promo','pourcentage_promo AS pourcentage_promo'),
-            'fields' => array( array('main' => 'id_produit','second' => 'id') ),
-            'order' => array('champs' => 'commandes_produits.quantite' , 'param' => 'desc'),
-            'condition' => 'commandes_produits.id_commande='.$d['commande']->id
-          ),'commandes_produits','produits');
-
-          //recuperer les unité de mésure
-          $unites_from_bd = $this->Commandes->find(array(
-              'fields' => array('id','libelle','symbole')
-            ),'unites');
-          $d['unites'] = array();
-          foreach ($unites_from_bd as $u) {
-            $d['unites'][$u->id] = ($u->symbole == 'NA') ? 'nombre' : $u->symbole;
-          }
 
         }
 
@@ -157,7 +130,7 @@ class CommandesRapideController extends Controller {
       // debug($d);
       $this->set($d);
 
-      }
+    }
 
     // }  
    

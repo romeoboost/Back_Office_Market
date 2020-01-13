@@ -44,9 +44,9 @@ if(!isset($_POST) || empty($_POST) ){
         $commande = current( $req_recup->fetchAll(PDO::FETCH_OBJ) );
 
         //verifie si le statut de la commande est vraiment en attente
-        if( $commande->statut != 0 ){
+        if( $commande->statut != 0 && $commande->statut != 1){
           $error_statut = true;
-          $error_text_second = 'La commande doit avoir le statut " EN ATTENTE " ';
+          $error_text_second = 'La commande doit avoir le statut " EN ATTENTE " ou " LIVRÉE ".';
 
         }else{
 
@@ -67,6 +67,12 @@ if(!isset($_POST) || empty($_POST) ){
                                   ) 
                                 );
           $retour['cmd_id'] = $cmd_id;
+          $retour['cmd_statut'] = $commande->statut;
+          $btn_confirm_shipping_html = '<button type="button" class="btn btn-icon-toggle set-stop-shipping-btn" data-toggle="tooltip" cmd-id="'.$cmd_id.'"
+                                            data-placement="top" data-original-title="Arrêter la livraison">
+                                            <i class="fa fa-pause"></i>
+                                        </button> ';
+          $retour['btn_confirm_shipping_html'] = $btn_confirm_shipping_html;
           $error_text = ' Succes ! ';
           $error_text_second = "La mise à jour de la commande $cmd_id a été éffectuée. " ;
         }

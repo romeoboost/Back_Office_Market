@@ -80,7 +80,7 @@ class ClientsController extends Controller {
 
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . $i, $client->token );
         
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E' . $i, $client->tel );
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E' . $i, "'".$client->tel );
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F' . $i, $client->email );
         $sexe = ($client->sexe == 1) ? 'HOMME' : 'FEMME';
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G' . $i, $sexe );

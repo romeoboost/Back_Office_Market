@@ -27,6 +27,9 @@
         }
         function loadcontroller()
         {
+			if( !isset($this->request->controller) || empty($this->request->controller) ){
+              header('Location: '.BASE_URL.'/accueil'); 
+            }
            $name = ucfirst($this->request->controller).'Controller';
            $file = ROOT.DS.'controller'.DS.$name.'.php';
            require $file;

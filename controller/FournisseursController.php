@@ -67,7 +67,7 @@ class FournisseursController extends Controller {
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A' . $i, $nbre_plus-- );
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B' . $i, $fournisseur->token );
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C' . $i, ucfirst( $fournisseur->nom ) );
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . $i, $fournisseur->tel );
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . $i, "'".$fournisseur->tel );
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E' . $i, $fournisseur->email );
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F' . $i, $fournisseur->date_creation );
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G' . $i, $fournisseur->date_modification );

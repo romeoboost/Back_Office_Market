@@ -40,6 +40,8 @@ class ClientsController extends Controller {
       $filter_formated = $this->organize_filter($start_date, $start_hour, $end_date, $end_hour, $nom, $prenoms, $client_id, $tel, $status, $sexe);
       // debug($filter_formated);
 
+      // debug($filter_formated);
+
       $clients = $this->get_clients($filter_formated);
       // debug($clients);
       
@@ -179,6 +181,7 @@ class ClientsController extends Controller {
     private function organize_filter($start_date, $start_hour, $end_date, $end_hour, $nom, $prenoms, $client_id, $tel, $status, $sexe){
       
       $list_function_params = func_get_args(); //recupere la liste de tous les paramètres envoyés dans la fonction
+      // debug($list_function_params);
       foreach ( $list_function_params as $function_param ) {
           # code...
         $spliter = explode( '&', $function_param);
@@ -244,7 +247,7 @@ class ClientsController extends Controller {
               'array_filter' => $filter['conditions_prepare'],
               'order' => array('champs' => 'id','param' => 'DESC')
             ),'clients');
-
+      // debug($filter);
       return $clients;
     }
 

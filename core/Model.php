@@ -51,7 +51,7 @@
            }else{
               $sql .= '*'; 
            } 
-           $sql .= ' FROM '.$this->table.' AS '.get_class($this).'';
+           $sql .= ' FROM '.$this->table; //.' AS '.get_class($this).'';
             //condition
            if(isset($req['condition'])){
                $sql .= ' WHERE '; 

@@ -100,13 +100,16 @@ if ($_POST) {
                 
                 $stock = 0;
 
-                $slug = $name_product;
+                $slug = str_replace('/', '', $name_product);                
+                $slug = str_replace('\\', '', $slug);
+                $slug = str_replace('%', '', $slug);
+                $slug = str_replace(' ', '-', $slug);
                 $req = $pdo->prepare('SELECT id,nom FROM categories_produits where id = :id '); 
                 $req->execute( array('id' => $category_product ) );
                 $cat_info = current($req->fetchAll(PDO::FETCH_OBJ));
                 $slug .= '-'.$cat_info->nom;
                 $slug .= '-'.$token_produit;
-                $slug .= str_replace(' ', '-', $slug);
+                $slug = str_replace(' ', '-', $slug);
 
                 // debugger($slug);
                 $date = date("Y-m-d H:i:s");

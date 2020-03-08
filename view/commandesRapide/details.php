@@ -63,11 +63,11 @@
                                         <?php
                                             $client_prenom = ( isset( explode( ' ',$commande->prenoms )[1] ) ) ? ucfirst( explode( ' ',$commande->prenoms )[1] ) : '';
                                         ?>
-                                        <dd><?php echo ucfirst( $commande->nom ).' '.ucfirst( explode( ' ',$commande->prenoms )[0] ).' '.$client_prenom; ?></dd>
+                                        <dd><?php echo ucfirst( htmlspecialchars ($commande->nom) ).' '.ucfirst( explode( ' ',htmlspecialchars ($commande->prenoms) )[0] ).' '.htmlspecialchars ($client_prenom); ?></dd>
                                         <dt>Téléphone</dt>
-                                        <dd><?php echo $commande->tel; ?></dd>
+                                        <dd><?php echo htmlspecialchars ($commande->tel); ?></dd>
                                         <dt>E-Mail</dt>
-                                        <dd><?php echo $commande->email; ?></dd>
+                                        <dd><?php echo htmlspecialchars ($commande->email); ?></dd>
 
                                     </dl>
                                 </div><!--end .col -->
@@ -79,7 +79,7 @@
                                         <dt>Commune</dt>
                                         <dd><?php echo ucfirst( $commune->commune ); ?></dd>
                                         <dt>Quartier</dt>
-                                        <dd><?php echo ucfirst( $commande->receiver_quartier ); ?></dd>
+                                        <dd><?php echo ucfirst( htmlspecialchars ($commande->receiver_quartier) ); ?></dd>
 
                                         <dt>Longitude</dt>
                                         <dd><?php echo ucfirst( $commande->longitude ); ?></dd>
@@ -140,7 +140,7 @@
                                    </div>
                                    <div class="col-sm-7 info-product-container">
                                             <h5>Description de la commande : </h5>
-                                            <p class="quick-cmd-detail-descript"><?php echo $commande->description_commande; ?></p>
+                                            <p class="quick-cmd-detail-descript"><?php echo htmlspecialchars ($commande->description_commande); ?></p>
                                    </div>
                                 </div><!--end .col -->
                             </div><!--end .row -->

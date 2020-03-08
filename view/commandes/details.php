@@ -61,13 +61,13 @@
                                     <dl class="dl-horizontal detail-cmd-info">
                                         <dt class="text-left">Nom & Prénoms</dt>
                                         <?php
-                                            $client_prenom = ( isset( explode( ' ',$client->prenoms )[1] ) ) ? ucfirst( explode( ' ',$client->prenoms )[1] ) : '';
+                                            $client_prenom = ( isset( explode( ' ',htmlspecialchars($client->prenoms) )[1] ) ) ? ucfirst( explode( ' ',htmlspecialchars($client->prenoms) )[1] ) : '';
                                         ?>
-                                        <dd><?php echo ucfirst( $client->nom ).' '.ucfirst( explode( ' ',$client->prenoms )[0] ).' '.$client_prenom; ?></dd>
+                                        <dd><?php echo ucfirst( htmlspecialchars($client->nom) ).' '.ucfirst( explode( ' ',htmlspecialchars($client->prenoms) )[0] ).' '.$client_prenom; ?></dd>
                                         <dt>Téléphone</dt>
-                                        <dd><?php echo $client->tel; ?></dd>
+                                        <dd><?php echo htmlspecialchars($client->tel); ?></dd>
                                         <dt>E-Mail</dt>
-                                        <dd><?php echo $client->email; ?></dd>
+                                        <dd><?php echo htmlspecialchars($client->email); ?></dd>
 
                                     </dl>
                                 </div><!--end .col -->
@@ -77,18 +77,18 @@
                                     <dl class="dl-horizontal detail-cmd-info-shipping">
                                         <dt class="text-left">Nom Réceptionnaire</dt>
                                         <?php
-                                            $recept_prenom = ( isset( explode( ' ',$shipping->receiver_lastname )[1] ) ) ? ucfirst( explode( ' ',$shipping->receiver_lastname )[1] ) : '';
+                                            $recept_prenom = ( isset( explode( ' ',htmlspecialchars($shipping->receiver_lastname) )[1] ) ) ? ucfirst( explode( ' ',htmlspecialchars($shipping->receiver_lastname) )[1] ) : '';
                                         ?>
-                                        <dd><?php echo ucfirst( $shipping->receiver_name ).' '.ucfirst( explode( ' ',$shipping->receiver_lastname )[0] ).' '.$recept_prenom; ?></dd>
+                                        <dd><?php echo ucfirst( htmlspecialchars($shipping->receiver_name) ).' '.ucfirst( explode( ' ',htmlspecialchars($shipping->receiver_lastname) )[0] ).' '.htmlspecialchars($recept_prenom); ?></dd>
                                         <dt>Téléphone Réceptionnaire</dt>
-                                        <dd><?php echo $shipping->receiver_tel; ?></dd>
+                                        <dd><?php echo htmlspecialchars($shipping->receiver_tel); ?></dd>
                                         <dt>E-Mail Réceptionnaire</dt>
-                                        <dd><?php echo $shipping->receiver_email; ?></dd>
+                                        <dd><?php echo htmlspecialchars($shipping->receiver_email); ?></dd>
 
                                         <dt>Commune</dt>
-                                        <dd><?php echo ucfirst( $shipping->dest_commune ); ?></dd>
+                                        <dd><?php echo ucfirst( htmlspecialchars($shipping->dest_commune) ); ?></dd>
                                         <dt>Quartier</dt>
-                                        <dd><?php echo ucfirst( $shipping->receiver_quartier ); ?></dd>
+                                        <dd><?php echo ucfirst( htmlspecialchars($shipping->receiver_quartier) ); ?></dd>
 
                                         <dt>Longitude</dt>
                                         <dd><?php echo ucfirst( $shipping->longitude ); ?></dd>

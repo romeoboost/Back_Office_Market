@@ -270,11 +270,11 @@ nom&/prenoms&/client_id&/tel&/status&/sexe&'; ?>"
                                 <?php foreach ( $clients['liste'] as $client ): ?>
                                     <tr class="text-center <?php echo $client->token; ?>">
                                         <td class=""><?php echo $total_plus--; ?></td>
-                                        <td class="nom"><?php echo ucfirst( $client->nom ); ?> </td>
-                                        <td class="prenom"><?php echo ucfirst( $client->prenoms ); ?> </td>
+                                        <td class="nom"><?php echo ucfirst( htmlspecialchars ($client->nom) ); ?> </td>
+                                        <td class="prenom"><?php echo ucfirst( htmlspecialchars ($client->prenoms) ); ?> </td>
                                         <td class="token"><?php echo $client->token ?></td>
-                                        <td class=""><?php echo $client->tel ?></td>
-                                        <td class=""><?php echo $client->email ?></td>
+                                        <td class=""><?php echo htmlspecialchars ($client->tel) ?></td>
+                                        <td class=""><?php echo htmlspecialchars ($client->email) ?></td>
                                         <td  class="sexe"><?php echo ($client->sexe == 1) ? 'HOMME' : 'FEMME'; ?></td>
                                         <td  class="statut"><?php echo ($client->statut == 1) ? 'ACTIF' : 'NON ACTIF'; ?></td>
                                         <td><?php echo dateFormat($client->date_creation); ?></td>

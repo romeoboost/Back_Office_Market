@@ -321,8 +321,8 @@
                                 <?php foreach ( $commandes as $commande ): ?>
                                     <tr class="<?php echo $commande->cmd_id; ?>">
                                         <td class=""><?php echo $nbre_cmd_plus--; ?></td>
-                                        <td class=""><?php echo ucfirst( $commande->client_nom ).' '.ucfirst( explode( ' ',$commande->client_prenoms )[0] ); ?> </td>
-                                        <td class=""><?php echo $commande->client_tel ?></td>
+                                        <td class=""><?php echo ucfirst( htmlspecialchars ($commande->client_nom) ).' '.ucfirst( explode( ' ',htmlspecialchars ($commande->client_prenoms) )[0] ); ?> </td>
+                                        <td class=""><?php echo htmlspecialchars ($commande->client_tel) ?></td>
                                         <td data-list-montant-ht="<?php echo $commande->montant_ht ?>" class="montant_ht"><?php echo number_format($commande->montant_ht, 0, '', ' '); ?></td>
                                         <td data-list-frais-livraison="<?php echo $commande->frais_livraison ?>" class="frais_livraison"><?php echo number_format($commande->frais_livraison, 0, '', ' '); ?></td>
                                         <td data-list-montant-ttc="<?php echo $commande->montant_total ?>" class="montant_ttc"><?php echo number_format($commande->montant_total, 0, '', ' '); ?></td>

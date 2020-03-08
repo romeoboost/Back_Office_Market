@@ -54,8 +54,8 @@ if ($_POST) {
                 if($client->statut==1){ // verifie si le client est actif
                     $_SESSION['bo_user']['id'] = $client->id;
                     $_SESSION['bo_user']['token'] = $client->token;
-                    $_SESSION['bo_user']['nom'] = $client->nom;
-                    $_SESSION['bo_user']['prenoms'] = $client->prenoms;
+                    $_SESSION['bo_user']['nom'] = htmlspecialchars ($client->nom);
+                    $_SESSION['bo_user']['prenoms'] = htmlspecialchars ($client->prenoms);
                     $_SESSION['bo_user']['email'] = $client->email;
                     $_SESSION['bo_user']['tel'] = $client->tel;
                     $_SESSION['bo_user']['date_creation'] = $client->date_creation;

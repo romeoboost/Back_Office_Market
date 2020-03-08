@@ -80,24 +80,24 @@ function html_list_avis($elements, $offset ){
   $nbre_product_plus_offset = $elements['stat']['total']['nbre'] - $offset;
   foreach ($elements['liste'] as $element) {
     $isClient = ($element->id_c == 0) ? 'NON' : 'OUI' ;
-    $nom = ($element->id_c == 0) ? $element->nom_avis.' '.$element->prenoms_avis : $element->nom_client.' '.$element->prenoms_client;
-    $email = ($element->id_c == 0) ? $element->email_avis : $element->email_client;
+    $nom = ($element->id_c == 0) ? htmlspecialchars($element->nom_avis).' '.htmlspecialchars($element->prenoms_avis) : htmlspecialchars($element->nom_client).' '.htmlspecialchars($element->prenoms_client);
+    $email = ($element->id_c == 0) ? htmlspecialchars($element->email_avis) : htmlspecialchars($element->email_client);
     $reponse_admin_contenu = !empty($element->reponse_admin_contenu) ? "REPONSE ".$element->reponse_admin_contenu : '';
     $page_accueil = ($element->page_accueil == 0) ? 'NON' : 'OUI' ;
     $statut = ($element->statut == 0) ? 'EN ATTENTE' : 'REPONDU' ;
     $contenu = substr($element->contenu, 60) ; 
-    $contenu .= strlen($element->contenu) > 60 ? '...' : $element->contenu ;
+    $contenu .= strlen($element->contenu) > 60 ? '...' : htmlspecialchars($element->contenu) ;
 
     $html .= '<tr class="text-center '.$element->token.'">';
     $html .=    '<td>'.$nbre_product_plus_offset-- .'</td>';
     $html .=    '<td class="isClient" >'.$isClient .'</td>
-                <td class="Nom" >'.ucfirst($nom) .'</td>
-                <td class="Email" >'.$email .'</td>
-                <td class="Produit" >'.$element->produit .'</td>
+                <td class="Nom" >'.ucfirst(htmlspecialchars($nom)) .'</td>
+                <td class="Email" >'.htmlspecialchars($email) .'</td>
+                <td class="Produit" >'.$element->produit.'</td>
                 <td class="Contenu">
-                  '.$contenu .'
+                  '.htmlspecialchars($contenu) .'
                 </td>
-                <td class="isHome" >'.$page_accueil .'</td>
+                <td class="isHome" >'.$page_accueil.'</td>
                 <td class="statut" >'.$statut .'</td>
                 <td class="date_debut">'.dateFormat($element->date_creation).'</td>
                 <td class="">';
@@ -406,11 +406,11 @@ function html_list_clients($pdo, $clients, $nombre_total_produit, $offset){
   foreach ($clients as $client) {
     $html .= '<tr class="text-center '.$client->token.'">';
     $html .=    '<td>'.$nbre_product_plus_offset--.'</td>';
-    $html .=    '<td class="nom">'.ucfirst( $client->nom ).'</td>';
-    $html .=    '<td class="prenom">'.ucfirst( $client->prenoms ).' </td>';
+    $html .=    '<td class="nom">'.ucfirst( htmlspecialchars ($client->nom) ).'</td>';
+    $html .=    '<td class="prenom">'.ucfirst( htmlspecialchars ($client->prenoms) ).' </td>';
     $html .=    '<td class="token">'.$client->token.' </td>';
-    $html .=    '<td class="">'.$client->tel.' </td>';
-    $html .=    '<td class="">'.$client->email .'</td>';
+    $html .=    '<td class="">'.htmlspecialchars ($client->tel).' </td>';
+    $html .=    '<td class="">'.htmlspecialchars ($client->email) .'</td>';
     $sexe =     ($client->sexe == 1) ? 'HOMME' : 'FEMME';
     $html .=    '<td  class="sexe">'.$sexe.'</td>';
     $statut =   ($client->statut == 1) ? 'ACTIF' : 'NON ACTIF';
@@ -855,8 +855,8 @@ function html_list_quick_cmd( $commandes, $nombre_total_cmd, $offset){
   foreach ($commandes as $commande) {
     $html .= '<tr class="'.$commande->cmd_id.'">';
     $html .=    '<td>'.$nbre_cmd_plus_offset--.'</td>';
-    $html .=    '<td> '.ucfirst( $commande->client_nom ).' '.ucfirst( explode( ' ',$commande->client_prenoms )[0] ).' </td>';
-    $html .=    '<td class="cmd_id"> '.$commande->client_tel.' </td>';
+    $html .=    '<td> '.ucfirst( htmlspecialchars($commande->client_nom) ).' '.ucfirst( explode( ' ',htmlspecialchars($commande->client_prenoms) )[0] ).' </td>';
+    $html .=    '<td class="cmd_id"> '.htmlspecialchars($commande->client_tel).' </td>';
     $html .=    '<td data-list-montant-ht="'.$commande->montant_ht.'" class="montant_ht"> '.number_format($commande->montant_ht, 0, '', ' ').' </td>';
     $html .=    '<td data-list-frais-livraison="'.$commande->frais_livraison.'" class="frais_livraison"> '.number_format($commande->frais_livraison, 0, '', ' ').' </td>';
     $html .=    '<td data-list-montant-ttc="'.$commande->montant_total.'" class="montant_ttc"> '.number_format($commande->montant_total, 0, '', ' ').' </td>';
@@ -899,7 +899,7 @@ function html_list_cmd( $commandes, $nombre_total_cmd, $offset){
   foreach ($commandes as $commande) {
     $html .= '<tr class="'.$commande->cmd_id.'">';
     $html .=    '<td>'.$nbre_cmd_plus_offset--.'</td>';
-    $html .=    '<td> '.ucfirst( $commande->client_nom ).' '.ucfirst( explode( ' ',$commande->client_prenoms )[0] ).' </td>';
+    $html .=    '<td> '.ucfirst( htmlspecialchars($commande->client_nom) ).' '.ucfirst( explode( ' ',htmlspecialchars($commande->client_prenoms) )[0] ).' </td>';
     $html .=    '<td> '.$commande->client_id.' </td>';
     $html .=    '<td data-list-montant-ht="'.$commande->montant_ht.'" class="montant_ht"> '.number_format($commande->montant_ht, 0, '', ' ').' </td>';
     $html .=    '<td data-list-frais-livraison="'.$commande->frais_livraison.'" class="frais_livraison"> '.number_format($commande->frais_livraison, 0, '', ' ').' </td>';

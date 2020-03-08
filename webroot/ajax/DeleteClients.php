@@ -79,7 +79,7 @@ if( !isset($_POST) || empty($_POST) || !isset($_POST['client_id']) || !isset($_P
             $retour['enregistrement'] = 'oui';
 
             $error_text = ' Succes ! ';
-            $error_text_second = "Le client ".ucfirst( $client->nom )." ".ucfirst( $client->prenoms )." a été supprimé. ";
+            $error_text_second = "Le client ".ucfirst( htmlspecialchars($client->nom) )." ".ucfirst( htmlspecialchars($client->prenoms) )." a été supprimé. ";
 
         }
   

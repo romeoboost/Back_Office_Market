@@ -23,13 +23,13 @@
                                         <div class="clearfix">
                                             <div class="pull-left product-libelle"> NOM : </div>
                                             <div class="pull-right product-info"> 
-                                                <b><?php echo ucfirst( $client->nom ); ?> </b>
+                                                <b><?php echo ucfirst( htmlspecialchars ($client->nom) ); ?> </b>
                                              </div>
                                         </div>
                                         <div class="clearfix">
                                             <div class="pull-left product-libelle"> PRENOMS : </div>
                                             <div class="pull-right product-info"> 
-                                                <b><?php echo ucfirst( $client->prenoms ); ?></b>
+                                                <b><?php echo ucfirst( htmlspecialchars ($client->prenoms) ); ?></b>
                                             </div>
                                         </div>
                                         <div class="clearfix">
@@ -41,7 +41,7 @@
                                         <div class="clearfix">
                                             <div class="pull-left product-libelle"> Téléphone : </div>
                                             <div class="pull-right product-info"> 
-                                                <b> <?php echo $client->tel; ?> </b>
+                                                <b> <?php echo htmlspecialchars($client->tel); ?> </b>
                                             </div>
                                         </div>
                                     </div>
@@ -49,7 +49,7 @@
                                         <div class="clearfix">
                                             <div class="pull-left product-libelle"> Téléphone : </div>
                                             <div class="pull-right product-info"> 
-                                                <b> <?php echo $client->email; ?> </b>
+                                                <b> <?php echo htmlspecialchars ($client->email); ?> </b>
                                             </div>
                                         </div>
                                         <div class="clearfix">

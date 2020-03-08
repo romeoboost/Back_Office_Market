@@ -77,13 +77,13 @@ class ClientsController extends Controller {
         $i++;
 
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A' . $i, $nbre_cmd_plus-- );
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B' . $i, ucfirst( $client->nom ) );
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C' . $i, ucfirst( $client->prenoms ) );
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B' . $i, ucfirst( htmlspecialchars ($client->nom) ) );
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C' . $i, ucfirst( htmlspecialchars ($client->prenoms) ) );
 
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . $i, $client->token );
         
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E' . $i, "'".$client->tel );
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F' . $i, $client->email );
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F' . $i, htmlspecialchars ($client->email) );
         $sexe = ($client->sexe == 1) ? 'HOMME' : 'FEMME';
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G' . $i, $sexe );
         $statut = ($client->statut == 1) ? 'ACTIF' : 'NON ACTIF';

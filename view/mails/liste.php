@@ -57,14 +57,14 @@
                                             <?php echo ($element->token == $element_focus->token) ? 'focus' : '' ;?>">
 
                                             <div class="stick-top-left small-padding"><i class="fa fa-dot-circle-o text-<?php echo ($element->statut == 0) ? 'info' : 'success' ; ?>"></i></div>
-                                            <?php $nom = ($element->id_c == 0) ? $element->nom_prenoms_messages : $element->nom_client.' '.$element->prenoms_client; ?>
+                                            <?php $nom = ($element->id_c == 0) ? htmlspecialchars($element->nom_prenoms_messages) : htmlspecialchars($element->nom_client).' '.htmlspecialchars($element->prenoms_client); ?>
                                             <h5> <?php echo ucfirst($nom); ?> <small>(<?php echo ($element->id_c == 0) ? 'NON CLIENT' : 'CLIENT' ; ?>)</small></h5>
-                                            <?php $objet = (trim($element->objet) == '') ? 'SANS OBJET' : $element->objet; //var_dump($element->objet); ?>
+                                            <?php $objet = (trim($element->objet) == '') ? 'SANS OBJET' : htmlspecialchars($element->objet); //var_dump($element->objet); ?>
 
                                             <h4><?php echo $objet; ?></h4>
                                             
                                             <p class="hidden-xs hidden-sm">
-                                                <?php echo substr($element->contenu, 60) ; echo strlen($element->contenu) > 60 ? '...' : $element->contenu ;?>
+                                                <?php echo substr(htmlspecialchars($element->contenu), 60) ; echo strlen(htmlspecialchars($element->contenu)) > 60 ? '...' : htmlspecialchars($element->contenu) ;?>
                                             </p>
                                             <div class="stick-top-right small-padding text-default-light text-sm"><?php echo dateFormat($element->date_creation); ?></div>
                                             <div class="stick-bottom-right small-padding ">

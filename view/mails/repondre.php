@@ -59,14 +59,14 @@
                                             <?php echo ($element->token == $element_focus->token) ? 'focus' : '' ;?>">
 
                                             <div class="stick-top-left small-padding"><i class="fa fa-dot-circle-o text-<?php echo ($element->statut == 0) ? 'info' : 'success' ; ?>"></i></div>
-                                            <?php $nom = ($element->id_c == 0) ? $element->nom_prenoms_messages : $element->nom_client.' '.$element->prenoms_client; ?>
+                                            <?php $nom = ($element->id_c == 0) ? $element->nom_prenoms_messages : htmlspecialchars($element->nom_client).' '.htmlspecialchars($element->prenoms_client); ?>
                                             <h5> <?php echo ucfirst($nom); ?> <small>(<?php echo ($element->id_c == 0) ? 'NON CLIENT' : 'CLIENT' ; ?>)</small></h5>
-                                            <?php $objet = (trim($element->objet) == '') ? 'SANS OBJET' : $element->objet; //var_dump($element->objet); ?>
+                                            <?php $objet = (trim($element->objet) == '') ? 'SANS OBJET' : htmlspecialchars($element->objet); //var_dump($element->objet); ?>
 
                                             <h4><?php echo $objet; ?></h4>
                                             
                                             <p class="hidden-xs hidden-sm">
-                                                <?php echo substr($element->contenu, 60) ; echo strlen($element->contenu) > 60 ? '...' : $element->contenu ;?>
+                                                <?php echo substr(htmlspecialchars($element->contenu), 60) ; echo strlen(htmlspecialchars($element->contenu)) > 60 ? '...' : htmlspecialchars($element->contenu) ;?>
                                             </p>
                                             <div class="stick-top-right small-padding text-default-light text-sm"><?php echo dateFormat($element->date_creation); ?></div>
                                             <div class="stick-bottom-right small-padding ">
@@ -91,13 +91,13 @@
                                 <h3>REPONDRE</h3>
                                     <form class="form formulaire_repondre_mail" id="formCompose">
                                         <div class="form-group floating-label">
-                                            <?php $email = ($element->id_c == 0) ? $element->email_messages : $element->email_client; ?>
-                                            <input type="email" class="form-control" id="to" name="to" value="<?php echo $email; ?>">
+                                            <?php $email = ($element->id_c == 0) ? $element->email_messages : htmlspecialchars($element->email_client); ?>
+                                            <input type="email" class="form-control" id="to" name="to" value="<?php echo htmlspecialchars($email); ?>">
                                             <label for="to1">À</label>
                                         </div><!--end .form-group -->
                                         <div class="form-group floating-label">
-                                            <?php $objet = (trim($element->objet) == '') ? 'SANS OBJET' : $element->objet; ?>
-                                            <input type="text" class="form-control" id="Subject" name="Subject"  value="Re: <?php echo $objet ?>">
+                                            <?php $objet = (trim($element->objet) == '') ? 'SANS OBJET' : htmlspecialchars($element->objet); ?>
+                                            <input type="text" class="form-control" id="Subject" name="Subject"  value="Re: <?php echo htmlspecialchars($objet) ?>">
                                             <label for="Subject">Objet</label>
                                         </div><!--end .form-group -->
                                         <div class="form-group">
@@ -106,13 +106,13 @@
                                                     <hr/>
                                                     <div style="background-color: #c7d0d0; padding: 5px;">
                                                         <p>
-                                                            <?php $nom = ($element->id_c == 0) ? $element->nom_prenoms_messages : $element->nom_client.' '.$element->prenoms_client; ?>
-                                                            <strong>De:</strong> <?php echo ucfirst($nom) ?> [ <?php echo $email; ?> ] <br/>
+                                                            <?php $nom = ($element->id_c == 0) ? $element->nom_prenoms_messages : htmlspecialchars($element->nom_client).' '.htmlspecialchars($element->prenoms_client); ?>
+                                                            <strong>De:</strong> <?php echo ucfirst($nom) ?> [ <?php echo htmlspecialchars($email); ?> ] <br/>
                                                             <strong>Date:</strong>  <?php echo dateFormat($element->date_creation) ?> ‎‎<br/>
                                                             <strong>À:</strong>  <?php echo APPLI_NAME ?>
                                                         </p>
                                                         <p>
-                                                            <?php echo $element->contenu ?>
+                                                            <?php echo htmlspecialchars($element->contenu) ?>
                                                         </p>
                                                     </div>
                                             </textarea>

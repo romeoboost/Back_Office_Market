@@ -719,8 +719,8 @@ function html_list_product($pdo, $produits, $nombre_total_produit, $offset){
     $html .=    '<td> <img class="img-circle width-1" src="'.WEBROOT_URL_FRONT.'images/shop/'.$produit->image.'.jpg?1422538624" alt="" /> </td>';
     $html .=    '<td class="name_product"> '.ucfirst( $produit->nom_produit ).' </td>';
     $html .=    '<td> '.ucfirst( $produit->categorie ).' </td>';
-    $html .=    '<td class="stock_product"> '.number_format($produit->stock, 0, '', ' ').' </td>';
-    $html .=    '<td class=""> '.number_format($produit->qtite_unit, 0, '', ' ').' </td>';
+    $html .=    '<td class="stock_product"> '.$produit->stock.' </td>';
+    $html .=    '<td class=""> '.$produit->qtite_unit.' </td>';
     $html .=    '<td class=""> '.ucfirst( $unit_mesure[$produit->unite] ).' </td>';
     $html .=    '<td> '.number_format($produit->prix_qtite_unit, 0, '', ' ').' </td>';
     $promo = ($produit->ispromo == 1) ? 'OUI' : 'NON';

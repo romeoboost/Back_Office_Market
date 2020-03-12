@@ -164,7 +164,7 @@
                                                     <td class="text-center" data-label="Unité de mésure"><?php echo $unites[$produit->id_unite]; ?></td>
                                                     <td class="text-center" data-label="Prix quantitié unitaire"><?php echo number_format( $produit->prix_qtte_unitaire_cmd, 0, '', ' ') ; ?></td>
                                                     <td class="text-center" data-label="Quantité totale">
-                                                        <?php echo number_format( $produit->nbre_cmd*$produit->qtte_unitaire_cmd, 0, '', ' ') ; ?>
+                                                        <?php echo $produit->nbre_cmd*$produit->qtte_unitaire_cmd; ?>
                                                     </td>
                                                     <td class="text-center" data-label="Prix total">
                                                         <?php 

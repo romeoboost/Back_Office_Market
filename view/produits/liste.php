@@ -327,8 +327,8 @@
                                     <td><img class="img-circle width-1" src="<?php echo WEBROOT_URL_FRONT.'images/shop/'.$produit->image; ?>.jpg?1422538624" alt="" /></td>
                                     <td class="name_product" ><?php echo ucfirst( $produit->nom_produit ); ?></td>
                                     <td><?php echo ucfirst( $produit->categorie ); ?></td>
-                                    <td class="stock_product"><?php echo number_format($produit->stock, 0, '', ' '); ?></td>
-                                    <td><?php echo number_format($produit->qtite_unit, 0, '', ' '); ?></td>
+                                    <td class="stock_product"><?php echo $produit->stock; ?></td>
+                                    <td><?php echo $produit->qtite_unit ?></td>
                                     <td><?php echo ucfirst( $unit_mesure[$produit->unite] ); ?></td>
                                     <td><?php echo number_format($produit->prix_qtite_unit, 0, '', ' '); ?></td>
                                     <td><?php echo ($produit->ispromo == 1) ? 'OUI' : 'NON'; ?></td>

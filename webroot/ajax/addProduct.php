@@ -74,7 +74,8 @@ if ($_POST) {
                 $page_home = ( strlen( $page_home ) == 0 ) ? 0 : intval( $page_home ) ;
                 $amount_product = intval( $amount_product );
                 $status_product = ( strlen( $status_product ) == 0 ) ? 0 : intval( $status_product ) ;
-                $unit_qtt_sold = intval( $unit_qtt_sold );
+                $unit_qtt_sold = str_replace(',', '.', trim($unit_qtt_sold)); 
+                $unit_qtt_sold = floatval( $unit_qtt_sold );
                 $unit_mesure = ( strlen( $unit_mesure ) == 0 ) ? 0 : intval( $unit_mesure ) ;
                 $promo_product = ( strlen( $promo_product ) == 0 ) ? 0 : intval( $promo_product ) ;
                 $percent_promo_product = intval( $percent_promo_product );

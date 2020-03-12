@@ -88,7 +88,8 @@ if ($_POST) {
 
                 $name_produit = intval($name_produit);
                 $name_supplier = intval($name_supplier);
-                $qtte = intval($qtte);
+                $qtte = str_replace(',', '.', trim($qtte));
+                $qtte = floatval($qtte);
                 $montant = intval($montant);
                 $frais = intval($frais);
                 $montant_ttc = intval($montant_ttc);

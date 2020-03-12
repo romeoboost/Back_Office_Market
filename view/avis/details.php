@@ -16,9 +16,9 @@
                             <div class="list-group list-gray">
                                 <div href="inbox" class="list-group-item">
                                     <h5>Commentaire de l'utilisateur (<b><?php echo ($element->id_c == 0) ? 'NON CLIENT' : 'CLIENT' ; ?></b>)</h5>
-                                    <?php $nom = ($element->id_c == 0) ? $element->nom_avis.' '.$element->prenoms_avis : $element->nom_client.' '.$element->prenoms_client; ?>
-                                    <?php $email = ($element->id_c == 0) ? $element->email_avis : $element->email_client; ?>
-                                    <h4><?php echo ucwords( $nom ) ; ?><span> / <?php echo $email; ?></span></h4>
+                                    <?php $nom = ($element->id_c == 0) ? htmlspecialchars($element->nom_avis).' '.htmlspecialchars($element->prenoms_avis) : htmlspecialchars($element->nom_client).' '.htmlspecialchars($element->prenoms_client); ?>
+                                    <?php $email = ($element->id_c == 0) ? htmlspecialchars($element->email_avis) : htmlspecialchars($element->email_client); ?>
+                                    <h4><?php echo ucwords( htmlspecialchars($nom) ) ; ?><span> / <?php echo htmlspecialchars($email); ?></span></h4>
                                     <p class="hidden-xs hidden-sm">
                                         <?php echo $element->contenu  ; ?>
                                     </p>

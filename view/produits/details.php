@@ -58,7 +58,7 @@
                                         <div class="clearfix">
                                             <div class="pull-left product-libelle"> STOCK RESTANT : </div>
                                             <div class="pull-right product-info"> 
-                                                <b><?php echo number_format($produit->stock, 0, '', ' '); ?></b>
+                                                <b><?php echo $produit->stock; ?></b>
                                              </div>
                                         </div>
                                         <div class="clearfix">
@@ -73,7 +73,7 @@
                                             <div class="clearfix">
                                                 <div class="pull-left product-libelle">QUANTITE UNITAIRE VENDUE : </div>
                                                 <div class="pull-right product-info"> 
-                                                    <b> <?php echo number_format($produit->qtite_unit, 0, '', ' '); ?> </b>
+                                                    <b> <?php echo $produit->qtite_unit; ?> </b>
                                                 </div>
                                             </div>
                                             <div class="clearfix">
@@ -177,7 +177,7 @@
                                             <?php endforeach; ?>
                                         </tbody>
                                     </table>
-                                </div><!--end .col -->
+                                </div><!--end .col , 0, '', ' '); -->
                             </div><!--end .row -->
                     </div><!--end .card -->
                 </div><!--end .col -->

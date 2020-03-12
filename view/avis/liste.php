@@ -234,13 +234,13 @@
                                 <tr class="text-center <?php echo $element->token; ?>">
                                     <td><?php echo $nbre_cmd_plus--; ?></td>
                                     <td class="isClient" ><?php echo ($element->id_c == 0) ? 'NON' : 'OUI' ; ?></td>
-                                    <?php $nom = ($element->id_c == 0) ? $element->nom_avis.' '.$element->prenoms_avis : $element->nom_client.' '.$element->prenoms_client; ?>
-                                    <td class="Nom" ><?php echo ucfirst($nom); ?></td>
-                                    <?php $email = ($element->id_c == 0) ? $element->email_avis : $element->email_client; ?>
-                                    <td class="Email" ><?php echo $email; ?></td>
+                                    <?php $nom = ($element->id_c == 0) ? htmlspecialchars($element->nom_avis).' '.htmlspecialchars($element->prenoms_avis) : htmlspecialchars($element->nom_client).' '.htmlspecialchars($element->prenoms_client); ?>
+                                    <td class="Nom" ><?php echo ucfirst(htmlspecialchars($nom)); ?></td>
+                                    <?php $email = ($element->id_c == 0) ? htmlspecialchars($element->email_avis) : htmlspecialchars($element->email_client); ?>
+                                    <td class="Email" ><?php echo htmlspecialchars($email); ?></td>
                                     <td class="Produit" ><?php echo $element->produit; ?></td>
                                     <td class="contenu" >
-                                        <?php echo substr($element->contenu, 60) ; echo strlen($element->contenu) > 60 ? '...' : $element->contenu ;?>
+                                        <?php echo substr($element->contenu, 60) ; echo strlen(htmlspecialchars($element->contenu)) > 60 ? '...' : htmlspecialchars($element->contenu) ;?>
                                     </td>
                                     <td class="isHome" ><?php echo ($element->page_accueil == 0) ? 'NON' : 'OUI' ; ?></td>
                                     <td class="status">

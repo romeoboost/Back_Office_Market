@@ -79,7 +79,8 @@ if ($_POST) {
                 $unit_mesure = ( strlen( $unit_mesure ) == 0 ) ? 0 : intval( $unit_mesure ) ;
                 $promo_product = ( strlen( $promo_product ) == 0 ) ? 0 : intval( $promo_product ) ;
                 $percent_promo_product = intval( $percent_promo_product );
-                $descript_product = trim( $descript_product );
+                // $descript_product = trim( $descript_product );
+                $descript_product = nl2br(stripslashes(strip_tags($descript_product)));
 
 
                 // $req = $pdo->prepare('SELECT id as nbre FROM produits order by id desc limit 0,1 '); 

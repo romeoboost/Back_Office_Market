@@ -75,7 +75,7 @@ if ($_POST) {
 
             }
 
-            //verifie si c'est ok pour l'image
+            //verifie si c'est ok pour l'image 
             if( $image_good ){//si image ok
                 
                 //attribut les valeur par defaut au champs qui ne sont pas obligatoire
@@ -89,7 +89,8 @@ if ($_POST) {
                 $unit_mesure = ( strlen( $unit_mesure ) == 0 ) ? 0 : intval( $unit_mesure ) ;
                 $promo_product = ( strlen( $promo_product ) == 0 ) ? 0 : intval( $promo_product ) ;
                 $percent_promo_product = intval( $percent_promo_product );
-                $descript_product = trim( $descript_product );
+                // $descript_product = trim( $descript_product );
+                $descript_product = nl2br(stripslashes(strip_tags($descript_product)));
 
                 $req = $pdo->prepare('SELECT COUNT(id) as nbre FROM produits '); 
                 $req->execute(array());

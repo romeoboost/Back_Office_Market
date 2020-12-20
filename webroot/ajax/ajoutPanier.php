@@ -1,13 +1,11 @@
 <?php
 include 'connectDB.php';
 include 'fonction.php';
-define('WEBROOT_URL', 'http://localhost/Market/webroot/');
-define('SITE_BASE_URL', 'http://localhost/Market/');
 if (empty(session_id())) {
     session_start();
     //$_SESSION['menu'] = 'Nous_Rejoindre';
 }
-//debugger($_SESSION);
+// debugger($_SESSION);
 $error_statut = false;
 $error_text = '';
 $error_text_second = '';
@@ -25,7 +23,7 @@ if(!isset($_POST) || empty($_POST) ){
   $error_text = "Oups, Erreur !";
   $error_text_second = 'Veuillez ne pas modifier la page';
 }else{
-  //debugger($_POST);
+  // debugger($_POST);
   extract($_POST);
   if( !isset($tokenProduit) || !isset($nbreProduit) ) //verifie si tous les champs existent
   {
@@ -55,10 +53,10 @@ if(!isset($_POST) || empty($_POST) ){
         produits.quantite_unitaire as qtite_unit,
         produits.id_unite as unite, produits.prix_quantite_unitaire as prix_qtite_unit, produits.slug as slug,produits.nouveau as isnew,
         produits.promo as ispromo, produits.pourcentage_promo as percent_promo, produits.stock AS stock,
-        produits.image as image, categories_produits.nom AS categorie, tailles.nom AS taille
+        produits.image as image, categories_produits.nom AS categorie
         FROM produits
         INNER JOIN categories_produits ON produits.id_categorie_produit=categories_produits.id
-        INNER JOIN tailles ON produits.id_taille=tailles.id ";
+        ";
 
         $sql_liste.="WHERE produits.token =:token ";
         $conditions_prepare[':token']=$tokenProduit;
@@ -67,7 +65,7 @@ if(!isset($_POST) || empty($_POST) ){
         $req->execute($conditions_prepare);
 
         $produit = current($req->fetchAll(PDO::FETCH_OBJ));
-        //debugger($produit);
+        // debugger($produit);
 
         //recupere le tableau des unites
         $sql_unite="SELECT id,libelle,symbole FROM unites";
@@ -86,6 +84,8 @@ if(!isset($_POST) || empty($_POST) ){
           $error_text_second = "ce produit n'est pas disponible.";
         }else{
 
+          // debugger('Nombre de produit : '. $nbreProduit);
+
           $New_Nbre = $nbreProduit;
           if( isset($_SESSION['cart']['products_list'][$produit->token_produit]['qtite_cart']) ){
             $New_Nbre += $_SESSION['cart']['products_list'][$produit->token_produit]['qtite_cart'];
@@ -99,7 +99,7 @@ if(!isset($_POST) || empty($_POST) ){
             $error_text_second = ($produit->stock > 0 ) ? "Désolé il ne reste que ".$produit->stock." ".$symbole_unite." pour le produit ".$produit->nom_produit :  $error_text_second;
             //debugger($error_text);
           }else{ // y en a en stock et donc on ajoute au panier
-            //debugger($produit);
+            // debugger('Produit disponible en stock');
 
             $newInCart=true;
             $Iscartempty=true;
@@ -124,15 +124,15 @@ if(!isset($_POST) || empty($_POST) ){
               //On defini dans la session la destination de livraison
               $_SESSION['cart']['shipping_dest']['token'] = $destination->token;
               $_SESSION['cart']['shipping_dest']['commune'] = $destination->commune;
-              $_SESSION['cart']['shipping_dest']['frais'] = $destination->frais;
+              // $_SESSION['cart']['shipping_dest']['frais'] = $destination->frais;
 
               // On ajoute le premier produit
               $_SESSION['cart']['products_list'][$produit->token_produit]['nom'] = ucfirst($produit->nom_produit);
               $_SESSION['cart']['products_list'][$produit->token_produit]['qtite_unit'] = $produit->qtite_unit;
               $_SESSION['cart']['products_list'][$produit->token_produit]['symbole_unite'] = $symbole_unite;
               $_SESSION['cart']['products_list'][$produit->token_produit]['qtite_unit'] = $produit->qtite_unit;
-              $_SESSION['cart']['products_list'][$produit->token_produit]['link_to_image'] = WEBROOT_URL.'images/shop/thumb/'.$produit->image.'.jpg';
-              $_SESSION['cart']['products_list'][$produit->token_produit]['link_to_details'] = SITE_BASE_URL.'produit/details/'.$produit->slug;
+              $_SESSION['cart']['products_list'][$produit->token_produit]['link_to_image'] = WEBROOT_URL_FRONT.'images/shop/thumb/'.$produit->image.'.jpg';
+              $_SESSION['cart']['products_list'][$produit->token_produit]['link_to_details'] = SITE_BASE_URL.'commandes/details_produit/'.$produit->slug;
               $_SESSION['cart']['products_list'][$produit->token_produit]['prix_qtite_unit'] = $prix_produit;
 
               $_SESSION['cart']['products_list'][$produit->token_produit]['qtite_cart'] = $nbreProduit;
@@ -155,14 +155,12 @@ if(!isset($_POST) || empty($_POST) ){
                 $_SESSION['cart']['products_list'][$produit->token_produit]['qtite_unit'] = $prix_produit;
                 $_SESSION['cart']['products_list'][$produit->token_produit]['symbole_unite'] = $symbole_unite;
                 $_SESSION['cart']['products_list'][$produit->token_produit]['qtite_unit'] = $produit->qtite_unit;
-                $_SESSION['cart']['products_list'][$produit->token_produit]['link_to_image'] = WEBROOT_URL.'images/shop/thumb/'.$produit->image.'.jpg';
-                $_SESSION['cart']['products_list'][$produit->token_produit]['link_to_details'] = SITE_BASE_URL.'produit/details/'.$produit->slug;
+                $_SESSION['cart']['products_list'][$produit->token_produit]['link_to_image'] = WEBROOT_URL_FRONT.'images/shop/thumb/'.$produit->image.'.jpg';
+                $_SESSION['cart']['products_list'][$produit->token_produit]['link_to_details'] = SITE_BASE_URL.'commandes/details_produit/'.$produit->slug;
                 $_SESSION['cart']['products_list'][$produit->token_produit]['prix_qtite_unit'] = $prix_produit;
 
                 $_SESSION['cart']['products_list'][$produit->token_produit]['qtite_cart'] = $nbreProduit;
                 $_SESSION['cart']['products_list'][$produit->token_produit]['price_cart'] = $prix_produit*$nbreProduit;
-
-
 
               }else{ // produit existe deja dans le panier 
                 $newInCart=false;
@@ -185,7 +183,11 @@ if(!isset($_POST) || empty($_POST) ){
 
             $retour['cart']['IsEmpty'] = $Iscartempty;
             $retour['cart']['total_amount'] = $_SESSION['cart']['total_amount'];
-            $retour['cart']['total_nbre'] = $_SESSION['cart']['total_nbre']; 
+            $retour['cart']['total_nbre'] = $_SESSION['cart']['total_nbre'];
+
+            $_SESSION['cart']['shipping_dest']['frais'] = getFees($pdo, $_SESSION['cart']['total_amount']);
+
+            $retour['cart']['shipping_dest'] = $_SESSION['cart']['shipping_dest'];
 
             $error_text = 'Produit ajouté avec succès.';
             $error_text_second = 'Dépechez vous de commander !';     
@@ -223,71 +225,4 @@ if ($error_statut) {
 $retour_json = json_encode($retour);
 
 echo $retour_json;
-
-
-// <div class="alert alert-warning alert-dismissible fade show" role="alert">
-//   <strong>Holy guacamole!</strong> You should check in on some of those fields below.
-//   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-// </div>
-
-// CL20180300033
-  // structure numero de membre
-  // AM AAAA MM NUMERO CI
-  //EX : AM20180300001CI
-
-
-/*
-<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-#membre#
-
-id
-nom
-prenom
-date_naissance
-id_pays
-id_metier
-email
-tel
-password
-date_creation
-date_modification
-statut
-id_user
-carte_membre
-photo
-numero_membre
-id_poste
-
-------------------------------------------------
-
-#paiement#
-id
-id_membre
-order_id
-jwt
-currency
-transaction_amount
-statut_id
-transaction_id
-paid_transaction_amount
-paid_currency
-change_rate
-onflictual_transaction_amount
-conflictual_currency
-wallet
-*/
-
-
-
-/*
-[operation_token] => hgdsttdf-b845-78c9-4hg7-74mpoef114ui
-    [order] => 
-    [jwt] => 
-    [currency] => XOF
-    [transaction_amount] =>
-
-*/
-
-
-
 

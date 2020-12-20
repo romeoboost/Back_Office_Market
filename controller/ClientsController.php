@@ -1,5 +1,36 @@
 <?php
 class ClientsController extends Controller {
+
+    public function ajouter()
+    {
+      conf::redir();
+      $this->loadmodel('Clients');
+      $_SESSION['bo_menu'] = 'Clients';
+      $_SESSION['bo_sub_menu'] = 'Clients';
+      $d = array();
+
+      $this->set($d);
+    }
+
+    public function modifier( $token ){
+      conf::redir();
+      $this->loadmodel('Clients');
+      $_SESSION['bo_menu'] = 'Clients';  $_SESSION['bo_sub_menu'] = 'Clients';
+      $d['token'] = $token;
+      if( !isset($token) || empty($token) ){
+        header('Location: '.BASE_URL.DS.'clients/liste');
+      }else{
+        //recupere les informations de la categorie
+        $d['client'] = current( $this->Clients->find( array( 'condition' => 'token = "'.$token.'"' ), 'clients') );
+
+        if( empty($d['client']) ){ //verifie que la categorie existe
+          header('Location: '.BASE_URL.DS.'clients/liste'); // renvoi vers liste de categorie si la categorie n'existe pas
+        }
+
+      }
+      // debug($d);
+      $this->set($d);
+    }
     
     public function liste(){
       conf::redir();
@@ -8,28 +39,44 @@ class ClientsController extends Controller {
       $_SESSION['bo_sub_menu'] = 'Clients';
       $d['numero_page_encours']=1;
       //Total clients
-      $total = $this->Clients->findCountAll('clients');
+      $d['clients']['total'] = $this->Clients->findCountAll('clients');
 
-      ///total clients non actifs
-      $non_actifs = $this->Clients->findCount( array( 'statut' => 0 ),'clients' );
+      ///total clients grossiste
+      $d['clients']['grossistes'] = $this->Clients->findCount( array( 'type_client' => 2 ),'clients' );
 
-      //total clients actifs
-      $actifs = $this->Clients->findCount( array( 'statut' => 1 ),'clients' );     
+      ///total clients demi_grossistes
+      $d['clients']['demi_grossistes'] = $this->Clients->findCount( array( 'type_client' => 1 ),'clients' );
 
-      $d['clients']['non_actifs'] = $non_actifs;
-      $d['clients']['actifs'] = $actifs;
-      $d['clients']['total'] = $total;
+      //total clients detaillants
+      $d['clients']['detaillants'] = $this->Clients->findCount( array( 'type_client' => 0 ),'clients' );     
+      
+      //total clients exchange
+      $d['clients']['exchanges'] = $this->Clients->findCount( array( 'type_client' => 3 ),'clients' );     
 
-      $d['nombre_pages']=ceil( $total / 10 );
+      $d['nombre_pages']=ceil( $d['clients']['total'] / 10 );
       
       //Liste des clients
       $d['clients']['liste'] = $this->Clients->find(array(
             'order' => array('champs' => 'id','param' => 'DESC'), //
             'limit' => '0,10'
-            ),'clients');
+          ),'clients');
       
       // debug($d);
       $this->set($d);
+    }
+    
+    public function getListe(){
+      conf::redir();
+      $this->loadmodel('Clients');  
+      
+      //Liste des clients
+      $d['clients']['liste'] = $this->Clients->find(array(
+            'order' => array('champs' => 'id','param' => 'DESC'), //
+            'limit' => '0,10'
+      ),'clients');
+      
+      // debug($d);
+      return $d['clients']['liste'];
     } 
 
 

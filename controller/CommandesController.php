@@ -57,6 +57,215 @@ class CommandesController extends Controller {
       $this->set($d);
     }
 
+    public function liste_to_validation(){
+      conf::redir();
+      $this->loadmodel('Commandes');
+      $_SESSION['bo_menu'] = 'Commandes';
+
+      //EN ATTENTE
+      $d['total_cmd_pending']['montant'] = $this->Commandes->findSum( array( 'statut' => 0 ),'montant_ht','commandes' );
+      $d['total_cmd_pending']['nbre'] = $this->Commandes->findCount( array( 'statut' => 0 ),'commandes' );
+
+      //Commandes list
+      
+      $d['commandes'] = $this->Commandes->findJoin( array(
+            'fieldsmain' => array('montant_ht AS montant_ht','frais_livraison AS frais_livraison','montant_total AS montant_total',
+                  'token as cmd_id', 'statut as cmd_statut', 'date_creation AS cmd_date_creation'),
+            'fieldstwo' => array('token AS client_id',' nom as client_nom ',' prenoms as client_prenoms '),
+            'fields' => array(  array( 'main' => 'id_client', 'second' => 'id' ) ),
+              'order' => array('champs' => 'commandes.id','param' => 'DESC'),
+              'condition' => ' commandes.statut=0 ',
+              'limit' => '0,10'
+            ),'commandes','clients');
+
+      $d['nombre_pages']=ceil($d['total_cmd_pending']['nbre'] / 10);
+      $d['numero_page_encours']=1;
+
+      $d['livreurs'] = $this->Commandes->find( array( 'fields' => 'id,nom,prenoms', 'order' => array('champs' => 'nom', 'param' => 'ASC') 
+                                             ) ,'livreurs' );
+
+      $d['order_first'] = current ( $this->Commandes->find( 
+                          array( 'fields' => "DATE(date_creation) as date_first, DATE_FORMAT(date_creation,'%H:%i:%s') hour_first",
+                                  'order' => array('champs' => 'id', 'param' => 'ASC') 
+                                ),'commandes' ) );      
+
+      // debug($d['commandes']); die();
+      
+      $this->set($d);
+    }
+
+
+    public function liste_to_pay(){
+      conf::redir();
+      $this->loadmodel('Commandes');
+      $_SESSION['bo_menu'] = 'Commandes';
+
+      
+      //EN ATTENTE
+      $d['total_cmd_pending']['montant'] = $this->Commandes->findSum( array( 'statut' => 7 ),'montant_reduction','commandes' );
+      $d['total_cmd_pending']['nbre'] = $this->Commandes->findCount( array( 'statut' => 7 ),'commandes' );
+
+      //EN partial
+      $d['total_cmd_partial']['montant'] = $this->Commandes->findSum( array( 'statut' => 8 ),'montant_reduction','commandes' );
+      $d['total_cmd_partial']['nbre'] = $this->Commandes->findCount( array( 'statut' => 8 ),'commandes' );
+
+      //a credit
+      $d['total_cmd_credit']['montant'] = $this->Commandes->findSum( array( 'statut' => 5 ),'montant_reduction','commandes' );
+      $d['total_cmd_credit']['nbre'] = $this->Commandes->findCount( array( 'statut' => 5 ),'commandes' );
+
+      //total
+      $d['total']['montant'] = $d['total_cmd_partial']['montant'] + $d['total_cmd_pending']['montant'] + $d['total_cmd_credit']['montant'];
+      $d['total']['nbre'] = $d['total_cmd_partial']['nbre'] + $d['total_cmd_pending']['nbre'] + $d['total_cmd_credit']['nbre'];
+
+
+      //Commandes list
+      
+      $d['commandes'] = $this->Commandes->findJoin( array(
+            'fieldsmain' => array('montant_ht AS montant_ht','frais_livraison AS frais_livraison','montant_total AS montant_total',
+                  'token as cmd_id', 'statut as cmd_statut', 'date_creation AS cmd_date_creation'),
+            'fieldstwo' => array('token AS client_id',' nom as client_nom ',' prenoms as client_prenoms '),
+            'fields' => array(  array( 'main' => 'id_client', 'second' => 'id' ) ),
+              'order' => array('champs' => 'commandes.id','param' => 'DESC'),
+              'condition' => ' commandes.statut in (7,8) ',
+              'limit' => '0,10'
+            ),'commandes','clients');
+
+      $d['nombre_pages']=ceil($d['total']['nbre'] / 10);
+      $d['numero_page_encours']=1;
+
+      $d['livreurs'] = $this->Commandes->find( array( 'fields' => 'id,nom,prenoms', 'order' => array('champs' => 'nom', 'param' => 'ASC') 
+                                             ) ,'livreurs' );
+
+      $d['order_first'] = current ( $this->Commandes->find( 
+                          array( 'fields' => "DATE(date_creation) as date_first, DATE_FORMAT(date_creation,'%H:%i:%s') hour_first",
+                                  'order' => array('champs' => 'id', 'param' => 'ASC') 
+                                ),'commandes' ) );      
+
+      // debug($d['commandes']); die();
+      
+      $this->set($d);
+    }
+
+    public function cart(){
+      conf::redir();
+      $this->loadmodel('Commandes');
+      $_SESSION['bo_menu'] = 'Commandes';
+      $d = array();
+      
+      //debug( $_SESSION['bo_user'] );
+
+      $this->set($d);
+    }
+
+    public function init_order(){
+      conf::redir();
+      $this->loadmodel('Commandes');
+      $_SESSION['bo_menu'] = 'Commandes';
+      $d = array();
+      
+      // unset($_SESSION['cart']);
+
+      //Liste des produits
+      $d['produits'] = $this->Commandes->findJoin(array(
+        'fieldsmain' => array('id AS id','nom AS nom_produit','token AS token_produit','quantite_unitaire as qtite_unit',
+         'id_unite as unite','prix_quantite_unitaire as prix_qtite_unit','slug as slug','nouveau as isnew','promo as ispromo',
+         'pourcentage_promo as percent_promo','image as image','statut AS produit_statut','stock AS stock','date_creation as date_creation'),
+         'fieldstwo' => array('nom AS categorie','statut AS categorie_statut'),
+         'fieldsthree' => array('nom AS taille'),
+         'fields' => array(
+                       array(
+                         'main' => 'id_categorie_produit',
+                         'second' => 'id'
+                         )
+           ),
+           'order' => array('champs' => 'prix_quantite_unitaire','param' => 'ASC'), //
+           'limit' => '0,10'
+         ),'produits','categories_produits');
+   
+      $d['unit_mesure'] = $this->unit_mesure();
+      $d['categories'] = $this->get_category();
+
+      $this->set($d);
+    }
+
+    public function add_product_validation($token_commande){
+      conf::redir();
+      $this->loadmodel('Commandes');
+      $_SESSION['bo_menu'] = 'Commandes';
+      $d = array();
+      
+      // unset($_SESSION['cart']);
+      //verifie que le token de la commande a bien été envoyé
+      if( !isset($token_commande) || empty($token_commande) ){
+        header('Location: '.BASE_URL.DS.'commandes/liste_to_validation');
+      }else{
+        $token_commande = trim($token_commande);
+
+        // recuperation de la commande
+        $d['commande'] = current( $this->Commandes->find( array( 
+            'condition' => array( 'token' => $token_commande ),
+            'order' => array( 'champs' => 'id', 'param' => 'DESC')
+          ),'commandes') );
+
+        //verifie si la comande existe bien en base
+        if( empty($d['commande']) ){
+          header('Location: '.BASE_URL.DS.'commandes/liste_to_validation');
+        }else{
+           //Liste des produits
+            $d['produits'] = $this->Commandes->findJoin(array(
+              'fieldsmain' => array('id AS id','nom AS nom_produit','token AS token_produit','quantite_unitaire as qtite_unit',
+              'id_unite as unite','prix_quantite_unitaire as prix_qtite_unit','slug as slug','nouveau as isnew','promo as ispromo',
+              'pourcentage_promo as percent_promo','image as image','statut AS produit_statut','stock AS stock','date_creation as date_creation'),
+              'fieldstwo' => array('nom AS categorie','statut AS categorie_statut'),
+              'fieldsthree' => array('nom AS taille'),
+              'fields' => array(
+                            array(
+                              'main' => 'id_categorie_produit',
+                              'second' => 'id'
+                              )
+                ),
+                'order' => array('champs' => 'prix_quantite_unitaire','param' => 'ASC'), //
+                'limit' => '0,10'
+              ),'produits','categories_produits');
+        
+            $d['unit_mesure'] = $this->unit_mesure();
+            $d['categories'] = $this->get_category();
+            $d['token_commande'] = $token_commande;
+
+        }
+
+
+      }
+      
+      $this->set($d);
+    }
+
+    private function unit_mesure($condition=null){
+      //recuperer les unité de mésure
+          $unites_from_bd = $this->Commandes->find(array(
+              'fields' => array('id','libelle','symbole')
+            ),'unites');
+          $unites = array();
+          foreach ($unites_from_bd as $u) {
+            $unites[$u->id] = ($u->symbole == 'NA') ? 'nombre' : $u->symbole;
+          }
+
+          return $unites;
+    }
+
+    private function get_category($condition=null){
+      //recuperer les unité de mésure
+          $requette['fields'] = array('id','nom','statut');
+          if(isset($condition)){
+            $requette['condition'] = $condition;
+          }
+          // debug($requette);          
+          // debug( $this->Produits->find( $requette ,'categories_produits' ) );          
+          $category_from_bd = $this->Commandes->find( $requette ,'categories_produits' );
+          
+          return $category_from_bd;
+    }
+
     public function details($token_commande){
       conf::redir();
       $this->loadmodel('Commandes');
@@ -150,9 +359,156 @@ class CommandesController extends Controller {
       // debug($d);
       $this->set($d);
 
-      }
+    }
 
-    // }  
+
+    public function details_to_validation($token_commande){
+      conf::redir();
+      $this->loadmodel('Commandes');
+      $d= array();
+      $_SESSION['bo_menu'] = 'Commandes';
+
+      //verifie que le token de la commande a bien été envoyé
+      if( !isset($token_commande) || empty($token_commande) ){
+        header('Location: '.BASE_URL.DS.'commandes/liste_to_validation');
+      }else{
+        $token_commande = trim($token_commande);
+
+        // recuperation de la commande
+        $d['commande'] = current( $this->Commandes->find( array( 
+            'condition' => array( 'token' => $token_commande ),
+            'order' => array( 'champs' => 'id', 'param' => 'DESC')
+          ),'commandes') );
+
+        //verifie si la comande existe bien en base
+        if( empty($d['commande']) || $d['commande']->statut != 0){
+          header('Location: '.BASE_URL.DS.'commandes/liste_to_validation');
+        }else{
+          //recuperation du statut
+          // $d['command_status'] = $this->getStatusCommand($d['command']->statut);
+
+          //Recuperation des infos du clients
+          $d['client'] = current ( $this->Commandes->find( 
+              array( 
+                'fields' => 'id,nom,prenoms,token,tel,email',
+                'condition' => 'id = '.$d['commande']->id_client
+              )
+            ,'clients' ) );
+
+          //recuperation des infos sur le user back office ayant traité la transaction
+          if( intval( $d['commande']->id_utilisateur ) > 0 ){
+            $d['user_bo'] = current ( $this->Commandes->find( 
+              array( 
+                'fields' => 'id,nom,prenoms',
+                'condition' => 'id = '.$d['commande']->id_utilisateur 
+              )
+            ,'utilisateurs' ) );
+          }          
+
+          //recupération list de produits
+          $d['produits'] = $this->Commandes->findJoin(array(
+            'fieldsmain' => array('id_commande AS id_cmd','quantite as quantite_cmd','qtte_unitaire AS qtte_unitaire_cmd',
+              'prix_qtte_unitaire AS prix_qtte_unitaire_cmd'),
+            'fieldstwo' => array( 'token as token', 'id AS id_produit','nom AS nom_produit','token AS token','id_unite as id_unite',
+              'quantite_unitaire AS quantite_unitaire_produit','prix_quantite_unitaire AS prix_quantite_unitaire',
+              'image AS image','promo AS promo','pourcentage_promo AS pourcentage_promo', 'image as image'),
+            'fields' => array( array('main' => 'id_produit','second' => 'id') ),
+            'order' => array('champs' => 'commandes_produits.quantite' , 'param' => 'desc'),
+            'condition' => 'commandes_produits.id_commande='.$d['commande']->id
+          ),'commandes_produits','produits');
+
+          //recuperer les unité de mésure
+          $unites_from_bd = $this->Commandes->find(array(
+              'fields' => array('id','libelle','symbole')
+            ),'unites');
+          $d['unites'] = array();
+          foreach ($unites_from_bd as $u) {
+            $d['unites'][$u->id] = ($u->symbole == 'NA') ? 'nombre' : $u->symbole;
+          }
+
+        }
+
+
+      }
+      // debug($d['produits']);
+      $d['token_commande'] = strtoupper( $token_commande );
+      $this->set($d);
+
+    }
+
+    public function pay($token_commande){
+      conf::redir();
+      $this->loadmodel('Commandes');
+      $d= array();
+      $_SESSION['bo_menu'] = 'Commandes';
+
+      //verifie que le token de la commande a bien été envoyé
+      if( !isset($token_commande) || empty($token_commande) ){
+        header('Location: '.BASE_URL.DS.'commandes/liste_to_pay');
+      }else{
+        $token_commande = trim($token_commande);
+        $d['token_commande'] = trim($token_commande);
+
+        // recuperation de la commande
+        $d['commande'] = current( $this->Commandes->find( array( 
+            'condition' => array( 'token' => $token_commande ),
+            'order' => array( 'champs' => 'id', 'param' => 'DESC')
+          ),'commandes') );
+
+        //verifie si la comande existe bien en base
+        if( empty($d['commande']) || ( $d['commande']->statut != 7 && $d['commande']->statut != 8 ) ){
+          header('Location: '.BASE_URL.DS.'commandes/liste_to_pay');
+        }else{
+          //recuperation du statut
+          // $d['command_status'] = $this->getStatusCommand($d['command']->statut);
+
+          //Recuperation des infos du clients
+          $d['client'] = current ( $this->Commandes->find( 
+              array( 
+                'condition' => 'id = '.$d['commande']->id_client
+              )
+            ,'clients' ) );
+
+          //recuperation des infos sur le user back office ayant traité la transaction
+          if( intval( $d['commande']->id_utilisateur ) > 0 ){
+            $d['user_bo'] = current ( $this->Commandes->find( 
+              array( 
+                'fields' => 'id,nom,prenoms',
+                'condition' => 'id = '.$d['commande']->id_utilisateur 
+              )
+            ,'utilisateurs' ) );
+          }          
+
+          //recupération liste des versements deja effectué
+          $d['versements'] = $this->Commandes->find( 
+            array( 
+              'condition' => 'id_commande = '.$d['commande']->id,
+              'order' => array( 'champs' => 'id', 'param' => 'DESC')
+            )
+          ,'versements' );
+
+          //recuperer les unité de mésure
+          $unites_from_bd = $this->Commandes->find(array(
+              'fields' => array('id','libelle','symbole')
+            ),'unites');
+          $d['unites'] = array();
+          foreach ($unites_from_bd as $u) {
+            $d['unites'][$u->id] = ($u->symbole == 'NA') ? 'nombre' : $u->symbole;
+          }
+
+        }
+
+
+      }
+      // debug($d['produits']);
+      $d['token_commande'] = strtoupper( $token_commande );
+      $this->set($d);
+
+    }
+
+    // } 
+    
+    
    
     public function extraction($start_date, $start_hour, $end_date, $end_hour, $tel_user, $client_id, $cmd_amount, $cmd_id, $status){
       conf::redir();

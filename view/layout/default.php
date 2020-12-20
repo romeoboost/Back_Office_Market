@@ -66,6 +66,13 @@
 <body class="menubar-hoverable header-fixed ">
         <!-- BEGIN HEADER-->
 <header id="header" >
+    <span id="linkToAddToCart" class="hidden"><?php echo WEBROOT_URL.'ajax/ajoutPanier.php'; ?></span>
+    <span id="linkToDeleteToCart" class="hidden"><?php echo WEBROOT_URL.'ajax/supprimerPanier.php'; ?></span>
+    <span id="linkToAddCustomerToCart" class="hidden"><?php echo WEBROOT_URL.'ajax/ajoutClientPanier.php'; ?></span>
+    <span id="linkToDeleteCustomerToCart" class="hidden"><?php echo WEBROOT_URL.'ajax/supprimerClientPanier.php'; ?></span>
+    <span id="linkToUpdateToCart" class="hidden"><?php echo WEBROOT_URL.'ajax/modifPanier.php'; ?></span>
+    
+
     <span id="linkToStatOrder" class="hidden"><?php echo WEBROOT_URL.'ajax/statOrder.php'; ?></span>
     <span id="linkToStatCustomer" class="hidden"><?php echo WEBROOT_URL.'ajax/statCustomer.php'; ?></span>
     <span id="linkToStatProducts" class="hidden"><?php echo WEBROOT_URL.'ajax/statProducts.php'; ?></span>
@@ -145,13 +152,85 @@
                     <button type="submit" class="btn btn-icon-toggle ink-reaction"><i class="fa fa-search"></i></button>
                 </form>
             </li> -->
-            <li class="dropdown hidden-xs">
+
+            <li class="dropdown hidden-xs cart-header">
                 <a href="javascript:void(0);" class="btn btn-icon-toggle btn-default" data-toggle="dropdown">
-                    <i class="fa fa-bell"></i><sup class="badge style-danger">4</sup>
+                    <i class="md md-add-shopping-cart"></i>
+                    <?php $NbreCart= isset( $_SESSION['cart']['total_nbre'] ) ? $_SESSION['cart']['total_nbre'] : "0" ?>
+                    <sup class="mini-cart-icon badge style-danger"><?php echo $NbreCart ?></sup>
                 </a>
-                <ul class="dropdown-menu animation-expand">
-                    <li class="dropdown-header">Messages du jour</li>
-                    <li>
+                <ul class="dropdown-menu animation-expand widget-shopping-cart-container">
+                    <!-- <li class="dropdown-header">Messages du jour</li> -->
+
+                    <li class="widget-shopping-cart-content">
+                        <ul class="cart-list">
+                        <?php if( !isset($_SESSION['cart']['products_list']) || empty($_SESSION['cart']['products_list']) ) { ?>
+                            <div class="empty-cart text-center col-md-12"> 
+                                Votre panier est vide 
+                            </div>
+                        <?php }else{ ?>
+                            <?php foreach ($_SESSION['cart']['products_list'] as $token => $p): ?>
+                                <li class="<?php echo $token; ?>" id-product="<?php echo $token; ?>" >
+                                    <!-- <a href="#" class="remove">×</a> -->
+                                    <a href="" class="remove remove-product-cart" id-product="<?php echo $token; ?>">×</a>
+                                    <a href="<?php echo $p['link_to_details']; ?>">
+                                        <img src="<?php echo $p['link_to_image']; ?>" alt="" />
+                                        <?php echo $p['nom']; ?> &nbsp;
+                                    </a>
+                                    <span class="quantity">
+                                        <span class="nbre-cart-product"><?php echo $p['qtite_cart']; ?></span> x
+                                        <span class="amount-cart-product"><?php echo $p['prix_qtite_unit']; ?></span> F
+                                    </span>
+                                </li>
+                            <?php endforeach; ?>
+                        <?php } ?>
+                        </ul>
+                        <p class="total">
+                            <strong>Sous Total:</strong> 
+                            <span class="amount">
+                                <?php echo isset( $_SESSION['cart']['total_amount'] ) ? $_SESSION['cart']['total_amount'] : "0" ?> F
+                            </span>
+                        </p>
+                        <p class="header-cart-customer-info">
+                            <strong>
+                                Le client :
+                                <span class="header-cart-customer-name">
+                                    <?php echo isset( $_SESSION['cart']['customer'] ) ? $_SESSION['cart']['customer']['name'] : "Aucun client" ?> 
+                                </span> 
+                        
+                            </strong>
+
+                            <span class="header-cart-customer-action">
+                                <?php if( isset( $_SESSION['cart']['customer'] ) ){ ?>
+                                    <a class="header-cart-add-customer delete-pusher"
+                                        title="retirer le client"> 
+                                        <i class="fa fa-times-circle-o"></i>
+                                    </a>
+                                    <a class="header-cart-add-customer update-pusher"
+                                        title="changer le client"> 
+                                        <i class="fa fa-pencil"></i>
+                                    </a>                                    
+                                <?php }else{ ?>
+                                    <a class="header-cart-add-customer add-pusher" 
+                                        title="ajouter un client"> 
+                                        <i class="fa fa-user-plus"></i> 
+                                    </a>
+                                <?php } ?>
+                            </span>
+                            
+                        </p>
+                        <p class="buttons">
+                            <a href="<?php echo SITE_BASE_URL ; ?>commandes/cart" class="view-cart">
+                                Le Panier
+                            </a>
+                            <a href="<?php echo SITE_BASE_URL ; ?>commandes/send_cart_to_validation"
+                                class="order-connect-btn order-cmd-button-base">
+                                    ENREGISTRER
+                            </a>
+                        </p>
+                    </li>
+
+                    <!-- <li>
                         <a class="alert alert-callout alert-warning" href="javascript:void(0);">
                             <strong>Alex Anistor</strong><br/>
                             <small>Testing functionality...</small>
@@ -165,9 +244,11 @@
                     </li>
                     <li class="dropdown-header">Options</li>
                     <li><a href="">Voir tous les messages<span class="pull-right"><i class="fa fa-arrow-right"></i></span></a></li>
-                    <li><a href="">Marquer comme lus<span class="pull-right"><i class="fa fa-arrow-right"></i></span></a></li>
+                    <li><a href="">Marquer comme lus<span class="pull-right"><i class="fa fa-arrow-right"></i></span></a></li> -->
                 </ul><!--end .dropdown-menu -->
-            </li><!--end .dropdown -->
+            </li>
+            <!--end .dropdown -->
+
 
             <!--end .dropdown -->
         </ul><!--end .header-nav-options -->
@@ -242,22 +323,35 @@
     </li><!--end /menu-li -->
     <!-- END DASHBOARD -->
     
-    <li class="">
-        <a href="<?php echo BASE_URL.DS.'commandes/liste'; ?>" class=" <?php echo active_menu('Commandes'); ?> ">
-            <!-- <div class="gui-icon"><i class="md md-email"></i></div> -->
+    <li class="gui-folder <?php echo active_menu('Commandes'); ?>">
+        <a>
             <div class="gui-icon"><i class="fa fa-shopping-cart"></i></div>
             <span class="title">Commandes</span>
         </a>
+        <ul>
+            <li class="<?php echo active_sub_menu('Commandes'); ?>">
+                <a href="<?php echo BASE_URL.DS.'commandes/init_order'; ?>">
+                    <span class="title <?php echo active_sub_menu('Init'); ?>">Créer une commande</span>
+                </a>
+            </li>
+            <li class="<?php echo active_sub_menu('Commandes'); ?>">
+                <a href="<?php echo BASE_URL.DS.'commandes/liste'; ?>">
+                    <span class="title">Toutes les commandes</span>
+                </a>
+            </li>
+            <li class="<?php echo active_sub_menu('Commandes'); ?>">
+                <a href="<?php echo BASE_URL.DS.'commandes/liste_to_validation'; ?>">
+                    <span class="title">Commandes à Valider</span>
+                </a>
+            </li>
+            <li class="<?php echo active_sub_menu('Commandes'); ?>">
+                <a href="<?php echo BASE_URL.DS.'commandes/liste_to_pay'; ?>">
+                    <span class="title">Commandes à Payer</span>
+                </a>
+            </li>        
+        </ul>
     </li>
 
-    <li class="">
-        <a href="<?php echo BASE_URL.DS.'commandesRapide/liste'; ?>" class=" <?php echo active_menu('CommandesRapide'); ?> ">
-            <!-- <div class="gui-icon"><i class="md md-email"></i></div> -->
-            <div class="gui-icon"><i class="fa fa-cart-plus"></i></div>
-            <span class="title">Commandes Rapides</span>
-        </a>
-    </li>
-    
     <!-- BEGIN DASHBOARD -->
     <li class="<?php echo active_menu('Clients'); ?>">
         <a href="<?php echo SITE_BASE_URL.'clients/liste'; ?>" >
@@ -288,42 +382,21 @@
         </ul>
     </li><!--end /menu-li -->
     <!-- END UI -->
-
-    <!-- BEGIN UI -->
-    <li class="gui-folder <?php echo active_menu('FraisLivraison'); ?>">
-        <a >
-            <div class="gui-icon"><i class="glyphicon glyphicon-map-marker"></i></div>
-            <span class="title">Frais Livraison</span>
-        </a>
-        <ul>
-            <li class="<?php echo active_sub_menu('FraisLivraison'); ?>">
-                <a href="<?php echo BASE_URL.DS.'fraisLivraison/liste'; ?>">
-                    <span class="title <?php echo active_sub_menu('FraisLivraison'); ?>">Grille de frais</span>
-                </a>
-            </li>
-            <li class="<?php echo active_sub_menu('CommunesLivraison'); ?>">
-                <a href="<?php echo BASE_URL.DS.'communesLivraison/liste'; ?>">
-                    <span class="title <?php echo active_sub_menu('CommunesLivraison'); ?>">Communes</span>
-                </a>
-            </li>           
-        </ul>
-    </li><!--end /menu-li -->
-    <!-- END UI -->
-    
-    <!-- BEGIN TABLES -->
-    <!-- <li class="">
-        <a href="<?php //echo SITE_BASE_URL.'communes_livraison/liste'; ?>">
-            <div class="gui-icon"><i class="glyphicon glyphicon-map-marker"></i></div>
-            <span class="title">Communes Livraison</span>
-        </a>
-    </li> --><!--end /menu-li -->
-    <!-- END TABLES -->
     
     <!-- BEGIN FORMS -->
     <li class="<?php echo active_menu('Stocks'); ?>">
         <a href="<?php echo BASE_URL.DS.'stocks/liste'; ?>">
             <div class="gui-icon"><span class="md md-web"></span></div>
             <span class="title">Stocks</span>
+        </a>
+    </li>
+    <!-- END FORMS -->
+
+     <!-- BEGIN FORMS -->
+    <li class="<?php echo active_menu('Magasins'); ?>">
+        <a href="<?php echo BASE_URL.DS.'magasins/liste'; ?>">
+            <div class="gui-icon"><span class="md md-store-mall-directory"></span></div>
+            <span class="title">Magasins</span>
         </a>
     </li>
     <!-- END FORMS -->
@@ -335,37 +408,7 @@
             <span class="title">Fournisseurs</span>
         </a>
     </li>
-    <li class="">
-        <a href="<?php echo BASE_URL.DS.'livreurs/liste'; ?>">
-            <div class="gui-icon"><i class="md md-local-shipping"></i></div>
-            <span class="title">Livreurs</span>
-        </a>
-    </li>
-    <li class="<?php echo active_menu('Pubs'); ?>">
-        <a href="<?php echo BASE_URL.DS.'pubs/liste'; ?>">
-            <div class="gui-icon"><i class="fa fa-image"></i></div>
-            <span class="title">Bannières publicitaires</span>
-        </a>
-    </li>
-    <!--end /menu-li -->
-    <!-- END FORMS -->
     
-    <!-- BEGIN CHARTS -->
-    <li class="<?php echo active_menu('Avis'); ?>">
-        <a href="<?php echo BASE_URL.DS.'avis/liste'; ?>" >
-            <div class="gui-icon"><i class="glyphicon glyphicon-comment"></i></div>
-            <span class="title">Avis</span>
-        </a>
-    </li>
-
-    <li class="<?php echo active_menu('Messages'); ?>">
-        <a href="<?php echo BASE_URL.DS.'mails/liste'; ?>" >
-            <div class="gui-icon"><i class="md md-email"></i></div>
-            <span class="title">Mails</span>
-        </a>
-    </li>
-    <!--end /menu-li -->
-    <!-- END CHARTS -->
     
     <!-- BEGIN LEVELS -->
     <li class="gui-folder">
@@ -397,7 +440,76 @@
         
         <!-- BEGIN OFFCANVAS RIGHT -->
         <div class="offcanvas">
+
+<!-- START MODAL ADD CLIENT TO CART -->
+<div class="modal own-modal fade" id="modal-add-customer-to-cart" tabindex="-1" role="dialog" 
+    aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title text-uppercase" id="exampleModalLongTitle"> AJOUTER UN CLIENT AU PANIER</h4>
+      </div>
+      <form id="form-add-customer-to-cart" class="form">
+      <div class="modal-body order-confirmation-body">
+        <div class="row">
+            <div id="" class="col-md-12 text-center">
+                <em class="text-caption">
+                    Selectionner le nom du client ou son numero de téléphone
+                </em>
+            </div>
             
+            <div class="card-body ">
+                <div id="" class="col-md-12 text-center errorForm"></div>
+
+                <?php 
+                    $token_client_used = isset( $_SESSION['cart']['customer']['token'] ) ? $_SESSION['cart']['customer']['token'] : '';
+                ?>
+                
+                <?php $liste = $this->request('Clients', 'getListe'); ?>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group ">
+                            <select id="select2" name="client" class="form-control dirty selectpicker" 
+                                data-live-search="true">
+                                <option value="" >&nbsp;</option>
+                                <?php foreach( $liste as $client ): ?>
+                                    <option value="<?php echo $client->token; ?>"
+                                        <?php echo ( $token_client_used == $client->token ) ? 'selected' : ''; ?>>
+                                        <?php 
+                                            echo $client->tel.' - '.ucfirst($client->nom).' '.ucfirst($client->prenoms).''; 
+                                        ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <label for="select2">Téléphone - Nom et Prénom des clients</label>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="hidden" name="actioner" value="">
+
+            </div>
+
+
+        </div>
+      </div>
+      <div class="modal-footer text-center">
+            <div class="card-actionbar-row">
+                <button id="modal-confirm-btn" class="btn btn-primary btn-raised ld-ext-right " type="submit">
+                        CONFIRMER
+                        <div class="ld ld-ring ld-spin"></div>
+                </button>
+            </div>
+      </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+<!-- END MODAL ADD CLIENT TO CART -->
 
 
 <!-- BEGIN OFFCANVAS SEARCH -->

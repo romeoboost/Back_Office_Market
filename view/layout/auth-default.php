@@ -4,7 +4,7 @@
 
 
     <head>
-        <title>Back Office - <?php echo APPLI_NAME; ?></title>
+        <title>LOGICIEL GESTION - <?php echo APPLI_NAME; ?></title>
 
         <!-- BEGIN META -->
         <meta charset="utf-8">
@@ -18,7 +18,7 @@
 
             <link type="text/css" rel="stylesheet" href="<?php echo WEBROOT_URL; ?>assets/css/modules/materialadmin/css/theme-default/bootstrap.css?1422823238" />
 
-            <link type="text/css" rel="stylesheet" href="<?php echo WEBROOT_URL; ?>assets/css/modules/materialadmin/css/theme-default/materialadmin.css?000000001" />
+            <link type="text/css" rel="stylesheet" href="<?php echo WEBROOT_URL; ?>assets/css/modules/materialadmin/css/theme-default/materialadmin.css?000000002" />
 
             <link type="text/css" rel="stylesheet" href="<?php echo WEBROOT_URL; ?>assets/css/modules/materialadmin/css/theme-default/font-awesome.min.css?1422823239" />
 
@@ -43,7 +43,9 @@
     
     <!-- BEGIN LOGIN SECTION -->
     <section class="section-account">
-        <div class="img-backdrop" style="background-image: url('<?php echo WEBROOT_URL; ?>assets/img/modules/materialadmin/about.jpg')"></div>
+        <div class="img-backdrop" 
+            style="background-image: url('<?php echo WEBROOT_URL; ?>assets/img/modules/materialadmin/parts-auto.jpg')">
+        </div>
         <div class="spacer"></div>
         <span id="linkToLogin" class="hidden"><?php echo WEBROOT_URL.'ajax/logIn.php'; ?></span>
         <span id="linkToHome" class="hidden"><?php echo BASE_URL.DS.'accueil/index'; ?></span>

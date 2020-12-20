@@ -38,17 +38,17 @@
 
 
                 <!-- BEGIN ALERT - REVENUE -->
-                <div class="col-md-4 col-sm-6">
+                <div class="col-md-2 col-sm-6">
                     <div class="card">
                         <div class="card-body no-padding">
                             <div class="col-sm-12 alert alert-callout alert-success no-margin">
                                 <div class="col-sm-12  text-center">
-                                    <span class="data-title">ACTIFS</span>
+                                    <span class="data-title">GROSSISTES</span>
                                 </div>
 
                                 <div class="col-sm-12 text-center no-padding">
                                     <strong class="text-xl stat-data-value no-padding actifs">
-                                       <?php echo number_format($clients['actifs'], 0, '', ' '); ?>
+                                       <?php echo number_format($clients['grossistes'], 0, '', ' '); ?>
                                        
                                     </strong><br/>
                                     <span class="opacity-50">Nombre</span>
@@ -61,16 +61,57 @@
                 <!-- END ALERT - REVENUE -->
 
                 <!-- BEGIN ALERT - REVENUE -->
-                <div class="col-md-4 col-sm-6">
+                <div class="col-md-2 col-sm-6">
                     <div class="card">
                         <div class="card-body no-padding">
                             <div class="col-sm-12 alert alert-callout alert-warning no-margin">
                                 <div class="col-sm-12  text-center">
-                                    <span class="data-title">NON ACTIFS </span>
+                                    <span class="data-title">DEMI GROSSISTES</span>
                                 </div>
                                 <div class="col-sm-12 text-center no-padding">
                                     <strong class="text-xl stat-data-value no-padding non_actifs">
-                                       <?php echo number_format($clients['non_actifs'], 0, '', ' '); ?>                                       
+                                       <?php echo number_format($clients['demi_grossistes'], 0, '', ' '); ?>                                       
+                                    </strong><br/>
+                                    <span class="opacity-50">Nombre</span>
+                                </div>                              
+                            </div>
+                        </div><!--end .card-body -->
+                    </div><!--end .card -->
+                </div><!--end .col -->
+                <!-- END ALERT - REVENUE -->
+
+                
+                <!-- BEGIN ALERT - REVENUE -->
+                <div class="col-md-2 col-sm-6">
+                    <div class="card">
+                        <div class="card-body no-padding">
+                            <div class="col-sm-12 alert alert-callout alert-warning no-margin">
+                                <div class="col-sm-12  text-center">
+                                    <span class="data-title">DETAILLANTS</span>
+                                </div>
+                                <div class="col-sm-12 text-center no-padding">
+                                    <strong class="text-xl stat-data-value no-padding non_actifs">
+                                       <?php echo number_format($clients['detaillants'], 0, '', ' '); ?>                                       
+                                    </strong><br/>
+                                    <span class="opacity-50">Nombre</span>
+                                </div>                              
+                            </div>
+                        </div><!--end .card-body -->
+                    </div><!--end .card -->
+                </div><!--end .col -->
+                <!-- END ALERT - REVENUE -->
+
+                <!-- BEGIN ALERT - REVENUE -->
+                <div class="col-md-2 col-sm-6">
+                    <div class="card">
+                        <div class="card-body no-padding">
+                            <div class="col-sm-12 alert alert-callout alert-warning no-margin">
+                                <div class="col-sm-12  text-center">
+                                    <span class="data-title">EXCHANGES</span>
+                                </div>
+                                <div class="col-sm-12 text-center no-padding">
+                                    <strong class="text-xl stat-data-value no-padding non_actifs">
+                                       <?php echo number_format($clients['exchanges'], 0, '', ' '); ?>                                       
                                     </strong><br/>
                                     <span class="opacity-50">Nombre</span>
                                 </div>                              
@@ -95,6 +136,7 @@
                                 </header>
 
                                 <div class="tools">
+                                    <a class="btn btn-icon-toggle btn-collapse"><i class="fa fa-angle-down"></i></a>
                                     <a class="btn btn-icon-toggle" data-toggle="tooltip" data-placement="left" 
                                     data-original-title="Annuler le filtre" href="<?php echo BASE_URL.DS.'clients/liste'; ?>">
                                         <i class="md md-settings-backup-restore"></i></a>
@@ -183,12 +225,14 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <div class="form-group">
-                                            <select id="status" name="status" class="form-control dirty selectpicker" data-live-search="true">
+                                            <select id="status" name="type_client" class="form-control dirty selectpicker" data-live-search="true">
                                                 <option value="" >&nbsp;</option>
-                                                <option value="0">NON ACTIF</option>
-                                                <option value="1">ACTIF</option>
+                                                <option value="2">GROSSISTE</option>
+                                                <option value="1">DEMI GROSSISTE</option>
+                                                <option value="0">DETAILLANT</option>
+                                                <option value="3">EXCHANGE</option>
                                             </select>
-                                            <label for="status">Statut</label>
+                                            <label for="status">Type Client</label>
                                         </div>
                                     </div> 
                                     <div class="col-sm-4">
@@ -221,7 +265,7 @@
                 
 
 
-            <div class="card">
+            <div class="card card-collapsed">
                 <div class="card-head card-head-xs style-primary list-element">
                     <header>
                         <h2 class="text-default-bright">Liste des Clients</h2>
@@ -232,6 +276,12 @@
                         </p> -->
                     </header>
                     <div class="tools">
+                        <a id="add-element-btn" class="btn btn-icon-toggle " data-toggle="tooltip" data-placement="left"
+                            href="<?php echo SITE_BASE_URL.'clients/ajouter'; ?>" 
+                             data-original-title="Ajouter une nouveau client">
+                            <i class="fa fa-plus-square"></i>
+                        </a>
+
                         <a id="extract-excel-btn" class="btn btn-icon-toggle " data-toggle="tooltip" data-placement="left"
 href="<?php echo SITE_BASE_URL.'clients/extraction/start_date&2018-01-01/start_hour&00:00:00/end_date&'.date("Y-m-d").'/end_hour&23:59:59/
 nom&/prenoms&/client_id&/tel&/status&/sexe&'; ?>" 
@@ -247,7 +297,7 @@ nom&/prenoms&/client_id&/tel&/status&/sexe&'; ?>"
                         filter-data-endDate="" filter-data-endHour=""
                         filter-data-telUser="" filter-data-clientId=""
                         filter-data-name="" filter-data-lastname=""
-                        filter-data-status="" filter-data-email="" filter-data-sexe=""
+                        filter-data-type_client="" filter-data-email="" filter-data-sexe=""
                         filter-data-pageRunning="<?php echo $numero_page_encours; ?>" 
                         >
                             <thead>
@@ -255,11 +305,12 @@ nom&/prenoms&/client_id&/tel&/status&/sexe&'; ?>"
                                     <th>#</th>
                                     <th class="text-center">Nom</th>
                                     <th class="text-center">Prenoms</th>
-                                    <th class="text-center">ID Client</th>
+                                    <th class="text-center">Type</th>
+                                    <th class="text-center">Solde</th>
                                     <th class="text-center">Tel</th>
                                     <th class="text-center">Email</th>
                                     <th class="text-center">Sexe</th>
-                                    <th class="text-center">Statut</th>
+                                    <!-- <th class="text-center">Statut</th> -->
                                     <th class="text-center">Date Creation</th>
                                     <th class="text-center">Actions</th>
                                 </tr>
@@ -272,26 +323,21 @@ nom&/prenoms&/client_id&/tel&/status&/sexe&'; ?>"
                                         <td class=""><?php echo $total_plus--; ?></td>
                                         <td class="nom"><?php echo ucfirst( htmlspecialchars ($client->nom) ); ?> </td>
                                         <td class="prenom"><?php echo ucfirst( htmlspecialchars ($client->prenoms) ); ?> </td>
-                                        <td class="token"><?php echo $client->token ?></td>
+                                        <td class="type"><?php echo libelle_type_client( $client->type_client ) ?></td>
+                                        <td class="Solde"><?php echo number_format($client->solde_apres, 0, '', ' '); ?></td>
                                         <td class=""><?php echo htmlspecialchars ($client->tel) ?></td>
                                         <td class=""><?php echo htmlspecialchars ($client->email) ?></td>
                                         <td  class="sexe"><?php echo ($client->sexe == 1) ? 'HOMME' : 'FEMME'; ?></td>
-                                        <td  class="statut"><?php echo ($client->statut == 1) ? 'ACTIF' : 'NON ACTIF'; ?></td>
+                                        <!-- <td  class="statut"><?php echo ($client->statut == 1) ? 'ACTIF' : 'NON ACTIF'; ?></td> -->
                                         <td><?php echo dateFormat($client->date_creation); ?></td>
                                         <td class="text-right">
-                                            <?php if( $client->statut == 1 ): ?>
-                                                <button type="button" class="btn btn-icon-toggle set-rejected-btn" data-toggle="tooltip" 
-                                                    data-placement="top" data-original-title="Desactiver le client " clients-id="<?php echo $client->token; ?>">
-                                                    <i class="fa fa-times-circle-o"></i>
-                                                </button>
-                                            <?php endif; ?>
-                                            <?php if( $client->statut == 0 ): ?>
-                                                <button type="button" class="btn btn-icon-toggle set-restore-btn" data-toggle="tooltip" 
-                                                clients-id="<?php echo $client->token; ?>"
-                                                    data-placement="top" data-original-title="Reactiver le client">
-                                                    <i class="md md-settings-backup-restore"></i>
-                                                </button>
-                                            <?php endif; ?>
+                                            <button type="button" class="btn btn-icon-toggle update-btn" data-toggle="tooltip" 
+                                            clients-id="<?php echo $client->token; ?>"
+                                                data-placement="top" data-original-title="Modifier les informations">
+                                                <a href="<?php echo BASE_URL.DS.'clients/modifier/'.$client->token; ?>">
+                                                    <i class="fa fa-pencil"></i>
+                                                </a>
+                                            </button>
                                             <button type="button" class="btn btn-icon-toggle check-details-btn" data-toggle="tooltip" 
                                             clients-id="<?php echo $client->token; ?>"
                                                 data-placement="top" data-original-title="Détails du client">

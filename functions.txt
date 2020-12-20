@@ -1,0 +1,126 @@
+-----------------------------------------
+## CHECK ##
+
+Gestion de Magasin
+Clients
+- Création de clients avec les types : gros, demi-gros, détails et exchange
+- Soldes des clients
+- Historique des opérations(achat, versement , dépôt et retrait)
+
+Stock
+- Entrée en stock
+- Transfert de stock d’un magasin à un autre
+- Inventaire
+
+Commande
+- Enregistrement de commande
+- Validation de commande
+- Paiement (caisse)
+- Génération de bons et reçu
+- Livraison aux clients
+Exchange
+- Opération dépôt retrait
+- Gestion de solde
+Gestion de magasin
+- création, modifications, suppression et affichage
+Admin
+- Utilisateur
+- Profil et Habilitation
+
+Piste Audit
+
+
+-----------------------
+### ROMEO ###
+
+- CLIENT :
+* grossiste
+* demi-gros
+* details
+* exchange
++ Solde client
++ historisation des versements
++ creation de client selon les types
+
+
+- COMMANDE :
++ enregistrement de commande
++ validation de commande
++ paiement (caisse), avec paiement totale, a crédit et partiel
++ génération de bons
++ validation de la livraison (confirmation du bon) / Annulation
+
+- STOCK :
++ Entrée en stock
++ Transfert de stock
++ Inventaire
+
+- ExCHANGE :
++ solde des clients
++ historique des depots/retraits selon l'article
++ opération depots/retrait
+
+- GESTION DES MAGASINS
++ Créer
++ Modifier
++ Supprimer
++ Lister
+
+- PISTE D'AUDIT
+
+- ADMIN
++ utilisateur
++ profil et habilitation
+
+
+
+ [tokenProduit] => PR20190600013AM, [tokenCommande] => MKT2020030054AM
+
+Initiation Commande 
+    - Mettre les sous menu :
+        * Initier commande : OK
+        * Liste commandes : OK
+        * commandes à valider :
+            - Liste : OK 
+            - Filtre Mise à jour : NOK
+            - pagination Mise à jour : NOK
+            - Bouton Valider pour envoi vers caisse : OK
+            - Afficher les details de la commande avec possibilité de : 
+                -> lister les produits de la commande : OK
+                -> ajouter un nouveau produit : OK
+                -> modifier le nombre de produit : OK
+                -> valider (modifier le montant total) : OK
+                -> Supprimer un produit : OK
+        * commandes à Payer : 
+            - Liste : OK
+            - Filtre Mise à jour : NOK
+            - pagination Mise à jour : NOK
+            - Bouton payer : 
+                -> lister les versements deja effectués : OK
+                -> Effectuer un versement  (avec mise à jour de solde ) : OK
+                -> GENERER reçu : NOK
+    - Liste Produits : 
+        * Liste (rajouter tag pour produit épuisé) : OK
+        * Pagination (avec scrolling ou pas)
+        * Recherche
+        * Bonnes images de produit #########
+    - Panier
+        * Vue Header: ok
+            * Logique : 
+                ajout : OK
+                retrait : OK
+        * Vue Page : OK
+            * Logique 
+                ajout : ok
+                retrait : ok
+                Mise à jour : OK
+    - Clients : 
+        * Ajouter selon le types : OK
+        * Modifier OK
+        * Supprimer : OK
+        * Détail (Afficher le solde et le type)  : OK
+        * Liste (afficher le solde et type) : OK
+        * Mettre couleur selon les soldes (rouge = negatif, vert = positif) : NOK
+        * Filtre mise à jour : OK
+        
+

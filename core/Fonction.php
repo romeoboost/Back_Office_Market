@@ -1,5 +1,20 @@
 <?php
 
+//renvoi le libelle du type client
+function libelle_type_client($type){
+  $libelle = '';
+  if($type == 1){
+    $libelle = 'Demi Grossiste';
+  }elseif ($type == 2) {
+    $libelle = 'Grossiste';
+  }elseif ($type == 3) {
+    $libelle = 'Exchange';
+  }else{
+    $libelle = 'Détaillant';
+  }
+  return $libelle;
+}
+
 //renvoi la coloration que doit prendre la ligne
 function color_ligne_product($produit){
   $class_color = '';
@@ -41,6 +56,18 @@ function status_displayed( $status ){
 
   $command_status_desc[4]['libele']='rejetée';
   $command_status_desc[4]['color']='default';
+
+  $command_status_desc[4]['libele']='payer à credit';
+  $command_status_desc[4]['color']='info';
+
+  $command_status_desc[7]['libele']='en attente de paiement';
+  $command_status_desc[7]['color']='danger';
+
+  $command_status_desc[8]['libele']='paiement partiel';
+  $command_status_desc[8]['color']='warning';
+
+  $command_status_desc[9]['libele']='paiement total';
+  $command_status_desc[9]['color']='success';
 
   return $command_status_desc[$status];
 

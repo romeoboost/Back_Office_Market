@@ -399,6 +399,20 @@ function html_list_stocks($pdo, $stocks, $nombre_total_produit, $offset){
   return $html;
 }
 
+function libelle_type_client($type){
+  $libelle = '';
+  if($type == 1){
+    $libelle = 'Demi Grossiste';
+  }elseif ($type == 2) {
+    $libelle = 'Grossiste';
+  }elseif ($type == 3) {
+    $libelle = 'Exchange';
+  }else{
+    $libelle = 'Détaillant';
+  }
+  return $libelle;
+}
+
 function html_list_clients($pdo, $clients, $nombre_total_produit, $offset){
   $html = '';
   $nbre_product_plus = $nombre_total_produit + 1;
@@ -408,28 +422,22 @@ function html_list_clients($pdo, $clients, $nombre_total_produit, $offset){
     $html .=    '<td>'.$nbre_product_plus_offset--.'</td>';
     $html .=    '<td class="nom">'.ucfirst( htmlspecialchars ($client->nom) ).'</td>';
     $html .=    '<td class="prenom">'.ucfirst( htmlspecialchars ($client->prenoms) ).' </td>';
-    $html .=    '<td class="token">'.$client->token.' </td>';
+    
+    $html .=    '<td class="">'.libelle_type_client ($client->type_client).' </td>';
+    $html .=    '<td class="">'.number_format($client->solde_apres, 0, '', ' ').' </td>';
     $html .=    '<td class="">'.htmlspecialchars ($client->tel).' </td>';
     $html .=    '<td class="">'.htmlspecialchars ($client->email) .'</td>';
     $sexe =     ($client->sexe == 1) ? 'HOMME' : 'FEMME';
     $html .=    '<td  class="sexe">'.$sexe.'</td>';
-    $statut =   ($client->statut == 1) ? 'ACTIF' : 'NON ACTIF';
-    $html .=    '<td  class="statut">'.$statut.'</td>';
     $html .=    '<td>'.dateFormat($client->date_creation).'</td>';
     $html .=    '<td class="">'; 
 
-    if( $client->statut == 1 ){
-    $html .=    '<button type="button" class="btn btn-icon-toggle set-rejected-btn" data-toggle="tooltip" 
-                    data-placement="top" data-original-title="Desactiver le client " clients-id="'.$client->token.'">
-                    <i class="fa fa-times-circle-o"></i>
-                </button>';
-      }  
-    if( $client->statut == 0 ){
-    $html .=    '<button type="button" class="btn btn-icon-toggle set-restore-btn" data-toggle="tooltip" 
-                clients-id="'.$client->token.'" data-placement="top" data-original-title="Reactiver le client">
-                    <i class="md md-settings-backup-restore"></i>
-                </button>';
-      }
+    $html .=      '<button type="button" class="btn btn-icon-toggle update-btn" data-toggle="tooltip" data-placement="top" clients-id="'.$client->token.'"
+                      data-original-title="Modifier les informations">
+                      <a href="'.SITE_BASE_URL.'clients/modifier/'.$client->token.'">
+                                <i class="fa fa-pencil"></i>
+                    </a>
+                  </button>';
     $html .=      '<button type="button" class="btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" clients-id="'.$client->token.'"
                                          data-original-title="Voir les détails du client">
                                          <a href="'.SITE_BASE_URL.'clients/details/'.$client->token.'">
@@ -1103,7 +1111,7 @@ function getMemberNumber($Nbre_Mbre_Actuel, $Abreviation_Pays){
 
 function getCmdeNumber($Nbre_Mbre_Actuel, $Abreviation_Pays){
 
-        $Identifiant = 'CMD'; //
+        $Identifiant = 'CF'; //
 
         $Date_Identifiant = date("Ym"); //
         $Identifiant .= "".$Date_Identifiant;        

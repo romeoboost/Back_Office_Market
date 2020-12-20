@@ -1,8 +1,7 @@
 <?php
 include 'connectDB.php';
 include 'fonction.php';
-define('WEBROOT_URL', 'http://localhost/Market/webroot/');
-define('SITE_BASE_URL', 'http://localhost/Market/');
+
 if (empty(session_id())) {
     session_start();
     //$_SESSION['menu'] = 'Nous_Rejoindre';
@@ -20,39 +19,43 @@ if(!isset($_POST) || empty($_POST) ){
   $error_text = "Oups, Erreur !";
   $error_text_second = 'Veuillez ne pas modifier la page';
 }else{
-  //debugger($_POST);
+  // debugger($_SESSION);
   extract($_POST);
-  if( !isset($userT) || !isset($nom) || !isset($prenoms) || !isset($tel) || !isset($email) || !isset($lieu_livraison) || !isset($quartier)
-   || !isset($description_lieu_livraison) ) //verifie si tous les champs existent
+  if( !isset( $_SESSION['cart']['customer'] ) ) //verifie si tous les champs existent
   {
     $error_statut = true;
     $error_text = "Oups, Erreur !";
-    $error_text_second = 'Veuillez ne pas modifier la page. Tous les paramètres sont obligatoires';
+    $error_text_second = 'Veuillez lier un client à la commande.';
     //debugger($_POST);
   }else{
-    if( empty($userT) || empty($nom) || empty($prenoms) || empty($tel) || empty($email) || empty($lieu_livraison) || empty($quartier) )
+    if( empty( $_SESSION['cart']['customer'] ) )
     {
       $error_statut = true;
       $error_text = "Oups, Erreur !";
-      $error_text_second = 'Veuillez remplir correctement le formulaire. Aucun champs obligatoire ne doit être vide.';
+      $error_text_second = 'Veuillez lier un client à la commande.';
       //debugger($register_sexe);
     }else{
+
+      //le token du client
+      $userT = $_SESSION['cart']['customer']['token'];
+
       //verifier que le client existe en base
       $req_recup = $pdo->prepare('SELECT * FROM clients WHERE token = :token ORDER BY id DESC LIMIT 0,1'); 
       $req_recup->execute( array( ':token' => $userT ) );
       $client = current($req_recup->fetchAll(PDO::FETCH_OBJ));
+      // debugger($client);
       if( empty($client) ){
         $error_statut = true;
         $error_text = "Oups, Erreur !";
-        $error_text_second = 'Vous devez être connecté pour commander.';
+        $error_text_second = 'Merci de lier un client à la commande.';
       }else{
         // -- Verifier si le panier n'est pas vide ou sil existe
         if( !isset($_SESSION['cart']) || !isset($_SESSION['cart']['products_list']) || empty($_SESSION['cart']) 
           || empty( $_SESSION['cart']['products_list']) ){
-          debugger($_SESSION);
+          // debugger($_SESSION);
           $error_statut = true;
           $error_text = "Oups, Erreur !";
-          $error_text_second = 'Votre panier est vide. 1';
+          $error_text_second = 'Votre panier est vide.';
         }else{
 
           //-- Verifier si les produits du panier existe bien en base
@@ -68,11 +71,11 @@ if(!isset($_POST) || empty($_POST) ){
                   if( empty($produit) ){
                     $error_statut = true;
                     $error_text = "Oups, Erreur !";
-                    $error_text_second = 'Votre panier est vide.'.$token_produit;
+                    $error_text_second = 'Le produit d\'identfiant .'.$token_produit.' n\'existe pas.';
                   }else{
                     //-- verifier si le produite existe toujours en stock
                     //$nbreProduit_panier = intval($nbreProduit);
-                    $nbreProduit = isset( $_SESSION['cart']['products_list'][$token_produit]['qtite_cart'] ) ? intval($_SESSION['cart']['products_list'][$token_produit]['qtite_cart']) : 0 ;
+                    $nbreProduit = isset( $_SESSION['cart']['products_list'][$token_produit]['qtite_cart'] ) ? floatval($_SESSION['cart']['products_list'][$token_produit]['qtite_cart']) : 0 ;
                     if($produit->stock < $nbreProduit*$produit->quantite_unitaire || $produit->stock == 0){
                       $error_statut = true;
                       $error_text = "Oups, Erreur !";
@@ -98,11 +101,24 @@ if(!isset($_POST) || empty($_POST) ){
               }
           }
 
+          //verifier si le user back office est encore connecté et recuperer ses éléméents
+          $req_recup = $pdo->prepare('SELECT * FROM utilisateurs WHERE token = :token ORDER BY id DESC LIMIT 0,1'); 
+          $req_recup->execute( array( ':token' => $_SESSION['bo_user']['token'] ) );
+          $user_bo = current($req_recup->fetchAll(PDO::FETCH_OBJ));
+
+          if( empty($user_bo) ){
+            $error_statut = true;
+            $error_text = "Oups, Erreur !";
+            $error_text_second = "Vous devriez être connecté.";
+          }
+
           if(!$error_statut){
+                // die();
                 $shipping_details = array();
 
                 // -- Verifier si le token destination n'est pas vide
-                $tokenDestination = isset( $_SESSION['cart']['shipping_dest'] ) ? $_SESSION['cart']['shipping_dest'] : '';
+                // $tokenDestination = isset( $_SESSION['cart']['shipping_dest'] ) ? $_SESSION['cart']['shipping_dest'] : 'mongsfsfccxxx';
+                $tokenDestination['token'] = 'mongsfsfccxxx';
 
                 $req_recup = $pdo->prepare('SELECT * FROM livraison_destinations WHERE token = :token ORDER BY id DESC LIMIT 0,1'); 
                 $req_recup->execute( array( ':token' => $tokenDestination['token'] ) );
@@ -115,10 +131,13 @@ if(!isset($_POST) || empty($_POST) ){
                     $error_text = "Oups, Erreur !";
                     $error_text_second = 'Veuillez choisir une commune de livraison dans la liste.';
                 }else{
+
+                    // debugger($lieu_shipping);
                      //-- recuperer les infos de la destination
                     $shipping_details['id'] = $lieu_shipping->id;
-                    $shipping_details['frais'] = $lieu_shipping->frais;
-                    $frais_livraison = $lieu_shipping->frais;
+                    $shipping_details['frais'] = getFees($pdo, $montant_cmde_HT);
+                    // $frais_livraison = $lieu_shipping->frais;
+                    $frais_livraison = getFees($pdo, $montant_cmde_HT);
 
                     //-- Reconstituer le montant total
                     $montant_cmde_TT = $montant_cmde_HT + $frais_livraison;
@@ -128,20 +147,20 @@ if(!isset($_POST) || empty($_POST) ){
 
                     $date = date("Y-m-d H:i:s");
 
-                    //-- insertion dans la table commandes
-                    $req = $pdo->prepare('SELECT COUNT(id) as nbre FROM commandes '); 
-                    $req->execute(array());
-                    $Mbre_actuel_Obj = current($req->fetchAll(PDO::FETCH_OBJ));
-
-                    $token_cmde = getCmdeNumber($Mbre_actuel_Obj->nbre, 'MKT');
+                    // debugger($panier);
+          					$req = $pdo->prepare(" SHOW TABLE STATUS LIKE 'commandes' ");
+          					$req->execute( array() ); $Mbre_actuel_Obj = current( $req->fetchAll() );
+          					$Nbre_Product_Actuel = isset($Mbre_actuel_Obj['Auto_increment']) ? intval( $Mbre_actuel_Obj['Auto_increment'] ) - 1 : 0;
+                    					         
+                    $token_cmde = getCmdeNumber($Nbre_Product_Actuel, 'MKT');
 
                     $req_insert = $pdo->prepare(' INSERT INTO commandes (
                                                               token, id_client, statut, montant_ht, frais_livraison, montant_total, id_livraison_destination, 
-                                                              date_creation, date_modification
+                                                              id_utilisateur, date_creation, date_modification
                                                            )
                                                   VALUES(
                                                         :token, :id_client, :statut, :montant_ht, :frais_livraison, :montant_total, :id_livraison_destination,
-                                                        :date_creation, :date_modification
+                                                        :id_utilisateur, :date_creation, :date_modification
                                                         )'
                                                 );
                
@@ -153,6 +172,7 @@ if(!isset($_POST) || empty($_POST) ){
                         'frais_livraison' => $frais_livraison,
                         'montant_total' => $montant_cmde_TT,
                         'id_livraison_destination' => $lieu_shipping->id,
+                        'id_utilisateur' => $user_bo->id,
                         'date_creation' => $date,
                         'date_modification' => $date 
                         ) 
@@ -196,32 +216,41 @@ if(!isset($_POST) || empty($_POST) ){
 
                     //-- insertion dans la table shipping_infos
                     $date = date("Y-m-d H:i:s");
+                    // $loc_lat = strlen($loc_lat) == 0 ? 0 : $loc_lat ;
+                    $loc_lat = 0 ;
+                    // $loc_long = strlen($loc_long) == 0 ? 0 : $loc_long ;
+
+                    $quartier = 'YAKRO';
+                    $description_lieu_livraison = 'YAKRO';
+                    $loc_long = 0 ;
                       $req_insert = $pdo->prepare(' INSERT INTO shipping_infos (
                                                               id_client, id_commande, nom, prenoms, tel, email, id_destination, quartier, 
-                                                              description, date_creation, date_modification
+                                                              longitude, lagitude, description, date_creation, date_modification
                                                            )
                                                   VALUES(
                                                         :id_client, :id_commande, :nom, :prenoms, :tel, :email, :id_destination, :quartier, 
-                                                              :description, :date_creation, :date_modification
+                                                        :longitude, :lagitude, :description, :date_creation, :date_modification
                                                         )'
                                                 );
                       $req_insert->execute( array( 
                           'id_client' => $client->id,
                           'id_commande' => $cmde_inserted->id,
-                          'nom' => $nom,
-                          'prenoms' => $prenoms,
-                          'tel' => $tel,
-                          'email' => $email,
+                          'nom' => $client->nom,
+                          'prenoms' => $client->prenoms,
+                          'tel' => $client->tel,
+                          'email' => $client->email,
                           'id_destination' => $lieu_shipping->id,
                           'quartier' => $quartier,
+                          'longitude' => $loc_long,
+                          'lagitude' => $loc_lat,
                           'description' => $description_lieu_livraison,
                           'date_creation' => $date,
                           'date_modification' => $date 
                           ) 
                       );
                     
-                      $error_text = 'Commande enregistrée avec Succès. <br>Numero de commande : '.$token_cmde;
-                      $error_text_second = 'Vous serez livré dans un délais de 24H';
+                      $error_text = 'Commande enregistrée avec succès. <br>Numero de commande : '.$token_cmde;
+                      $error_text_second = 'La commande part en validation.';
 
                       //Vider le panier du client 
                        $_SESSION['cart'] = array();
@@ -271,6 +300,17 @@ $retour_json = json_encode($retour);
 
 echo $retour_json;
 
+/**
+ * Modification sur la bd (11-12-2019)
+ * ALTER TABLE `shipping_infos` ADD `longitude` VARCHAR(255) NOT NULL AFTER `quartier`;
+ * ALTER TABLE `shipping_infos` ADD `lagitude` VARCHAR(255) NOT NULL AFTER `quartier`;
+ * ALTER TABLE `shipping_infos` CHANGE `lagitude` `lagitude` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0', CHANGE `longitude` `longitude` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0';
+ */
 
+ /*
+ * Modif DB (12-03-2020)
+ * ALTER TABLE `commandes_produits` CHANGE `qtte_unitaire` `qtte_unitaire` FLOAT NULL DEFAULT NULL;
+ * ALTER TABLE `produits` CHANGE `stock` `stock` FLOAT NOT NULL DEFAULT '0';
+ */
 
 

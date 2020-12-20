@@ -58,16 +58,21 @@ if( !isset($_POST) || empty($_POST) || !isset($_POST['client_id']) || !isset($_P
         $error_text = "Oups, Erreur !";
         $error_text_second = "Echec de suppression du client.";
       }else{
-        //recupere la liste des commandes liés à la catégorie
+        //recupere les commandes du client
         $req_recup = $pdo->prepare('SELECT * FROM commandes WHERE id_client = :id_client ORDER BY id DESC'); 
         $req_recup->execute( array( ':id_client' => $client->id ) );
         $commandes = $req_recup->fetchAll(PDO::FETCH_OBJ);
+
+        //recupere les transaction exchange du client
+        $req_recup = $pdo->prepare('SELECT * FROM exchanges WHERE id_client = :id_client ORDER BY id DESC'); 
+        $req_recup->execute( array( ':id_client' => $client->id ) );
+        $exchanges = $req_recup->fetchAll(PDO::FETCH_OBJ);
         
-        //Verifie si la catégorie est liée à des commandes
-        if( !empty($commandes) ){
+        //Verifie si le client est liée à des commandes
+        if( !empty($commandes) || !empty($exchanges) ){
           $error_statut = true;
           $error_text = "Oups, Erreur !";
-          $error_text_second = "Echec de suppression du client. Le client est déjà lié à un ou plusieurs commandes.";
+          $error_text_second = "Echec de suppression du client. Le client est déjà lié à une ou plusieurs commandes ou transactions Exchanges.";
         }else{
 
           //Supprime la catégorie

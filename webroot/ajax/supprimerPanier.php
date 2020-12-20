@@ -1,8 +1,6 @@
 <?php
 include 'connectDB.php';
 include 'fonction.php';
-define('WEBROOT_URL', 'http://localhost/Market/webroot/');
-define('SITE_BASE_URL', 'http://localhost/Market/');
 if (empty(session_id())) {
     session_start();
     //$_SESSION['menu'] = 'Nous_Rejoindre';
@@ -21,7 +19,7 @@ if(!isset($_POST) || empty($_POST) ){
   $error_text = "Oups, Erreur !";
   $error_text_second = 'Veuillez ne pas modifier la page.';
 }else{
-  //debugger($_POST);
+  // debugger($_POST);
   extract($_POST);
   if( !isset($_SESSION['cart']['products_list'][$tokenProduit]) ){ //verifie si le produit existe dans le panier
       $error_statut = true;
@@ -61,7 +59,11 @@ if(!isset($_POST) || empty($_POST) ){
         unset( $_SESSION['cart']['products_list'][$tokenProduit] ); // suppresion du produit du panier
 
         $retour['cart']['total_amount'] = $_SESSION['cart']['total_amount'];
-        $retour['cart']['total_nbre'] = $_SESSION['cart']['total_nbre']; 
+        $retour['cart']['total_nbre'] = $_SESSION['cart']['total_nbre'];
+
+        //recuperation des frais de livraison
+        $_SESSION['cart']['shipping_dest']['frais'] = getFees($pdo, $_SESSION['cart']['total_amount']);
+        $retour['cart']['shipping_dest'] = $_SESSION['cart']['shipping_dest'];
 
         if( intval($_SESSION['cart']['total_amount']) <= 0 || 
             intval($_SESSION['cart']['total_nbre']) <= 0 ){ // le montant ou le nombre total du panier est 0
@@ -102,13 +104,4 @@ if ($error_statut) {
 $retour_json = json_encode($retour);
 
 echo $retour_json;
-
-
-// <div class="alert alert-warning alert-dismissible fade show" role="alert">
-//   <strong>Holy guacamole!</strong> You should check in on some of those fields below.
-//   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-// </div>
-
-
-
 

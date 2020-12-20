@@ -73,32 +73,21 @@
                                 </div><!--end .col -->
 
                                 <div class="col-xs-5">
-                                    <h4 class="text-light">Informations sur Livraison</h4>
+                                    <h4 class="text-light">Informations sur Magasin</h4>
                                     <dl class="dl-horizontal detail-cmd-info-shipping">
-                                        <dt class="text-left">Nom Réceptionnaire</dt>
+                                        <dt class="text-left">Nom Gérant</dt>
                                         <?php
                                             $recept_prenom = ( isset( explode( ' ',htmlspecialchars($shipping->receiver_lastname) )[1] ) ) ? ucfirst( explode( ' ',htmlspecialchars($shipping->receiver_lastname) )[1] ) : '';
                                         ?>
                                         <dd><?php echo ucfirst( htmlspecialchars($shipping->receiver_name) ).' '.ucfirst( explode( ' ',htmlspecialchars($shipping->receiver_lastname) )[0] ).' '.htmlspecialchars($recept_prenom); ?></dd>
                                         <dt>Téléphone Réceptionnaire</dt>
                                         <dd><?php echo htmlspecialchars($shipping->receiver_tel); ?></dd>
-                                        <dt>E-Mail Réceptionnaire</dt>
-                                        <dd><?php echo htmlspecialchars($shipping->receiver_email); ?></dd>
-
+                                        
                                         <dt>Commune</dt>
                                         <dd><?php echo ucfirst( htmlspecialchars($shipping->dest_commune) ); ?></dd>
                                         <dt>Quartier</dt>
                                         <dd><?php echo ucfirst( htmlspecialchars($shipping->receiver_quartier) ); ?></dd>
 
-                                        <dt>Longitude</dt>
-                                        <dd><?php echo ucfirst( $shipping->longitude ); ?></dd>
-
-                                        <dt>Latitude</dt>
-                                        <dd><?php echo ucfirst( $shipping->lagitude ); ?></dd>
-
-
-                                        <dt>Description du lieu</dt>
-                                        <dd><?php echo $shipping->receiver_description; ?></dd>
                                         <?php if( isset($livreur) && !empty( $livreur ) ): ?>
                                             <dt>Livreur</dt>
                                             <dd><?php echo strtoupper( $livreur->nom ).' ('.ucfirst( explode( ' ',$livreur->prenoms )[0] ).')'; ?></dd>

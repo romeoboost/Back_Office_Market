@@ -44,18 +44,24 @@
                                                 <b> <?php echo htmlspecialchars($client->tel); ?> </b>
                                             </div>
                                         </div>
+                                        <div class="clearfix">
+                                            <div class="pull-left product-libelle"> Email : </div>
+                                            <div class="pull-right product-info"> 
+                                                <b> <?php echo htmlspecialchars($client->email); ?> </b>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-xs-6">
                                         <div class="clearfix">
-                                            <div class="pull-left product-libelle"> Téléphone : </div>
+                                            <div class="pull-left product-libelle"> Type Client : </div>
                                             <div class="pull-right product-info"> 
-                                                <b> <?php echo htmlspecialchars ($client->email); ?> </b>
+                                                <b> <?php echo libelle_type_client( $client->type_client ); ?> </b>
                                             </div>
                                         </div>
                                         <div class="clearfix">
-                                            <div class="pull-left product-libelle"> STATUT : </div>
+                                            <div class="pull-left product-libelle"> Solde : </div>
                                             <div class="pull-right product-info"> 
-                                                <b> <?php echo ($client->statut == 1) ? 'ACTIF' : 'NON ACTIF'; ?> </b>
+                                                <b> <?php echo number_format($client->solde_apres, 0, '', ' '); ?> </b>
                                             </div>
                                         </div>
                                         <div class="clearfix">
@@ -87,7 +93,8 @@
 
                         <div class="row card">
                                 <div class="col-sm-12">
-                                    <h4 class="text-medium list-order-product-title">Liste des produits liés à la catégorie produit 
+                                    <h4 class="text-medium list-order-product-title">
+                                    Liste des Commandes liées à ce client
                                         <span class="badge"><?php echo count($commandes); ?></span>
                                     </h4>
                                 </div>
@@ -125,7 +132,9 @@
                                         </tbody>
                                     </table>
                                 </div><!--end .col -->
-                            </div><!--end .row -->
+                        </div><!--end .row -->
+
+                        
                     </div><!--end .card -->
                 </div><!--end .col -->
             </div><!--end .row -->

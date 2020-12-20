@@ -3,7 +3,7 @@ include 'connectDB.php';
 include 'fonction.php';
 setlocale(LC_TIME, "fr_FR", "French");
 
-$error_statut = false;
+$error_type_client = false;
 $error_text = '';
 $error_html = '';
 $retour = array();
@@ -18,12 +18,12 @@ if ($_POST) {
     // debugger($_POST);
     //verifie si tous les champs existent
     // [start_date] => 26-05-2019, [start_hour] => , [end_date] =>, [end_hour] =>, [nom] => Kesso, [prenoms] => Romeo
-    // [client_id] => CLI055525MTK, [tel] => 01010101, [status] => 1, [sexe] => 1
+    // [client_id] => CLI055525MTK, [tel] => 01010101, [type_client] => 1, [sexe] => 1
     //
     if( !isset($start_date) || !isset($start_hour) || !isset($end_date) || !isset($end_hour) || !isset($nom)
-     || !isset($prenoms) || !isset($client_id) || !isset($tel) || !isset($status) || !isset($sexe)  || !isset($number_page_running) ) 
+     || !isset($prenoms) || !isset($client_id) || !isset($tel) || !isset($type_client) || !isset($sexe)  || !isset($number_page_running) ) 
     {
-        $error_statut = true;
+        $error_type_client = true;
         $error_text = "Oups, Erreur !";
         $error_text_second = 'Veuillez ne pas modifier la page. Tous les paramètres sont obligatoires';
         //debugger($_POST);
@@ -32,9 +32,9 @@ if ($_POST) {
         
         //verifie si au moins un champs de filtre est renseigné
         if( empty($start_date) && empty($start_hour) && empty($end_date) && empty($end_hour) && empty($nom) && empty($prenoms) 
-            && empty($client_id) && empty($tel) && strlen($sexe) == 0 && strlen($status) == 0 && !isset($pagination) )
+            && empty($client_id) && empty($tel) && strlen($sexe) == 0 && strlen($type_client) == 0 && !isset($pagination) )
         {
-            $error_statut = true;
+            $error_type_client = true;
             $error_text = "Oups, Erreur !";
             $error_text_second = "Veuillez renseigner au moins l'un des champs avant de valider le formulaire"; 
 
@@ -83,7 +83,7 @@ if ($_POST) {
                 $condition_sql_liste .= " AND clients.token like :client_id ";
                 $conditions_prepare[':client_id'] = '%'.strtolower( $client_id ).'%';
             }
-            // [nom] => Kesso, [prenoms] => Romeo, [client_id] => CLI055525MTK, [tel] => 01010101, [status] => 1, [sexe] => 1
+            // [nom] => Kesso, [prenoms] => Romeo, [client_id] => CLI055525MTK, [tel] => 01010101, [type_client] => 1, [sexe] => 1
             //rajoute condition pour le nom du produit
             $tel = trim($tel);
             if( !empty( $tel ) ){
@@ -92,9 +92,9 @@ if ($_POST) {
             }
 
             //rajoute condition pour categorie produits
-            if( strlen($status) != 0 ){
-                $condition_sql_liste .= " AND clients.statut =:statut ";
-                $conditions_prepare[':statut'] = intval($status);
+            if( strlen($type_client) != 0 ){
+                $condition_sql_liste .= " AND clients.type_client =:type_client ";
+                $conditions_prepare[':type_client'] = intval($type_client);
             }
 
             //rajoute condition pour categorie produits
@@ -125,20 +125,18 @@ if ($_POST) {
 
             unset($req['limit']); //desactive la limite 
             $clients['total'] = count( sql_select($pdo, $req, 'clients') );
-              //  $d['clients']['non_actifs'] = $non_actifs;
-                  // $d['clients']['actifs'] = $actifs;
-                  // $d['clients']['total'] = $total;
-            if( strlen($status) == 0 ){   //si le status ne fais pas partie du filtre            
+
+            if( strlen($type_client) == 0 ){   //si le type_client ne fais pas partie du filtre            
                 //total produits non actifs
-                $req['condition'] = $condition_sql_liste.' AND clients.statut = 0';
+                $req['condition'] = $condition_sql_liste.' AND clients.type_client = 0';
                 $clients_nonActif = sql_select($pdo, $req, 'clients');
                 $clients['non_actifs'] = count ( $clients_nonActif );
 
-                $req['condition'] = $condition_sql_liste.' AND clients.statut = 1';
+                $req['condition'] = $condition_sql_liste.' AND clients.type_client = 1';
                 $clients_Actif = sql_select($pdo, $req, 'clients');
                 $clients['actifs'] = count ( $clients_Actif );
             }else{
-                if( intval( $status ) == 0 ){
+                if( intval( $type_client ) == 0 ){
                    //total categorie non actives
                     $clients['non_actifs'] = $clients['total'];
                 }else{
@@ -160,9 +158,9 @@ if ($_POST) {
               $result['html_list_clients'] = html_list_clients($pdo, $clients['listes'], $clients['total'], $offset );
               // debugger($result);
               
-               // [nom] => Kesso, [prenoms] => Romeo, [client_id] => CLI055525MTK, [tel] => 01010101, [status] => 1, [sexe] => 1
+               // [nom] => Kesso, [prenoms] => Romeo, [client_id] => CLI055525MTK, [tel] => 01010101, [type_client] => 1, [sexe] => 1
               $result['link_for_extract'] = SITE_BASE_URL.'clients/extraction/start_date&'.$start_date.'/start_hour&'.$start_hour.'/end_date&'.$end_date.
-              '/end_hour&'.$end_hour.'/nom&'.$nom.'/prenoms&'.$prenoms.'/client_id&'.$client_id.'/tel&'.$tel.'/status&'.$status.'/sexe&'.$sexe; 
+              '/end_hour&'.$end_hour.'/nom&'.$nom.'/prenoms&'.$prenoms.'/client_id&'.$client_id.'/tel&'.$tel.'/type_client&'.$type_client.'/sexe&'.$sexe; 
               // debugger($result);
         }
 
@@ -174,7 +172,7 @@ if ($_POST) {
 
 $retour['result']=$result;
 
-if ($error_statut) {
+if ($error_type_client) {
     $error_html = '
                     <div class="col-sm-12 alert alert-danger alert-dismissible text-align-center" role="alert">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">

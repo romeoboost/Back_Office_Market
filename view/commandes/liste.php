@@ -174,136 +174,138 @@
 
             <form class="form cmd_search_form with_date">
                 <em class="text-caption">Ce formulaire permet de filtrer la liste des commandes et les statistiques.
-                        Il faut renseigner au moins un champs avant de valider. </em>
-                        <div class="card">
-                            <div class="card-head card-head-xs style-primary">
-                                <header>
-                                    <!-- Formulaire de recherche -->
-                                    <h2 class="text-default-bright">Formulaire de recherche</h2>
-                                </header>
+                        Il faut renseigner au moins un champs avant de valider. 
+                </em>
+                <div class="card">
+                    <div class="card-head card-head-xs style-primary">
+                        <header>
+                            <!-- Formulaire de recherche -->
+                            <h2 class="text-default-bright">Formulaire de recherche</h2>
+                        </header>
 
-                                <div class="tools">
-                                    <a class="btn btn-icon-toggle" data-toggle="tooltip" data-placement="left" 
-                                    data-original-title="Annuler le filtre" href="<?php echo BASE_URL.DS.'commandes/liste'; ?>">
-                                        <i class="md md-settings-backup-restore"></i></a>
+                        <div class="tools">
+                            <a class="btn btn-icon-toggle btn-collapse"><i class="fa fa-angle-down"></i></a>
+                            <a class="btn btn-icon-toggle" data-toggle="tooltip" data-placement="left" 
+                            data-original-title="Annuler le filtre" href="<?php echo BASE_URL.DS.'commandes/liste'; ?>">
+                                <i class="md md-settings-backup-restore"></i></a>
+                        </div>
+                    </div>
+                    <div class="card-body ">
+                        <!-- floating-label -->
+                        <div id="errorForm" class="col-md-12 text-center"></div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group " id="">
+                                    <div class="input-group date" id="StartDate">
+                                        <div class="input-group-content">
+                                            <input type="text" name="start_date" class="form-control" id="StartDateInput">
+                                            <label>Date Début</label>
+                                        </div>
+                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="card-body ">
-                                <!-- floating-label -->
-                                <div id="errorForm" class="col-md-12 text-center"></div>
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <div class="form-group " id="">
-                                            <div class="input-group date" id="StartDate">
-                                                <div class="input-group-content">
-                                                    <input type="text" name="start_date" class="form-control" id="StartDateInput">
-                                                    <label>Date Début</label>
-                                                </div>
-                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-group ">
+                                    <div class="input-group date" id="StartHour">
+                                        <div class="input-group-content">
+                                            <input type="text" name="start_hour" class="form-control" id="StartHourInput">
+                                            <label>Heure Début</label>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <div class="form-group ">
-                                            <div class="input-group date" id="StartHour">
-                                                <div class="input-group-content">
-                                                    <input type="text" name="start_hour" class="form-control" id="StartHourInput">
-                                                    <label>Heure Début</label>
-                                                </div>
-                                                <span class="input-group-addon"><i class="md md-access-time"></i></span>
-                                            </div>
-                                        </div>
-                                    </div> 
-                                    <div class="col-sm-4">
-                                        <div class="form-group">
-                                            <div class="input-group date" id="EndDate">
-                                                <div class="input-group-content">
-                                                    <input type="text" name="end_date" class="form-control" id="EndDateInput">
-                                                    <label>Date Fin</label>
-                                                </div>
-                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                            </div>
-                                            <!-- <input type="text" class="form-control" id="Lastname2">
-                                            <label for="Lastname2">Date Fin</label> -->
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <div class="form-group">
-                                            <div class="input-group date" id="EndHour">
-                                                <div class="input-group-content">
-                                                    <input type="text" name="end_hour" class="form-control" id="EndHourInput">
-                                                    <label>Heure Fin</label>
-                                                </div>
-                                                <span class="input-group-addon"><i class="md md-access-time"></i></span>
-                                            </div>
-                                            <!-- <input type="text" class="form-control" id="Lastname2">
-                                            <label for="Lastname2">Date Fin</label> -->
-                                        </div>
+                                        <span class="input-group-addon"><i class="md md-access-time"></i></span>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <input type="text" name="tel_user" class="form-control" id="client_tel">
-                                            <label for="client_tel">Téléphone Du Client</label>
+                            </div> 
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <div class="input-group date" id="EndDate">
+                                        <div class="input-group-content">
+                                            <input type="text" name="end_date" class="form-control" id="EndDateInput">
+                                            <label>Date Fin</label>
                                         </div>
-                                    </div> 
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <input type="text" name="client_id" class="form-control" id="client_id">
-                                            <label for="client_id">Identifiant du Client</label>
-                                        </div>
+                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <input type="text" name="cmd_amount" class="form-control" id="montant_cmd">
-                                            <label for="montant_cmd">Montant</label>
-                                        </div>
-                                    </div> 
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <input type="text" name="cmd_id" class="form-control" id="cmd_id">
-                                            <label for="cmd_id">Identifiant De Commande</label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="form-group ">
-                                            <select id="select2" name="status" class="form-control dirty selectpicker" data-live-search="true">
-                                                <option value="" >&nbsp;</option>
-                                                <option value="0">EN ATTENTE</option>
-                                                <option value="3">EN COURS DE LIVRAISON</option>
-                                                <option value="1">LIVREE</option>
-                                                <option value="2">ANNULEE</option>                                                
-                                                <option value="4">REJETEE</option>
-                                            </select>
-                                            <label for="select2">Statut</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <input type="hidden" name="number_page_running" value="<?php echo $numero_page_encours; ?>">
-
-                            </div><!--end .card-body -->
-                            <div class="card-actionbar">
-                                <div class="card-actionbar-row">
-                                    <!-- <button id="cmd_search_form_btn" 
-                                        type="submit" class="btn btn-flat btn-primary ink-reaction">FILTRER
-                                        <div class="ld ld-ring ld-spin"></div>
-                                    </button> -->
-                                    <button id="cmd_search_form_btn" class="btn btn-primary btn-raised ld-ext-right " type="submit">
-                                            FILTRER
-                                            <div class="ld ld-ring ld-spin"></div>
-                                    </button>
+                                    <!-- <input type="text" class="form-control" id="Lastname2">
+                                    <label for="Lastname2">Date Fin</label> -->
                                 </div>
                             </div>
-                        </div><!--end .card -->
-                        <!-- <em class="text-caption">Ce formulaire permet de filtrer la liste des commandes.
-                        Il faut renseigner au moins un champs avant de valider. </em> -->
-                    </form> 
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <div class="input-group date" id="EndHour">
+                                        <div class="input-group-content">
+                                            <input type="text" name="end_hour" class="form-control" id="EndHourInput">
+                                            <label>Heure Fin</label>
+                                        </div>
+                                        <span class="input-group-addon"><i class="md md-access-time"></i></span>
+                                    </div>
+                                    <!-- <input type="text" class="form-control" id="Lastname2">
+                                    <label for="Lastname2">Date Fin</label> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <input type="text" name="tel_user" class="form-control" id="client_tel">
+                                    <label for="client_tel">Téléphone Du Client</label>
+                                </div>
+                            </div> 
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <input type="text" name="client_id" class="form-control" id="client_id">
+                                    <label for="client_id">Identifiant du Client</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <input type="text" name="cmd_amount" class="form-control" id="montant_cmd">
+                                    <label for="montant_cmd">Montant</label>
+                                </div>
+                            </div> 
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <input type="text" name="cmd_id" class="form-control" id="cmd_id">
+                                    <label for="cmd_id">Identifiant De Commande</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group ">
+                                    <select id="select2" name="status" class="form-control dirty selectpicker" data-live-search="true">
+                                        <option value="" >&nbsp;</option>
+                                        <option value="0">EN ATTENTE</option>
+                                        <option value="3">EN COURS DE LIVRAISON</option>
+                                        <option value="1">LIVREE</option>
+                                        <option value="2">ANNULEE</option>                                                
+                                        <option value="4">REJETEE</option>
+                                    </select>
+                                    <label for="select2">Statut</label>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="number_page_running" value="<?php echo $numero_page_encours; ?>">
+
+                    </div><!--end .card-body -->
+                    <div class="card-actionbar">
+                        <div class="card-actionbar-row">
+                            <!-- <button id="cmd_search_form_btn" 
+                                type="submit" class="btn btn-flat btn-primary ink-reaction">FILTRER
+                                <div class="ld ld-ring ld-spin"></div>
+                            </button> -->
+                            <button id="cmd_search_form_btn" class="btn btn-primary btn-raised ld-ext-right " type="submit">
+                                    FILTRER
+                                    <div class="ld ld-ring ld-spin"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div><!--end .card -->
+                <!-- <em class="text-caption">Ce formulaire permet de filtrer la liste des commandes.
+                Il faut renseigner au moins un champs avant de valider. </em> -->
+            </form> 
                 
 
 
@@ -317,7 +319,7 @@
                     </header>
                     <div class="tools">
                         <a id="extract-excel-btn" class="btn btn-icon-toggle " data-toggle="tooltip" data-placement="left"
-    href="<?php echo SITE_BASE_URL.'commandes/extraction/start_date&'.$order_first->date_first.'/start_hour&00:00:00/end_date&'.date("Y-m-d").'/end_hour&23:59:59/tel_user&/client_id&/cmd_amount&/cmd_id&/status&'; ?>" 
+                        href="<?php echo SITE_BASE_URL.'commandes/extraction/start_date&'.$order_first->date_first.'/start_hour&00:00:00/end_date&'.date("Y-m-d").'/end_hour&23:59:59/tel_user&/client_id&/cmd_amount&/cmd_id&/status&'; ?>" 
                         target="_blank" data-original-title="Extraire le tableau vers Excel">
                             <i class="fa fa-file-excel-o"></i></a>
                     </div>
@@ -367,30 +369,30 @@
                                         <td><?php echo dateFormat($commande->cmd_date_creation); ?></td>
                                         <td class="text-right">
                                             <?php if( $commande->cmd_statut == 0 ): ?>
-                                                <button type="button" class="btn btn-icon-toggle set-shipping-btn" data-toggle="tooltip" 
+                                                <!-- <button type="button" class="btn btn-icon-toggle set-shipping-btn" data-toggle="tooltip" 
                                                     data-placement="top" data-original-title="Livrer" cmd-id="<?php echo $commande->cmd_id; ?>">
                                                     <i class="md md-local-shipping"></i>
-                                                </button>
+                                                </button> -->
                                                 <button type="button" class="btn btn-icon-toggle set-rejected-btn" data-toggle="tooltip" 
                                                     data-placement="top" data-original-title="Rejetter la commande" cmd-id="<?php echo $commande->cmd_id; ?>">
                                                     <i class="fa fa-times-circle-o"></i>
                                                 </button>
                                             <?php endif; ?>
                                             <?php if( $commande->cmd_statut == 1 ): ?>
-                                                <button type="button" class="btn btn-icon-toggle set-shipping-btn" data-toggle="tooltip" 
+                                                <!-- <button type="button" class="btn btn-icon-toggle set-shipping-btn" data-toggle="tooltip" 
                                                     data-placement="top" data-original-title="Reprendre la livraison" cmd-id="<?php echo $commande->cmd_id; ?>">
                                                     <i class="md md-local-shipping"></i>
-                                                </button>
+                                                </button> -->
                                             <?php endif; ?>
                                             <?php if( $commande->cmd_statut == 3 ): ?>
-                                                <button type="button" class="btn btn-icon-toggle set-confirm-shipping-btn" data-toggle="tooltip" cmd-id="<?php echo $commande->cmd_id; ?>"
+                                                <!-- <button type="button" class="btn btn-icon-toggle set-confirm-shipping-btn" data-toggle="tooltip" cmd-id="<?php echo $commande->cmd_id; ?>"
                                                     data-placement="top" data-original-title="Confirmer la livraison">
                                                     <i class="md md-check-box"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-icon-toggle set-stop-shipping-btn" data-toggle="tooltip" cmd-id="<?php echo $commande->cmd_id; ?>"
+                                                </button> -->
+                                                <!-- <button type="button" class="btn btn-icon-toggle set-stop-shipping-btn" data-toggle="tooltip" cmd-id="<?php echo $commande->cmd_id; ?>"
                                                     data-placement="top" data-original-title="Arrêter la livraison">
                                                     <i class="fa fa-pause"></i>
-                                                </button>
+                                                </button> -->
                                             <?php endif; ?>
                                             <?php if( $commande->cmd_statut == 4 ): ?>
                                                 <button type="button" class="btn btn-icon-toggle set-restore-btn" data-toggle="tooltip" cmd-id="<?php echo $commande->cmd_id; ?>"

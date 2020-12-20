@@ -1,13 +1,12 @@
 <?php
 include 'connectDB.php';
 include 'fonction.php';
-define('WEBROOT_URL', 'http://localhost/Market/webroot/');
-define('SITE_BASE_URL', 'http://localhost/Market/');
 if (empty(session_id())) {
     session_start();
     //$_SESSION['menu'] = 'Nous_Rejoindre';
 }
-//debugger($_POST);
+// debugger($_POST);
+
 $error_statut = false;
 $error_text = '';
 $error_text_second = '';
@@ -26,10 +25,9 @@ if(!isset($_POST) || empty($_POST) ){
   produits.quantite_unitaire as qtite_unit,
   produits.id_unite as unite, produits.prix_quantite_unitaire as prix_qtite_unit, produits.slug as slug,produits.nouveau as isnew,
   produits.promo as ispromo, produits.pourcentage_promo as percent_promo, produits.stock AS stock,
-  produits.image as image, categories_produits.nom AS categorie, tailles.nom AS taille
+  produits.image as image, categories_produits.nom AS categorie
   FROM produits
-  INNER JOIN categories_produits ON produits.id_categorie_produit=categories_produits.id
-  INNER JOIN tailles ON produits.id_taille=tailles.id ";
+  INNER JOIN categories_produits ON produits.id_categorie_produit=categories_produits.id ";
 
   $sql_liste.="WHERE produits.token =:token ";
   
@@ -37,7 +35,10 @@ if(!isset($_POST) || empty($_POST) ){
   // $req = $pdo->prepare($sql_liste); 
   // $req->execute($conditions_prepare);
 
+  //Faire une boucle sur la liste des produits
   foreach ($_POST as $token => $value) {
+
+    //verifie si le produit est dans le panier
     if( !isset($_SESSION['cart']['products_list'][$token]) ){
       $error_statut = true;
       $error_text = "Oups, Erreur !";
@@ -46,17 +47,21 @@ if(!isset($_POST) || empty($_POST) ){
 
       //debugger(intval($value));
       //is_int ( mixed $var )
+      //verifie que le nombre de produit n'est pas 0
       if( !isset($value) || intval($value) == 0 ){
         $error_statut = true;
         $error_text = "Oups, Erreur !";
         $error_text_second = "Désolé la valeur du nombre de produit doit être numerique et supérieur à 0.";
       }else{
+
+        //recueper les infos du produit en base
         $conditions_prepare[':token']=$token;
         $req = $pdo->prepare($sql_liste);
         $req->execute($conditions_prepare);
         $produit = current($req->fetchAll(PDO::FETCH_OBJ));
 
         $value = intval($value);
+        //verifie si le produit est encore disponible en stock
         if($produit->stock < $value*$produit->qtite_unit){
           $error_statut = true;
           $error_text = "Oups, Erreur !";
@@ -71,6 +76,7 @@ if(!isset($_POST) || empty($_POST) ){
 
   //debugger($error_text);
 
+  //SI les produits ont passé l'étape de checking
   if(!$error_statut){
     $_SESSION['cart']['total_amount'] = 0;
     $_SESSION['cart']['total_nbre'] = 0;
@@ -89,6 +95,11 @@ if(!isset($_POST) || empty($_POST) ){
       $_SESSION['cart']['total_amount'] += $prix_produit*$value;
       $_SESSION['cart']['total_nbre'] += $value;
     }
+
+    //recuperation des frais de livraison
+    $retour['cart']['total_amount'] = $_SESSION['cart']['total_amount'];
+    $_SESSION['cart']['shipping_dest']['frais'] = getFees($pdo, $_SESSION['cart']['total_amount']);
+    $retour['cart']['shipping_dest'] = $_SESSION['cart']['shipping_dest'];
 
     $error_text = 'Panier modifié avec succès.';
     $error_text_second = 'Dépechez vous de commander !';
@@ -122,70 +133,6 @@ if ($error_statut) {
 $retour_json = json_encode($retour);
 
 echo $retour_json;
-
-
-// <div class="alert alert-warning alert-dismissible fade show" role="alert">
-//   <strong>Holy guacamole!</strong> You should check in on some of those fields below.
-//   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-// </div>
-
-// CL20180300033
-  // structure numero de membre
-  // AM AAAA MM NUMERO CI
-  //EX : AM20180300001CI
-
-
-/*
-<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-#membre#
-
-id
-nom
-prenom
-date_naissance
-id_pays
-id_metier
-email
-tel
-password
-date_creation
-date_modification
-statut
-id_user
-carte_membre
-photo
-numero_membre
-id_poste
-
-------------------------------------------------
-
-#paiement#
-id
-id_membre
-order_id
-jwt
-currency
-transaction_amount
-statut_id
-transaction_id
-paid_transaction_amount
-paid_currency
-change_rate
-onflictual_transaction_amount
-conflictual_currency
-wallet
-*/
-
-
-
-/*
-[operation_token] => hgdsttdf-b845-78c9-4hg7-74mpoef114ui
-    [order] => 
-    [jwt] => 
-    [currency] => XOF
-    [transaction_amount] =>
-
-*/
 
 
 

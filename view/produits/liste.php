@@ -324,7 +324,7 @@
                                 <?php foreach ( $produits as $produit ): ?>
                                 <tr class="<?php echo $produit->token_produit.' '.color_ligne_product($produit); ?>">
                                     <td><?php echo $nbre_cmd_plus--; ?></td>
-                                    <td><img class="img-circle width-1" src="<?php echo WEBROOT_URL_FRONT.'images/shop/'.$produit->image; ?>.jpg?1422538624" alt="" /></td>
+                                    <td><img class="img-circle width-1" src="<?php echo WEBROOT_URL.'images/shop/'.$produit->image; ?>.jpg?1422538624" alt="" /></td>
                                     <td class="name_product" ><?php echo ucfirst( $produit->nom_produit ); ?></td>
                                     <td><?php echo ucfirst( $produit->categorie ); ?></td>
                                     <td class="stock_product"><?php echo $produit->stock; ?></td>
